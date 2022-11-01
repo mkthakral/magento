@@ -1,0 +1,240 @@
+<?php  
+$feeds=$this->getFeed();
+$partner=$this->getProfileDetail();
+$helper = Mage::helper('marketplace');
+$seller_id=$partner['mageuserid'];
+$seller=Mage::getModel('customer/customer')->load($seller_id);
+$shoptitle = $partner->getShoptitle();
+if(!$shoptitle){
+	$shoptitle = $seller->getName();
+}
+$seller_product_count = $helper->getSellerProCount($seller_id);
+
+$logo=$partner->getlogopic()==''?"noimage.png":$partner->getlogopic();
+$logo=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$logo;
+
+$locsearch=$partner->getcomplocality()==''? Mage::getModel('directory/country')
+			->load($partner->getcountrypic())->getName():$partner->getcomplocality();
+$countryflag=$this->getSkinUrl('marketplace/images/country/countryflags/').strtoupper($partner->getcountrypic()==""?"XX":$partner->getcountrypic()).".png";
+$countryName = '';
+if($partner->getcountrypic()){
+	$countryModel = Mage::getModel('directory/country')->loadByCode($partner->getcountrypic());
+	$countryName = ",".$countryModel->getName();
+}
+$baseurl=$this->getUrl('marketplace/seller');
+$captchenable = Mage::getStoreConfig('marketplace/marketplace_options/captcha',Mage::app()->getStore());		
+?>
+<div class="wk_mp_design">
+	<div class="wk_mp_design_inner">
+		<div class="wk_logo_block">
+			<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$partner['profileurl']);?>" >
+				<img class="bannerpicrs" src="<?php echo $logo;?>" />
+			</a>
+		</div>
+		<div class="wk_mp_profile_container">
+			<div id="info" class="block-content">
+				<div class="wk_seller">	
+					<div class="section">
+						<div class="storename">
+							<a class="store-name" href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$partner['profileurl']);?>">
+								<?php echo $shoptitle; ?>
+							</a>
+						</div>
+						<div class="wefrom">
+							<span class="wk_storeloc_icon wk_icon"></span>
+							<a class="cont-name" title="<?php echo $helper->__('Search') ?>" href="<?php echo  $helper->getRewriteUrl('marketplace/seller/location/'.$partner['profileurl'])."?loc=".$locsearch?>" target="_blank">
+								<span><?php echo $locsearch.$countryName; ?></span>
+								<img class="piccountry" title="<?php echo $helper->__('View Map') ?>" src="<?php echo $countryflag;  ?>" />
+							</a>
+						</div>
+					</div>					
+					<div class="section" style="background-color: rgb(232, 232, 232);">
+						<?php echo $helper->__('Profile') ?>
+					</div>
+					<div class="section">
+						<a class="store-name" href="<?php echo $helper->getRewriteUrl('marketplace/seller/feedback/'.$partner['profileurl'])?>">
+							<?php echo $helper->__('Reviews') ?>
+						</a>
+					</div>				
+					<div class="section ask_que"> 
+						<a id="askque"><?php echo $helper->__('Contact Us') ?></a>
+						<ul>      
+							<li class="ask_que">
+								<div id="ask_data">
+									<div class="modal_header">
+										<h4 class="modal-title"><?php echo $helper->__('Contact Seller') ?></h4>
+										<span  class="wk_close" >x</span>
+										<span  class="wk_clear" ></span>
+									</div>
+									<?php
+									if(Mage::helper('customer')->isLoggedIn()){
+										$buyer_name = Mage::getSingleton('customer/session')->getCustomer()->getName();
+										$buyer_email = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+										$readonly = "readonly='readonly'";
+									}else{				
+										$buyer_email = '';
+										$buyer_name = '';
+										$readonly = '';
+									}
+									?>
+									<form id="ask_form" method="post" action="#">
+										<div class="modal-body form-list">
+											<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Name') ?> :</label>
+											<input type="text" name="name" class="queryemail wk_contact_input_fields required-entry" value="<?php echo $buyer_name?>" <?php echo $readonly?>/>
+											<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Email') ?> :</label>
+											<input type="text" name="email" class="queryemail required-entry validate-email wk_contact_input_fields" value="<?php echo $buyer_email?>" <?php echo $readonly?>/>
+											<label for="name" class="required"><em>*</em><?php echo $helper->__('Subject') ?> :</label>
+											<input type="text" name="subject" class="wk_contact_input_fields required-entry"/>
+											<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Query') ?> :</label>
+											<textarea  name="ask" class="queryquestion wk_contact_input_fields required-entry" style="width:100%;"></textarea>
+											<input type="hidden" name="seller-id" value="<?php echo $seller_id;?>"/>
+											<?php 
+											if($captchenable){?>
+												<div>
+													<span>
+														<label for="wk_mp_captcha"><span id="wk_mp_captchalable1"><?php echo rand(1,20)?></span> + <span id="wk_mp_captchalable2"><?php echo rand(1,20)?></span> =</label>
+													</span>
+													<input type="text" class="required-entry wk_contact_input_fields" name="wk_mp_captcha" id="wk_mp_captcha" />
+												</div>
+											<?php
+											}?>
+										</div>
+										<div class="modal_footer">
+											<span class="error"></span>
+											<span class="errormail"></span>
+											<input type="reset" value="<?php echo $helper->__('Reset') ?>" id="resetbtn" class="wk_btn wk_btn_default"/>
+											<input type="submit" value="<?php echo $helper->__('Submit') ?>" id="askbtn" class="wk_btn wk_btn_primary clickask"/>
+											<span class="wk_clear"></span>
+										</div>
+									</form>
+								</div>
+							</li> 
+						</ul>	
+					</div>
+					<?php
+					if(Mage::getStoreConfig('marketplace/seller_profile/partner_policy_approval',Mage::app()->getStore())){?>
+						<div class="section">
+							<a class="store-name" href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$partner['profileurl']).'#return-policy';?>">
+								<?php echo $helper->__('Return Policy') ?>
+							</a>
+						</div>
+						<div class="section">
+							<a class="store-name" href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$partner['profileurl']).'#shipping-policy';?>">
+								<?php echo $helper->__('Shipping Policy') ?>
+							</a>
+						</div>
+					<?php
+					}?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="wk_mp_design_inner wk_mp_design_inner_last" style="margin-top:10px;">
+		<div class="wk_mp_profile_container storename">
+			<div class="store-name">
+				<?php echo $helper->__("Seller's Collection") ?>
+			</div>			
+			<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/collection/'.$partner['profileurl']); ?>">
+				<div class="store-name"><?php echo $helper->__('%s Products',$seller_product_count) ?></div>
+				<button class="button" title="<?php echo $helper->__("View Seller's Collection") ?>">
+					<span>
+						<span>
+							<?php echo $helper->__('View All'); ?>
+						</span>
+					</span>
+				</button>
+			</a>
+			<div style="margin-top:5px;">
+				<iframe width="100%" height="200" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=<?php echo $locsearch.$countryName;?>&amp;output=embed"></iframe>
+				<br />
+				<small>
+					<a href="https://maps.google.com/maps?q=<?php echo $locsearch.$countryName;?>"><?php echo Mage::helper('marketplace')->__('View Location on Map') ?></a>
+				</small>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<script>
+	$wk_jq=jQuery.noConflict(); 
+	var ask_form = new VarienForm('ask_form', true);
+	(function($wk_jq){
+		$wk_jq(function(){
+			$wk_jq('.wrapper').append($wk_jq('#ask_data'));
+			$wk_jq('.ask_que').click(function(){
+				$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+				$wk_jq('.page').css('opacity','0.4');
+				$wk_jq('#ask_data').show();
+			});
+			$wk_jq('.wk_close').click(function(){
+				$wk_jq('.page').css('opacity','1');
+				$wk_jq('#resetbtn').trigger('click');
+				$wk_jq('#ask_data').hide();
+				$wk_jq('#ask_form .validation-failed').each(function(){
+					$wk_jq(this).removeClass('validation-failed');
+				});
+				$wk_jq('#ask_form .validation-advice').each(function(){
+					$wk_jq(this).remove();
+				});
+			});
+			
+			$wk_jq('#askbtn').click(function(){
+				if(ask_form.validator.validate()!=false){
+					var thisthis = $wk_jq(this);
+					if(thisthis.hasClass("clickask")){	
+						<?php 
+						if($captchenable){?>
+							var total = parseInt($wk_jq('#wk_mp_captchalable1').text()) + parseInt($wk_jq('#wk_mp_captchalable2').text());
+							var wk_mp_captcha = $wk_jq('#wk_mp_captcha').val();
+							if(total != wk_mp_captcha){
+								$wk_jq('#wk_mp_captchalable1').text(Math.floor((Math.random()*10)+1));
+								$wk_jq('#wk_mp_captchalable2').text(Math.floor((Math.random()*100)+1));
+								$wk_jq('#wk_mp_captcha').val('');
+								$wk_jq('#wk_mp_captcha').addClass('error_border');
+								$wk_jq(this).addClass('error_border');
+								$wk_jq('#ask_form .errormail').text("<?php echo $helper->__(' Wrong varification number. ') ?>").slideDown('slow').delay(2000).slideUp('slow');
+							}else{
+								thisthis.removeClass('clickask');
+								$wk_jq('#ask_data').addClass('mail_procss');
+								$wk_jq.ajax({
+									url:'<?php echo Mage::getBaseUrl();?>marketplace/seller/sendmail',
+									data:$wk_jq('#ask_form').serialize(),
+									type:'post',
+									dataType:'json',
+									success:function(d){
+										thisthis.addClass('clickask');
+										$wk_jq('#ask_data').removeClass('mail_procss')
+										alert("<?php echo $helper->__(' Mail Send ') ?>..");
+										$wk_jq('.wk_close,#resetbtn').trigger('click');
+									}
+								});
+							}
+						<?php 
+						}else{?>
+							thisthis.removeClass('clickask');
+								$wk_jq('#ask_data').addClass('mail_procss');
+								$wk_jq.ajax({
+									url:'<?php echo Mage::getBaseUrl();?>marketplace/seller/sendmail',
+									data:$wk_jq('#ask_form').serialize(),
+									type:'post',
+									dataType:'json',
+									success:function(d){
+										thisthis.addClass('clickask');
+										$wk_jq('#ask_data').removeClass('mail_procss')
+										alert("<?php echo $helper->__(' Mail Send ') ?>..");
+										$wk_jq('.wk_close,#resetbtn').trigger('click');
+									}
+								});
+							<?php 
+						}?>
+					}
+					return false;
+				}
+			});
+		});
+	})($wk_jq);
+</script>

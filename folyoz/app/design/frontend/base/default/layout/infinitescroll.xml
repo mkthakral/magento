@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<catalog_category_view>
+		<reference name="head">
+			<block type="core/text" name="google.cdn.jquery" >
+				<action method="setText" ifconfig="infinite_scroll/infinite_scroll_settings/include_jquery">
+					<text><![CDATA[<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script><script type="text/javascript">jQuery.noConflict();</script>]]>					</text>
+				</action>
+			</block>
+			<block type="page/html_head" name="infinityJs" after="google.cdn.jquery" >
+				<action method="addJs" ifconfig="infinite_scroll/infinite_scroll_settings/scroll_loader_active"><script>infinite/jquery.ias.min.js</script></action>
+			</block>
+		</reference>
+		<reference name="before_body_end">
+			<block type="core/template" name="infinite_scroll" template="infinitescroll/js.phtml" />
+		</reference>
+	</catalog_category_view>
+</layout>

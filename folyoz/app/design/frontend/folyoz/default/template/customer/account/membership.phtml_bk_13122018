@@ -1,0 +1,51 @@
+<?php
+	$userId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+
+	$datetime1 = new DateTime(date("Y-m-d"));
+	$datetime2 = new DateTime($result[0]["end_date"]);
+	$interval = $datetime1->diff($datetime2);
+	$intervalvalue = $interval->format('%a');
+	$interval = $interval->format('%R%a');
+	
+	if($result[0]["status"]=="active" and $interval < 7 and $interval > 0){
+?>
+
+	<h2>Your Subscription Will expire soon please renew package</h2>
+	<?php } elseif($interval < 0) {
+		$writeAdapter = $resource->getConnection('core_write');
+		$query = "UPDATE `user_subscription` SET `status` = 'inactive' WHERE `user_subscription`.`id` = ".$result[0]['id'];
+		$writeAdapter->query($query);	
+	?>
+	<h2>Your Subscription was Expired</h2>
+	<?php } if(count($result)>0){?>
+	<h2> You have <?php echo $intervalvalue ?> Days remaining on your membership.</h2>
+	<?php } ?>
+<div class="dashboard">
+    <div class="page-title">
+        <h1><?php echo $this->__('Membership') ?></h1>
+    </div>	
+	<?php $collectionVirtual = Mage::getResourceModel('catalog/product_collection')->addAttributeToFilter('type_id', array('eq' => 'virtual')); ?>
+	<form name="subscription" id="subscription" method="POST" action="">
+	<?php foreach($collectionVirtual as $key)
+	{
+		//echo "<pre>".print_r($key,1)."</pre>";
+		$product = Mage::getModel('catalog/product')->load($key->getId());
+		$url = Mage::getBaseUrl()."customer/account/redirect/?id=".$product->getId();
+		echo $product->getPrice().'    '.$product->getName().'   <input type="radio" name="subtype" value="'.$product->getId().'" required>Select '.$product->getDuration().' days<br>';
+	}
+	?>
+	<input type="submit" name="submit" id="submit" value="Continue">
+	</form>
+	<?php if(count($result) <= 0) { ?>
+	<h2>You are not Subscribed yet.</h2>
+	<?php } ?>
+</div>
+<?php $count= Mage::helper('checkout/cart')->getItemsCount(); ?>
+<?php if($count!=0){ ?>
+<iframe src="http://digitalmate.in/magento/folyoz/onestepcheckout" height="800" width="800"></iframe>
+<?php } ?>

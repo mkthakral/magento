@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mate_Checkout>
+            <version>1.0.1</version>
+        </Mate_Checkout>
+    </modules>
+    <frontend>
+        <routers>
+        <checkout>
+            <args>
+                <modules>
+                    <Mate_Checkout before="Mage_Checkout">Mate_Checkout</Mate_Checkout>
+                </modules>
+            </args>
+        </checkout>
+        </routers>
+    </frontend>
+</config>

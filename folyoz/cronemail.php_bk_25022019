@@ -1,0 +1,191 @@
+<?php
+require_once 'app/Mage.php';
+umask(0) ;  
+Mage::app();
+
+$host = Mage::getBaseUrl();
+
+try {
+	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('submitted_portfolio');
+	$query = "SELECT * FROM $table group by user_id";
+	$result = $readAdapter->fetchAll($query); // load all request submitted by all artist 
+
+	foreach($result as $key){
+	$director = Mage::getModel('customer/customer')->load($key['user_id']); // load submitted director
+		$html = "";
+		if($director->getData('approval') == 63){
+			$resource = Mage::getSingleton('core/resource');
+			$readAdapter= $resource->getConnection('core_read');			
+			$table = $resource->getTableName('submitted_portfolio');
+			$query = "SELECT * FROM $table where user_id = ".$key['user_id'];
+			$result2 = $readAdapter->fetchAll($query); // load all request submitted by all artist 
+			
+			foreach($result2 as $loopkey){
+				$artist = Mage::getModel('customer/customer')->load($loopkey['submitted_user_id']);
+				if($artist->getAvatar()==""){
+				$img = '<img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'customer/nopropimg.png" height="100px"; width="100px"/>';
+				} else {
+				$img =	'<img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $artist->getAvatar().'" height="100px"; width="100px" />';
+				}				
+				if($director->getData('follow_update') == "Daily"){ // call for daily follow
+					if(getArtistWithRecentUploads($loopkey['submitted_user_id'], "Daily")>0){
+						$html .="<tr><td>".$img."</td>";
+						$html .="<td><b>".$artist->getName()."</b></td>";
+						$html .="<td><a href='".$host."art_details?id=".$artist->getId()."'>View Portfolio</a></td></tr>";
+					}
+				}
+				elseif($director->getData('follow_update') == "Monthly"){ // call for monthly follow
+					if(date('d') == 1){
+						if(getArtistWithRecentUploads($loopkey['submitted_user_id'], "Monthly")>0){
+							$html .="<tr><td>".$img."</td>";
+							$html .="<td><b>".$artist->getName()."</b></td>";
+							$html .="<td><a href='".$host."art_details?id=".$artist->getId()."'>View Portfolio</a></td></tr>";
+						}
+					}
+				}
+				elseif($director->getData('follow_update') == "Weekly"){ // call for weekly 
+					$year = date("Y"); $month = date("m");
+					if( ((0 == $year % 4) and (0 != $year % 100) or (0 == $year % 400))){// call for weekly follow on leap year
+						if(getArtistWithRecentUploads($loopkey['submitted_user_id'], "Lep")>0){
+							$html .="<tr><td>".$img."</td>";
+							$html .="<td><b>".$artist->getName()."</b></td>";
+							$html .="<td><a href='".$host."art_details?id=".$artist->getId()."'>View Portfolio</a></td></tr>";
+						}			
+					}
+					else{  
+						if($month == 2){ 
+							if(getArtistWithRecentUploads($loopkey['submitted_user_id'], "Feb")>0){ // call for weekly follow on non leap year for february
+								$html .="<tr><td>".$img."</td>";
+								$html .="<td><b>".$artist->getName()."</b></td>";
+								$html .="<td><a href='".$host."art_details?id=".$artist->getId()."'>View Portfolio</a></td></tr>";
+							}
+						}else{
+							if(getArtistWithRecentUploads($loopkey['submitted_user_id'], "Weekly")>0){ // call for weekly follow non leap year except february
+								$html .="<tr><td>".$img."</td>";
+								$html .="<td><b>".$artist->getName()."<b></td>";
+								$html .="<td><a href='".$host."art_details?id=".$artist->getId()."'>View Portfolio</a></td></tr>";
+							}
+						}
+					}
+				}		 
+			}
+			if($html != ""){
+				$templateId = 4;
+				$email = $director->getEmail();
+				$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
+				$mail = Mage::getModel('core/email');
+				$mail->setToName('Folyoz');
+				$mail->setFromName('Folyoz');
+				$email_template_variables = array(
+					'name' => $director->getName(),
+					'html' => $html,
+				);
+				$mailSubject = 'Portfolio Update';
+				$from_email = Mage::getStoreConfig('trans_email/ident_custom1/email');
+				$processedTemplate = $emailTemplate->getProcessedTemplate($email_template_variables);
+				$mail = Mage::getModel('core/email');
+				$mail->setToName('folyoz');
+				$mail->setTemplateParam($email_template_variables);
+				$mail->setToEmail($email);
+				$mail->setBody($processedTemplate);
+				$mail->setSubject($mailSubject);
+				$mail->setFromEmail($from_email);
+				$mail->setType('Html');
+				try {
+					$mail->send();
+					echo "Success";
+				} catch (Exception $ex) {}
+			}
+ 			
+		}
+	}
+}catch(Exception $e){
+Mage::log($e->getMessage());
+}
+
+function getArtistWithRecentUploads($artistid, $duration){
+	$resource = Mage::getSingleton('core/resource');
+	$counter = 0;
+	// daily email
+	if($duration == "Daily"){
+		$table = $resource->getTableName('catalog_product_entity');
+		$query = "SELECT entity_id as id FROM $table where date(created_at) = CURDATE() - 1";
+		$readAdapter= $resource->getConnection('core_read');			
+		$table = $resource->getTableName('marketplace_product');
+		$query2 = "SELECT index_id FROM $table where mageproductid in ($query) and userid = $artistid";
+		$products = $readAdapter->fetchAll($query2);
+		$counter = count($products);
+		return $counter;		
+	}
+	// monthly email
+	elseif($duration == "Monthly"){
+		$table = $resource->getTableName('catalog_product_entity');
+		$query = "SELECT entity_id as id FROM $table where created_at between (CURDATE() - INTERVAL 1 MONTH) and LAST_DAY(CURDATE() - INTERVAL 1 MONTH)";
+		$readAdapter= $resource->getConnection('core_read');			
+		$table = $resource->getTableName('marketplace_product');
+		$query2 = "SELECT index_id FROM $table where mageproductid in ($query) and userid = $artistid";
+		$products = $readAdapter->fetchAll($query2);
+		$counter = count($products);
+		return $counter;		
+	}
+	//weekly email for leap year 
+	elseif($duration == "Lep"){
+		$day = date('d');
+		if($day==8 or $day==15 or $day==22 or $day==29){
+			$table = $resource->getTableName('catalog_product_entity');
+			if($day==8)// first week email for every month
+				$query = "SELECT entity_id as id FROM $table where created_at between CONCAT('29-',MONTH(CURDATE())-1,'-',YEAR(CURDATE())) and (CURDATE() - 1)";
+			else //except first week email for every month
+				$query = "SELECT entity_id as id FROM $table where created_at >= (SYSDATE() - INTERVAL 7 DAY)";
+			$readAdapter= $resource->getConnection('core_read');			
+			$table = $resource->getTableName('marketplace_product');
+			$query2 = "SELECT index_id FROM $table where mageproductid in ($query) and userid = $artistid";
+			$products = $readAdapter->fetchAll($query2);
+			$counter = count($products);
+		}
+		return $counter;		
+	}	
+	//weekly with non leap year(except february) email
+	elseif($duration == "Weekly"){
+		$day = date('d'); $month = date('m');
+		if($day==8 or $day==15 or $day==22 or $day==29){
+			$table = $resource->getTableName('catalog_product_entity');
+			if($month==8 and $month == 3)//first week email only for march
+				$query = "SELECT entity_id as id FROM $table where created_at between CONCAT('28-',MONTH(CURDATE())-1,'-',YEAR(CURDATE())) and (CURDATE() - 1)";
+			elseif($day==8)//first week email except march
+				$query = "SELECT entity_id as id FROM $table where created_at between CONCAT('29-',MONTH(CURDATE())-1,'-',YEAR(CURDATE())) and (CURDATE() - 1)";
+			else // except first week email
+				$query = "SELECT entity_id as id FROM $table where created_at >= (SYSDATE() - INTERVAL 7 DAY)";
+			$readAdapter= $resource->getConnection('core_read');			
+			$table = $resource->getTableName('marketplace_product');
+			$query2 = "SELECT index_id FROM $table where mageproductid in ($query) and userid = $artistid";
+			$products = $readAdapter->fetchAll($query2);
+			$counter = count($products);
+		}
+		return $counter;		
+	}	
+	//weekly email for non leap year(only for february) 
+	elseif($duration == "Feb"){
+		$day = date('d');
+		if($day==7 or $day==14 or $day==21 or $day==28){
+			$table = $resource->getTableName('catalog_product_entity');
+			if($day==7) // first week email
+				$query = "SELECT entity_id as id FROM $table where created_at between CONCAT('29-',MONTH(CURDATE())-1,'-',YEAR(CURDATE())) and (CURDATE() - 1)";
+			elseif($day==28) // except last week email
+				$query = "SELECT entity_id as id FROM $table where created_at >= (SYSDATE() - INTERVAL 6 DAY)";
+			else // except first week email
+				$query = "SELECT entity_id as id FROM $table where created_at >= (SYSDATE() - INTERVAL 7 DAY)";
+				$readAdapter= $resource->getConnection('core_read');			
+			$table = $resource->getTableName('marketplace_product');
+			$query2 = "SELECT index_id FROM $table where mageproductid in ($query) and userid = $artistid";
+			$products = $readAdapter->fetchAll($query2);
+			$counter = count($products);
+		}
+		return $counter;		
+	}
+		
+}
+?> 

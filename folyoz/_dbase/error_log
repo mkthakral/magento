@@ -1,0 +1,6 @@
+[19-Mar-2019 11:36:21 UTC] PHP Fatal error:  Uncaught Error: Call to a member function realParent() on boolean in /home/digitalmate/public_html/magento/folyoz/_dbase/libraries/navigation/NavigationTree.php:934
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/_dbase/libraries/navigation/Navigation.php(51): PMA\libraries\navigation\NavigationTree->renderPath()
+#1 /home/digitalmate/public_html/magento/folyoz/_dbase/navigation.php(77): PMA\libraries\navigation\Navigation->getDisplay()
+#2 {main}
+  thrown in /home/digitalmate/public_html/magento/folyoz/_dbase/libraries/navigation/NavigationTree.php on line 934

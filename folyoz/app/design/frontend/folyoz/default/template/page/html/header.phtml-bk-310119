@@ -1,0 +1,158 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage()) { ?>
+
+<div class="header-language-background">
+    <div class="header-language-container">
+        <div class="store-language-container">
+            <?php echo $this->getChildHtml('store_language') ?>
+        </div>
+
+        <?php echo $this->getChildHtml('currency_switcher') ?>
+
+        <p class="welcome-msg"><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getChildHtml('accountLinks') ?></p>
+    </div>
+</div>
+
+<header id="header" class="page-header">
+	<div class="container">
+		<div class="page-header-container">
+			<a class="logo" href="<?php echo $this->getUrl('') ?>">
+				<img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="large" />
+				<img src="<?php echo $this->getLogoSrcSmall() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="small" />
+			</a>
+
+			<?php // In order for the language switcher to display next to logo on smaller viewports, it will be moved here.
+				  // See app.js for details ?>
+			<div class="store-language-container"></div>
+
+			<!-- Skip Links -->
+
+
+
+			<!-- Navigation -->
+			<div class="hrader-nav-outer">
+				<div id="header-nav" class="skip-content">
+					<?php echo $this->getChildHtml('topMenu') ?>
+				</div>
+
+			<!-- Account -->
+				<div class="header-account">
+				<?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+
+					<span class="sign-click ajaxlogin-login">Sign In</span>
+					
+
+					<?php } else{ ?>
+					<span class="account-click"><a href="<?php echo $this->getUrl() ?>customer/account">Dashboard</a></span>
+					
+				<?php  } ?>
+
+				</div>
+				
+			   <?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+			   <?php $baseurl = Mage::getBaseUrl(); ?>
+			   <?php  $customer=$loginuser = Mage::getSingleton('customer/session')->getCustomer(); ?>
+			   <?php $str = explode("/",Mage::helper('core/url')->getCurrentUrl()); ?>
+			   <?php $active = $str[count($str)-2]; ?>
+			   <span class="click-mob">Click Here</span>
+			   <div class="mob-navmenu" style="display:none;">
+				<?php if($customer->getAvatar()==""){ ?>
+				<span class="mob-customer-img"><img id="preview" src="<?php echo $this->getskinUrl() ?>images/nopropimg.png" height="125px"; width="125px"/></span>
+				<?php } else { ?>
+				<span class="mob-customer-img"><img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+				<?php } ?>
+			   <div class="mob-menu-name"><?php echo $customer->getName(); ?></div>
+			   
+			   <ul>
+				   <li><a href="<?php echo $this->getUrl(); ?>illustration.html">Illustration</a></li>
+				   <li><a href="<?php echo $this->getUrl(); ?>photography.html">Photography</a></li>
+			   </ul>
+			   
+			  <ul>
+					<?php if($loginuser->getGroupId() == 2){ ?>		
+					<li class="<?php if($active == "index" or $active == "account")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/index/">Dashboard</a></li>
+					<li class=" <?php if($active == "edit")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/edit/">Profile Settings</a></li>
+					<li class=" <?php if($active == "managesubmission")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/managesubmission/">Manage Submissions</a></li>
+					<li class=" <?php if($active == "helpwiki")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/helpwiki/">Help Wiki</a></li>
+					<li class="last"><a href="<?php echo $baseurl; ?>customer/account/logout/">Logout</a></li>
+					<?php } ?>
+					<?php if($loginuser->getGroupId() == 1){ ?>		
+					<li class=" <?php if($active == "index" or $active == "account")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/index/">Dashboard</a></li>
+					<li class=" <?php if($active == "edit")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/edit/">Profile Settings</a></li>
+					<li class=" <?php if($active == "myproductslist")echo "active"; ?>"><a href="<?php echo $baseurl; ?>marketplace/marketplaceaccount/myproductslist/">My Portfolio</a></li>
+					<li class=" <?php if($active == "submitportfolio")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/submitportfolio/">Submit Portfolio</a></li>
+					<li class=" <?php if($active == "membership")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/membership/">Membership</a></li>
+					<li class=" <?php if($active == "history")echo "active"; ?>"><a href="<?php echo $baseurl; ?>sales/order/history/">Receipts</a></li>
+					<li class=" <?php if($active == "history")echo "active"; ?>"><a href="<?php echo $baseurl; ?>sales/order/history/">Analytics</a></li>
+					<li><a href="<?php echo $baseurl; ?>art_details?id=<?php echo $customer->getId(); ?>" target="_blank">View Portfolio Page</a></li>
+					<li class="last <?php if($active == "helpwiki")echo "active"; ?>"><a href="<?php echo $baseurl; ?>customer/account/helpwiki/">Help Wiki</a></li>
+					<li class="last"><a href="<?php echo $baseurl; ?>customer/account/logout/">Logout</a></li>
+					<?php } ?>
+              </ul>
+              </div>
+				
+                <?php } ?>
+
+				
+				
+			</div>
+			
+
+		</div>
+	</div>
+</header>
+
+
+<?php echo $this->getChildHtml('topContainer'); ?>
+<?php } ?>
+
+<script>
+jQuery(window).scroll(function (event) {
+    var scroll = jQuery(window).scrollTop();
+	
+    if (scroll >= 200) 
+	{
+        jQuery(".page-header").addClass("sticky-head");
+    }
+	if(scroll <= 200)
+	{
+		jQuery(".page-header").removeClass("sticky-head");
+	}
+	
+});
+
+jQuery(".click-mob").click(function(){
+
+jQuery(".mob-navmenu").toggle();
+	
+	
+});
+</script>

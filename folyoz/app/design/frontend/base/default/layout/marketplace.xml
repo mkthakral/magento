@@ -1,0 +1,597 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="top.links">
+            <action method="addLink" translate="label title" module="marketplace">
+                <label>Marketplace</label>
+                <url>marketplace</url>
+                <title>Marketplace</title>
+                <prepare>true</prepare>
+            </action>
+        </reference>
+    </default>
+
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+            <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>marketplace/checkout/cart/item/default.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>marketplace/checkout/cart/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>marketplace/checkout/cart/item/default.phtml</template></action>
+        </reference>
+    </checkout_cart_index>
+
+    <marketplace_index_toplinkmarketplace>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="marketplace" template="marketplace/marketplace.phtml" />
+        </reference>
+    </marketplace_index_toplinkmarketplace>
+
+    <marketplace_seller_list>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/sellerlist" name="sellerlist" template="marketplace/sellerlist.phtml" />
+        </reference>
+    </marketplace_seller_list>
+
+    <marketplace_account_becomepartner>
+        <update handle="customer_account" />
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/becomepartner" name="marketplace_becomepartner" template="marketplace/becomepartner.phtml" />
+        </reference>
+    </marketplace_account_becomepartner>
+    <catalog_product_view>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="wk-block" template="marketplace/wk_block.phtml" before="-"></block>
+        </reference>
+    </catalog_product_view>
+    <customer_account_create>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="customer_conf" template="marketplace/confpartner.phtml" />
+        </reference>
+    </customer_account_create>
+    <customer_account>
+         <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="left">
+            <block type="core/template" name="marketplacenavigation" template="marketplace/navigation.phtml" before="-" />
+        </reference>
+    </customer_account>
+    <marketplace_account_editaccount>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/colorpicker/css/colorpicker.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="edit_myprofile" template="marketplace/edit_myprofile.phtml" />
+        </reference>
+    </marketplace_account_editaccount>
+    <marketplace_marketplaceaccount_newproduct>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/colorpicker/css/colorpicker.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="marketplace/newproduct" name="new_product" template="marketplace/newproduct.phtml" />
+        </reference>
+    </marketplace_marketplaceaccount_newproduct>
+    
+   <marketplace_account_configurableproduct>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="marketplace_addproduct" template="marketplace/newconfigurableproduct.phtml"/>
+        </reference>
+    </marketplace_account_configurableproduct>
+    
+    <marketplace_account_configurableassociate>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="marketplace/associate" name="marketplace_account_configurableassociate" template="marketplace/configurableassociate.phtml"/>
+        </reference>
+    </marketplace_account_configurableassociate>
+    
+    <marketplace_account_newattribute>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>             
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="marketplace_account_newattribute" template="marketplace/newattribute.phtml"/>
+        </reference>
+    </marketplace_account_newattribute>
+    <marketplace_account_simpleproduct>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_addproduct" template="marketplace/simpleproduct.phtml" />
+        </reference>
+    </marketplace_account_simpleproduct>
+    <marketplace_account_downloadableproduct>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_addproduct" template="marketplace/downloadableproduct.phtml" />
+        </reference>
+    </marketplace_account_downloadableproduct>
+    <marketplace_account_virtualproduct>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_addproduct" template="marketplace/virtualproduct.phtml" />
+        </reference>
+    </marketplace_account_virtualproduct>
+    <marketplace_account_productlist>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="marketplace/marketplace" name="marketplace_myproductslist" template="marketplace/myproductlist.phtml" />
+        </reference>
+    </marketplace_account_productlist>
+    <marketplace_account_simpleproductedit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_editproducts" template="marketplace/editsimpleproduct.phtml" />
+        </reference>
+    </marketplace_account_simpleproductedit>
+    <marketplace_account_downloadableproductedit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_editproducts" template="marketplace/editdownloadableproduct.phtml" />
+        </reference>
+    </marketplace_account_downloadableproductedit>
+    <marketplace_account_virtualproductedit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_editproducts" template="marketplace/editvirtualproduct.phtml" />
+        </reference>
+    </marketplace_account_virtualproductedit>
+    <marketplace_account_configurableproductedit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="core/template" name="marketplace_editproducts" template="marketplace/editconfigurableproduct.phtml"/>
+        </reference>
+    </marketplace_account_configurableproductedit>
+    <marketplace_account_dashboard>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_dashboard" template="marketplace/mydashboard.phtml" />
+        </reference>
+    </marketplace_account_dashboard>
+    <marketplace_order_history>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_myorderhistory" template="marketplace/myorderhistory.phtml" />
+        </reference>
+    </marketplace_order_history>
+
+    <marketplace_order_view>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">            
+            <block type="marketplace/orders" name="marketplace_view_order" template="marketplace/vieworder.phtml" />
+        </reference>
+        <reference name="marketplace_view_order">
+            <action method="setTemplate" ifconfig="marketplace/marketplace_options/ordermanage" ifvalue="1">
+                <template>marketplace/manageorder.phtml</template>
+            </action>
+        </reference>
+    </marketplace_order_view>
+
+    <marketplace_order_print>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_print_order" template="marketplace/printorder.phtml" />
+        </reference>
+    </marketplace_order_print>
+
+    <marketplace_order_invoice_view>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_order_invoice" template="marketplace/invoices.phtml"/>
+        </reference>     
+    </marketplace_order_invoice_view>  
+
+    <marketplace_order_shipment_view>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_order_shipment" template="marketplace/shipments.phtml"/>
+        </reference>     
+    </marketplace_order_shipment_view>
+
+    <marketplace_order_creditmemo_new>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_order_newcreditmemo" template="marketplace/newcreditmemo.phtml"/>
+        </reference>     
+    </marketplace_order_creditmemo_new>
+
+    <marketplace_order_creditmemo_view>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/orders" name="marketplace_order_creditmemo" template="marketplace/creditmemo.phtml"/>
+        </reference>     
+    </marketplace_order_creditmemo_view>
+
+    <marketplace_marketplaceaccount_viewtransdetails>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>marketplace/css/style.css</stylesheet>
+            </action>
+        </reference>
+        <update handle="customer_account" />
+        <reference name="content">
+            <block type="core/template" name="marketplace_view_transaction" template="marketplace/viewtransdetails.phtml" />
+        </reference>
+    </marketplace_marketplaceaccount_viewtransdetails>
+
+    <marketplace_seller_profile>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/3columns.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/profile" name="marketplace" template="marketplace/profile.phtml" />
+            <block type="marketplace/profile" name="product_bestsell_block" template="marketplace/product_bestsell_block.phtml" />
+        </reference>
+        <reference name="left">
+            <remove name="left.newsletter"></remove>
+            <remove name="left.permanent.callout"></remove>            
+            <remove name="left.reports.product.viewed" />
+            <remove name="catalog.leftnav"/>
+            <remove name="cart_sidebar" />
+            <remove name="product.clone_prices"/>
+            <remove name="catalog.compare.sidebar"/>
+            <remove name="catalog.compare.sidebar" />
+            <remove name="wishlist_sidebar"/>
+            <remove name="tags_popular"/>
+            <remove name="reorder"/>
+            <remove name="sale.reorder.sidebar"/>
+            <remove name="paypal.partner.right.logo"/>
+            <block type="marketplace/profile" name="partner_profile_left" template="marketplace/profile_left_sidebar.phtml" />
+        </reference>
+        <reference name="right">
+            <remove name="right.permanent.callout" />
+            <remove name="right.reports.product.compared"/>
+            <remove name="right.reports.product.viewed" />
+            <remove name="right.poll"/>
+            <remove name="paypal.partner.right.logo"/>
+            <remove name="cart_sidebar" />
+            <remove name="product.clone_prices"/>
+            <remove name="catalog.compare.sidebar"/>
+            <remove name="catalog.compare.sidebar" />
+            <remove name="wishlist_sidebar"/>
+            <remove name="tags_popular"/>
+            <remove name="reorder"/>
+            <remove name="sale.reorder.sidebar"/>
+            <block type="marketplace/profile" name="profile_right_sidebar" template="marketplace/profile_right_sidebar.phtml" />
+        </reference>
+    </marketplace_seller_profile>
+    <marketplace_seller_collection>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <reference name="left">
+            <remove name="left.newsletter"></remove>
+            <remove name="left.permanent.callout"></remove>            
+            <remove name="left.reports.product.viewed" />
+            <remove name="catalog.leftnav"/>
+            <remove name="cart_sidebar" />
+            <remove name="product.clone_prices"/>
+            <remove name="catalog.compare.sidebar"/>
+            <remove name="catalog.compare.sidebar" />
+            <remove name="wishlist_sidebar"/>
+            <remove name="tags_popular"/>
+            <remove name="reorder"/>
+            <remove name="sale.reorder.sidebar"/>
+            <remove name="paypal.partner.right.logo"/>
+            <block type="marketplace/sellercategory" name="partner_category" template="marketplace/sellercategory.phtml" before="-" />
+            <block type="marketplace/sellercategory" name="collection-left" template="marketplace/collectionleft.phtml" />
+        </reference>
+        <reference name="content">
+            <block type="marketplace/collection" name="marketplace_collection8" template="marketplace/collectionview.phtml" />
+        </reference>
+    </marketplace_seller_collection>
+    <marketplace_seller_location>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="location_form" template="marketplace/location.phtml" />
+        </reference>
+        <reference name="left">
+            <remove name="left.newsletter"></remove>
+            <remove name="left.permanent.callout"></remove>            
+            <remove name="left.reports.product.viewed" />
+            <remove name="catalog.leftnav"/>
+            <remove name="cart_sidebar" />
+            <remove name="product.clone_prices"/>
+            <remove name="catalog.compare.sidebar"/>
+            <remove name="catalog.compare.sidebar" />
+            <remove name="wishlist_sidebar"/>
+            <remove name="tags_popular"/>
+            <remove name="reorder"/>
+            <remove name="sale.reorder.sidebar"/>
+            <remove name="paypal.partner.right.logo"/>
+            <block type="marketplace/location" name="partner_profile_left" template="marketplace/profile_left_sidebar.phtml" />
+        </reference>        
+    </marketplace_seller_location>
+    <marketplace_seller_feedback>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-left.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="marketplace/feedback" name="review_form" template="marketplace/reviewform.phtml" />
+        </reference>
+        <reference name="left">
+            <remove name="left.newsletter"></remove>
+            <remove name="left.permanent.callout"></remove>            
+            <remove name="left.reports.product.viewed" />
+            <remove name="catalog.leftnav"/>
+            <remove name="cart_sidebar" />
+            <remove name="product.clone_prices"/>
+            <remove name="catalog.compare.sidebar"/>
+            <remove name="catalog.compare.sidebar" />
+            <remove name="wishlist_sidebar"/>
+            <remove name="tags_popular"/>
+            <remove name="reorder"/>
+            <remove name="sale.reorder.sidebar"/>
+            <remove name="paypal.partner.right.logo"/>
+            <block type="marketplace/feedback" name="partner_profile_left" before="-" template="marketplace/profile_left_sidebar.phtml" />
+        </reference>
+    </marketplace_seller_feedback>
+    <marketplace_transaction_info>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>marketplace/css/wk_block.css</stylesheet>
+            </action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>             
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="content">    
+            <block type="marketplace/transactions" name="marketplace_transaction" template="marketplace/transactions.phtml" />  
+        </reference>
+    </marketplace_transaction_info>
+    <marketplace_order_shipping>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="addCss"><stylesheet>marketplace/css/wk_block.css</stylesheet></action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
+        </reference>
+        <reference name="content">
+             <block type="core/template" name="mpshippingmanager" as="mpshippingmanager" template="marketplace/shippingmanager.phtml" />
+        </reference>
+    </marketplace_order_shipping>
+    <marketplace_account_salesdetail>
+        <reference name="head">
+            <action method="addCss"><stylesheet>marketplace/css/wk_block.css</stylesheet></action>
+            <action method="addCss"><stylesheet>marketplace/css/style.css</stylesheet></action>
+        </reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="marketplace/salesdetail" name="marketplace_salesdetail" as="marketplace_salesdetail" template="marketplace/salesdetail.phtml"/>
+        </reference>
+    </marketplace_account_salesdetail>
+</layout>

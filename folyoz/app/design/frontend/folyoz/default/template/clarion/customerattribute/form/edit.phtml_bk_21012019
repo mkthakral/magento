@@ -1,0 +1,488 @@
+<?php
+/**
+ * Create account form template
+ * 
+ * @category    design
+ * @package     base_default
+ * @author      Clarion Magento Team
+ */
+?>
+<?php
+/**
+ * edit account form template
+ *
+ * @var $this Mage_Customer_Block_form_edit
+ */
+?>
+<?php
+$data=Mage::getSingleton('customer/session')->getCustomer();
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+
+$customerId = $customerData->getId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('Profile Settings') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" id="form-validate" autocomplete="off" enctype="multipart/form-data">
+    <div class="fieldset">
+        <?php echo $this->getBlockHtml('formkey')?>
+        <h2 class="legend account-cstm-title"><?php echo $this->__('Account Information') ?></h2>
+		<div class="outer-imgbox">
+			<?php  $customer->getAvatar();  ?>
+			<?php if($customer->getAvatar()==""){ ?>
+			<span class="customer-img"><img id="preview" src="<?php echo $this->getskinUrl() ?>images/nopropimg.png" height="125px"; width="125px"/></span>
+			<?php } else { ?>
+			<span class="customer-img"><img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+			<?php } ?>
+			<ul class="prof-img">
+				<li><span class="requer-cstm">*</span>Change your profile image </li>
+				<li class="fields">
+					<div class="input-box">
+						<div class="img-choosefile-outer">
+							<input type="file" name="avatar" onChange="readURL(this);" title="<?php echo $this->__('Avatar') ?>" id="avatar" class="input-text" />
+							<span class="img-choosefile-astm">Click here</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>	
+		<div class="login-seeting-outer">		
+			<p class="login-seting-title"><span class="requer-cstm">*</span>Login Settings (private)</p>
+			<ul class="form-list">
+				
+				<li class="fields">
+					<?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getCustomer())->toHtml() ?>
+				</li>
+				<li class="log-email">
+					<!--<label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>-->
+					<div class="input-box">
+						<input type="text" name="email" id="email" value="<?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text required-entry validate-email" />
+					</div>
+				</li>
+			<?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+			<?php if ($_dob->isEnabled()): ?>
+				<li><?php echo $_dob->setDate($this->getCustomer()->getDob())->toHtml() ?></li>
+			<?php endif ?>
+			<?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+			<?php if ($_taxvat->isEnabled()): ?>
+				<li><?php echo $_taxvat->setTaxvat($this->getCustomer()->getTaxvat())->toHtml() ?></li>
+			<?php endif ?>
+			<?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+			<?php if ($_gender->isEnabled()): ?>
+				<li><?php echo $_gender->setGender($this->getCustomer()->getGender())->toHtml() ?></li>
+			<?php endif ?>
+				<li class="control">
+					<input type="checkbox" name="change_password" id="change_password" value="1" onclick="setPasswordForm(this.checked)" title="<?php echo $this->__('Change Password') ?>"<?php if($this->getCustomer()->getChangePassword()==1): ?> checked="checked"<?php endif; ?> class="checkbox" /><label for="change_password"><?php echo $this->__('Change Password') ?></label>
+				</li>
+			</ul>
+		</div>
+    </div>
+    <div class="fieldset" style="display:none;">
+        <h2 class="legend c-pass-title"><?php echo $this->__('Change Password') ?></h2>
+        <ul class="form-list">
+            <li>
+                <label for="current_password" class="required"><em>*</em><?php echo $this->__('Current Password') ?></label>
+                <div class="input-box">
+                    <!-- This is a dummy hidden field to trick firefox from auto filling the password -->
+                    <input type="text" class="input-text no-display" name="dummy" id="dummy" />
+                    <input type="password" title="<?php echo $this->__('Current Password') ?>" class="input-text" name="current_password" id="current_password" />
+                </div>
+            </li>
+            <li class="fields">
+                <div class="field">
+                    <label for="password" class="required"><em>*</em><?php echo $this->__('New Password') ?></label>
+                    <div class="input-box">
+                        <input type="password" title="<?php echo $this->__('New Password') ?>" class="input-text validate-password" name="password" id="password" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="confirmation" class="required"><em>*</em><?php echo $this->__('Confirm New Password') ?></label>
+                    <div class="input-box">
+                        <input type="password" title="<?php echo $this->__('Confirm New Password') ?>" class="input-text validate-cpassword" name="confirmation" id="confirmation" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- custom attributes -->
+	<?php if ($customerGroupId == 1) { ?>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Public Profile') ?></h2>
+		<ul class="form-list">
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Address:" title="Address" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('address')) ?>" class="input-text" name="address" id="address" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="City:" title="City" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('city')) ?>" class="input-text" name="city" id="city" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="State:" title="State" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('state')) ?>" class="input-text" name="state" id="state" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Zip code:" title="Zip code" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('zip_code')) ?>" class="input-text" name="zip_code" id="zip_code" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Country:" title="Country" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('country')) ?>" class="input-text" name="country" id="country" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Phone:" title="Phone" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('phone')) ?>" class="input-text" name="phone" id="phone" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Website:" title="Website" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('website')) ?>" class="input-text" name="website" id="website" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Instagram URL:" title="Instagram URL" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('instagram_url')) ?>" class="input-text" name="instagram_url" id="instagram_url" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Facebook URL:" title="Facebook URL" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('facebook_url')) ?>" class="input-text" name="facebook_url" id="facebook_url" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Twitter URL:" title="Twitter URL" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('twitter_url')) ?>" class="input-text" name="twitter_url" id="twitter_url" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Youtube Video Share Link:" title="Youtube Video Share Link" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('youtube_link')) ?>" class="input-text" name="youtube_link" id="youtube_link" />
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<textarea class=" textarea" placeholder="Biography, Education, etc" cols="15" rows="2" title="Information about what you’re looking for" name="education" id="education"><?php echo $this->getCustomer()->getData('education'); ?></textarea>
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<textarea class=" textarea" placeholder="Clients:" cols="15" rows="2" title="Information about what you’re looking for" name="clients" id="clients"><?php echo $this->getCustomer()->getData('clients'); ?></textarea>
+					</div>
+				</div>
+			</li>			
+			<li class="fields cstm-select-outer">
+				<div class="field">
+					<label for="user_type" class=""><em></em><?php echo $this->__('What I do:') ?></label>
+					<div class="input-box">
+						<select name="profession" id="profession" class="input-text required-entry" >
+							<option value=""></option>
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('profession')->getSource()->getAllOptions();?>
+							<?php foreach($options as $key): ?>
+								<?php if(!empty($key["value"])) { ?>
+								<option value="<?php echo $key['value'] ?>"<?php if($key['value']==$this->getCustomer()->getData('profession')){?> selected <?php } ?>>
+									<?php echo $key['label'] ?>
+								</option>
+								<?php }?>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="fields" <?php if($customerData->getData("profession") == 38) echo "style='display:none'"; ?> id="ph35">
+				<div class="field">
+					<label for="work_type_use_for_photography" class="type-of-work"><em></em><?php echo $this->__('The Type of work/ genre you normally create (Select up to 18 Categories from the menu)') ?></label>
+					<div class="input-box">
+						<select multiple="multiple" size="5" id="work_type_use_for_photography" name="work_type_use_for_photography[]" title=""  class=" multiselect multipleSelect <?php if($customerData->getData("profession") == 35) echo "required-entry"; ?> ">
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_photography')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if($option["value"] != "") { ?>
+								<option value="<?php echo $option['value'] ?>"<?php if (in_array($option['value'], explode(',', $this->getCustomer()->getData('work_type_use_for_photography')))) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+					</div>
+				</div>
+			</li>			
+			<li class="fields" <?php if($customerData->getData("profession") == 35) echo "style='display:none'"; ?> id="il38">
+				<div class="field">
+					<label for="work_type_use_for_illustration" class="type-of-work"><em></em><?php echo $this->__('The Type of work/ genre you normally create (Select up to 18 Categories from the menu)') ?></label>
+					<div class="input-box">
+						<select multiple="multiple" size="5" id="work_type_use_for_illustration" name="work_type_use_for_illustration[]" title=""  class=" multiselect multipleSelect <?php if($customerData->getData("profession") == 38) echo "required-entry"; ?> ">
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_illustration')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if($option["value"] != "") { ?>
+								<option value="<?php echo $option['value'] ?>"<?php if (in_array($option['value'], explode(',', $this->getCustomer()->getData('work_type_use_for_illustration')))) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+					</div>
+				</div>
+			</li>			
+		</ul>
+	 </div>
+	<?php } ?>
+	
+	<?php if ($customerGroupId == 2) { ?>
+	<div class="fieldset">
+		<h2 class="legend"><label class="required"><em>*</em><?php echo $this->__('Public Profile') ?></label><span class="intergotive-sign">?</span></h2>
+		<ul class="form-list">
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Position / Title" title="Position" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('position')) ?>" class="input-text required-entry" name="position" id="position" />
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field">
+					<div class="input-box">
+						<input type="text" placeholder="Company Name" title="Company Name" value="<?php echo $this->escapeHtml($this->getCustomer()->getData('company_name')) ?>" class="input-text required-entry" name="company_name" id="company_name" />
+					</div>
+				</div>
+			</li>
+			<li class="fields cstm-select-outer">
+				<div class="field">
+					<div class="input-box">
+						<select name="industry_type" id="industry_type" class="input-text required-entry" >
+							<option value="">Industry You work in (closest match)</option>
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('industry_type')->getSource()->getAllOptions();?>
+							<?php foreach($options as $key): ?>
+								<?php if(!empty($key["value"])) { ?>
+								<option value="<?php echo $key['value'] ?>"<?php if($key['value']==$this->getCustomer()->getData('industry_type')){?> selected <?php } ?>>
+									<?php echo $key['label'] ?>
+								</option>
+								<?php }?>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field illstrator-outer">
+					<label for="hire_illustrators" class="required"><em>*</em><?php echo $this->__('I hire Illustrators') ?></label>
+					<div class="input-box">
+						<ul>
+							<li>
+								<input 	type="radio" class="hire_illustrators" name="hire_illustrators" value="Frequently" <?php echo ($this->getCustomer()->getData('hire_illustrators')=='Frequently')?'checked':'' ?>>
+								<label>Frequently</label>
+							</li>
+							<li>
+								<input  type="radio" class="hire_illustrators" name="hire_illustrators" value="Sometimes" <?php echo ($this->getCustomer()->getData('hire_illustrators')=='Sometimes')?'checked':'' ?>>
+								<label>Sometimes</label>
+							</li>
+							<li>
+								<input  type="radio" class="hire_illustrators" name="hire_illustrators" value="Never" <?php echo ($this->getCustomer()->getData('hire_illustrators')=='Never')?'checked':'' ?>>
+								<label>Never</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field">
+					<label for="work_type_use_for_illustration" class="type-of-work"><em></em><?php echo $this->__('The type of work I use for Illustration (Select up to 18 Categories from the menu):') ?></label>
+					<div class="input-box">
+						<select multiple="multiple" size="5" id="work_type_use_for_illustration" name="work_type_use_for_illustration[]" title=""  class="<?php echo ($this->getCustomer()->getData('hire_illustrators')=='Never')?'':'required-entry' ?> multiselect multipleSelect">
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_illustration')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if(!empty($option["value"])) { ?>
+								<option value="<?php echo $option['value'] ?>"<?php if (in_array($option['value'], explode(',', $this->getCustomer()->getData('work_type_use_for_illustration')))) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field illstrator-outer">
+					<label for="hire_photographers" class="required"><em>*</em><?php echo $this->__('I hire Photographers') ?></label>
+					<div class="input-box">
+						<ul>
+							<li>
+								<input  type="radio" class="hire_photographers" name="hire_photographers" value="Frequently" <?php echo ($this->getCustomer()->getData('hire_photographers')=='Frequently')?'checked':'' ?>>
+								<label>Frequently</label>
+							</li>
+							<li>							
+								<input 	type="radio" class="hire_photographers" name="hire_photographers" value="Sometimes" <?php echo ($this->getCustomer()->getData('hire_photographers')=='Sometimes')?'checked':'' ?>>
+								<label>Sometimes</label>
+							</li>
+							<li>
+								<input  type="radio" class="hire_photographers" name="hire_photographers" value="Never" <?php echo ($this->getCustomer()->getData('hire_photographers')=='Never')?'checked':'' ?>>
+								<label>Never</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field">
+					<label for="work_type_use_for_photography" class="required type-of-work"><em>*</em><?php echo $this->__('The type of work I use for Photography (Select up to 18 Categories from the menu)') ?></label>
+					<div class="input-box">
+						<select multiple="multiple" size="5" id="work_type_use_for_photography" name="work_type_use_for_photography[]" title=""  class="<?php echo ($this->getCustomer()->getData('hire_photographers')=='Never')?'':'required-entry' ?> multiselect multipleSelect">
+							<?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_photography')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if(!empty($option["value"])) { ?>
+								<option value="<?php echo $option['value'] ?>"<?php if (in_array($option['value'], explode(',', $this->getCustomer()->getData('work_type_use_for_photography')))) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+					</div>
+				</div>
+			</li>
+			<li class="fields">
+				<div class="field">
+					<label for="looking_for_information" class="required"><em>*</em><?php echo $this->__('Information about what you’re looking for') ?></label>
+					<div class="input-box">
+						<textarea class="textarea required-entry" placeholder="e.g. Our publication works mainly with political figures rendered in a cartoon caricature style. From time to time we do use realism illustration for our covers." cols="15" rows="2" title="Information about what you’re looking for" name="looking_for_information" id="looking_for_information"><?php echo $this->getCustomer()->getData('looking_for_information'); ?></textarea>
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field">
+					<label for="not_want_to_see_information" class="required"><em>*</em><?php echo $this->__('Information about what you don’t want to see') ?></label>
+					<div class="input-box">
+						<textarea class="required-entry textarea" placeholder="e.g. Please do not submit portfolios with images of black velvet Elvis portraits or clowns." cols="15" rows="2" title="Information about what you’re looking for" name="not_want_to_see_information" id="not_want_to_see_information"><?php echo $this->getCustomer()->getData('not_want_to_see_information'); ?></textarea>
+					</div>
+				</div>
+			</li>			
+			<li class="fields">
+				<div class="field illstrator-outer">
+					<label for="follow_update" class="required"><em>*</em><?php echo $this->__('When I follow someone, I want to see Updates') ?></label>
+					<div class="input-box">
+					<ul>
+						<li>
+							<input  type="radio" name="follow_update" value="Daily" <?php echo ($this->getCustomer()->getData('follow_update')=='Daily')?'checked':'' ?>>
+							<label>Daily</label>
+						</li>
+						<li>						
+							<input  type="radio" name="follow_update" value="Weekly" <?php echo ($this->getCustomer()->getData('follow_update')=='Weekly')?'checked':'' ?>>
+							<label>Weekly</label>
+						</li>
+						<li>
+							<input  type="radio" name="follow_update" value="Monthly" <?php echo ($this->getCustomer()->getData('follow_update')=='Monthly')?'checked':'' ?>>
+							<label>Monthly</label>
+						</li>
+					</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	 </div>
+	<?php } ?>
+    
+    <div class="buttons-set">
+        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+        <button type="submit" title="<?php echo $this->__('Save') ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+		<!--<p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>-->
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+    function setPasswordForm(arg){
+        if(arg){
+            $('current_password').up(3).show();
+            $('current_password').addClassName('required-entry');
+            $('password').addClassName('required-entry');
+            $('confirmation').addClassName('required-entry');
+
+        }else{
+            $('current_password').up(3).hide();
+            $('current_password').removeClassName('required-entry');
+            $('password').removeClassName('required-entry');
+            $('confirmation').removeClassName('required-entry');
+        }
+    }
+
+    <?php if($this->getCustomer()->getChangePassword()): ?>
+        setPasswordForm(true);
+    <?php endif; ?>
+//]]>
+</script>
+<script type="text/javascript">
+   $j = jQuery.noConflict();
+   function readURL(input) {
+       if (input.files && input.files[0]) {
+           var reader = new FileReader();
+
+           reader.onload = function(e) {
+
+               $j('#preview').attr('src', e.target.result);
+           }
+
+           reader.readAsDataURL(input.files[0]);
+       }
+   }
+	window.onload = function (){
+		jQuery('#work_type_use_for_illustration').fastselect({
+			"maxItems": 18,
+		});
+		jQuery('#work_type_use_for_photography').fastselect({
+			"maxItems": 18,
+		});
+	}
+	
+	jQuery('body').on('change', '#profession', function () {
+		
+		var value = jQuery(this).val();
+		if(value == 35){
+			 jQuery('#il38').hide();
+			 jQuery('#work_type_use_for_illustration').removeClass('required-entry');
+			 jQuery('#ph35').show();
+			 jQuery('#work_type_use_for_photography').addClass('required-entry');
+		}
+		if(value == 38){
+			 jQuery('#ph35').hide();
+			 jQuery('#work_type_use_for_photography').removeClass('required-entry');
+			 jQuery('#il38').show();
+			 jQuery('#work_type_use_for_illustration').addClass('required-entry');
+		}	
+	});	
+	jQuery(".hire_photographers").on("change",function(){
+		if(jQuery(this).val()=="Never"){
+			jQuery("#work_type_use_for_photography").removeClass("required-entry");
+		}else{
+			jQuery("#work_type_use_for_photography").addClass("required-entry");
+		}
+	})
+	jQuery(".hire_illustrators").on("change",function(){
+		if(jQuery(this).val()=="Never"){
+			jQuery("#work_type_use_for_illustration").removeClass("required-entry");
+		}else{
+			jQuery("#work_type_use_for_illustration").addClass("required-entry");
+		}
+	})
+</script>

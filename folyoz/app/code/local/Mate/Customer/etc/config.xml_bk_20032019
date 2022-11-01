@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mate_Customer>
+            <version>1.0.1</version>
+        </Mate_Customer>
+    </modules>
+    <frontend>
+        <routers>
+        <customer>
+            <args>
+                <modules>
+                    <Mate_Customer before="Mage_Customer">Mate_Customer</Mate_Customer>
+                </modules>
+            </args>
+        </customer>
+        </routers>
+    </frontend>
+</config>

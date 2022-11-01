@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<adminhtml_system_config_edit>		
+		<update handle="editor"/>		
+		<reference name="head">			
+			<action method="setCanLoadTinyMce"><load>1</load></action>		
+		</reference>	
+	</adminhtml_system_config_edit>
+	<marketplace_adminhtml_partners_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_partners" name="partners" />
+            <block type="core/template" template="marketplace/denyseller.phtml"/>
+        </reference>
+    </marketplace_adminhtml_partners_index>
+	<marketplace_adminhtml_order_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_order" name="order" />
+            <block type="core/template" template="marketplace/payseller.phtml"/>
+        </reference>
+    </marketplace_adminhtml_order_index>
+    <marketplace_adminhtml_transaction_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_transaction" name="transaction" />
+        </reference>
+    </marketplace_adminhtml_transaction_index>
+	<marketplace_adminhtml_products_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_products" name="products" />
+			<block type="core/template" template="marketplace/previewpro.phtml"/>
+        </reference>
+    </marketplace_adminhtml_products_index>
+	<marketplace_adminhtml_commisions_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_commisions" name="commisions" />
+        </reference>
+    </marketplace_adminhtml_commisions_index>
+	<marketplace_adminhtml_feedback_index>
+        <reference name="content">
+            <block type="marketplace/adminhtml_feedback" name="feedback" />
+        </reference>
+    </marketplace_adminhtml_feedback_index>
+	<adminhtml_sales_order_view> 
+		<reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_order_view_items_renderer_default</block><template>sales/order/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+	<adminhtml_sales_order_invoice_new>
+		<reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_new>
+	 <adminhtml_sales_order_shipment_new>
+		<reference name="order_items">
+           <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/shipment/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_shipment_new>
+	<adminhtml_sales_order_shipment_view>
+		 <reference name="shipment_items">
+           <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/shipment/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_shipment_view>
+	 <adminhtml_sales_order_invoice_updateqty>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/create/items/renderer/default.phtml</template></action>
+           <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_updateqty>
+	<adminhtml_sales_order_invoice_view>
+        <reference name="invoice_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_view>
+	<adminhtml_sales_order_creditmemo_new>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
+    <adminhtml_sales_order_creditmemo_view>
+        <reference name="creditmemo_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/view/items/renderer/default.phtml</template></action>
+             <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>marketplace/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_view>
+</layout>

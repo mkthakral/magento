@@ -1,0 +1,392 @@
+<?php 
+	$categorieid = $this->getRequest()->getParam('categories');
+	$styleid = $this->getRequest()->getParam('style');
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$baseurl = Mage::getBaseUrl();
+	$product = Mage::getResourceModel('catalog/product');
+	$userId = $customer->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('submitted_portfolio');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id ASC";
+	$result = $readAdapter->fetchAll($query);
+?>
+<?php 
+	$catpro_id = $marpro_id =  array();
+	$collection_product = Mage::getModel('catalog/product')->getCollection();
+	
+ 	if(!empty($categorieid) and !empty($styleid) ){
+		//$collection_product = Mage::getModel('marketplace/product')->getCollection()->addFieldToFilter('userid',array('eq'=>29));
+		$collection_product->addAttributeToFilter('categories', array('finset' => $categorieid))->addAttributeToFilter('style', array('finset' => $styleid)); 
+	}elseif(!empty($styleid)){
+		$collection_product->addAttributeToFilter('style', array('finset' => $styleid)); 
+	}elseif(!empty($categorieid)){
+		$collection_product->addAttributeToFilter('categories', array('finset' => $categorieid)); 
+	}	
+	foreach($collection_product as $key) {
+	 $catpro_id[] = $key->getId();
+	}
+	$collection_product_marketplace = Mage::getModel('marketplace/product')->getCollection()->addFieldToFilter('mageproductid',array('in'=>$catpro_id));
+/* 	echo count($collection_product_marketplace);
+	exit(); */
+ ?>
+<?php $collection = Mage::getModel('customer/customer')->getCollection()->addAttributeToSelect('*')->addFieldToFilter('group_id', 2);?>
+<div class="dashboard">
+    <div class="page-title">
+        <h1><?php echo $this->__('Manage Submissions') ?></h1>
+		<div class="tooltip-outer">
+			<span class="intergotive-sign">?</span>
+			<div class="tooltip" style="display:none">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>					
+		</div>		
+    </div>	
+	<div class="account-message">
+		<?php if($customer->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($customer->getData('approval') == 64) { ?>
+		<h2>We are currently reviewing your profile.</h2>
+		<?php } ?>
+	</div>	
+	<div class="page-body">	
+		<div class="row">
+			<div class="col-lg-12">
+				<div>
+					<form action="" method="get">
+						<select id="categories" name="categories" title=""  class="">
+							<?php $options = $product->getAttribute('categories')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if($option["value"] != "") { ?>
+								<option value="<?php echo $option['value'] ?>"><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+						<select id="style" name="style" title=""  class="">
+							<?php $options = $product->getAttribute('style')->getSource()->getAllOptions();?>
+							<?php foreach ($options as $option):?>
+								<?php if($option["value"] != "") { ?>
+								<option value="<?php echo $option['value'] ?>"><?php echo $option['label'] ?></option>
+								<?php } ?>
+							<?php endforeach;?>
+						</select>
+						<label class="dataTables_filter" for="_search">
+							<span class="search-icon"></span>
+						</label>
+						<input type="submit" name="_search" id="_search" style="display:none">
+					</form>
+				</div>
+				<table id="myTable" class="display"> 
+					<thead>
+						<tr>
+							<th></th>
+							<th>Name</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($result as $key) { ?>
+						<?php $artist = Mage::getModel('customer/customer')->load($key["submitted_user_id"]); ?>
+							<?php if(!empty($artist->getId())) { ?>
+								<?php if(!empty($categorieid) or !empty($styleid)) { ?>
+									<?php $pro = $collection_product_marketplace->addFieldToFilter('userid',array('eq'=>$artist->getId())); ?>
+									<?php echo count($pro); ?>
+									<?php if(count($pro) > 0) { ?>
+										<tr>
+											<td>
+												<div class="icon-outer">
+													<div id="viewed_<?php echo $key['id']?>"class="<?php if($key['viewed'] == 1){echo "viewed";}else{echo "notviewed";}?>"></div>
+													<div id="following_<?php echo $key['id']?>" class="noaction <?php if($key['following'] == 1){echo "following";}?>" status="<?php echo $key['following'];?>">Following</div>
+													<div id="updated_portfolio_<?php echo $key['id']?>" class="noaction <?php if($key['updated_portfolio'] == 1){echo "pro-update";}?>">Updated Portfolio</div>
+													<div id="blocked_<?php echo $key['id']?>" class="<?php if($key['blocked'] == 1){echo "noaction blocked";}?>"><?php if($key['blocked'] == 1){echo "Blocked";}?></div>	
+												</div>
+											</td>
+											<td><?php echo $artist->getName()?></td>					
+											<td>							
+												<div class="details-control cus-more" rowid="<?php echo $key['id'] ?>" customerid = "<?php echo $artist->getId()?>" view="<?php echo $key['viewed'] ?>" updated_portfolio="<?php echo $key['updated_portfolio'] ?>" ></div>
+											</td>
+										</tr>
+									<?php } ?>
+								<?php }else{ ?>
+										<tr>
+											<td>
+												<div class="icon-outer">
+													<div id="viewed_<?php echo $key['id']?>"class="<?php if($key['viewed'] == 1){echo "viewed";}else{echo "notviewed";}?>"></div>
+													<div id="following_<?php echo $key['id']?>" class="noaction <?php if($key['following'] == 1){echo "following";}?>" status="<?php echo $key['following'];?>">Following</div>
+													<div id="updated_portfolio_<?php echo $key['id']?>" class="noaction <?php if($key['updated_portfolio'] == 1){echo "pro-update";}?>">Updated Portfolio</div>
+													<div id="blocked_<?php echo $key['id']?>" class="<?php if($key['blocked'] == 1){echo "noaction blocked";}?>"><?php if($key['blocked'] == 1){echo "Blocked";}?></div>	
+												</div>
+											</td>
+											<td><?php echo $artist->getName()?></td>					
+											<td>							
+												<div class="details-control cus-more" rowid="<?php echo $key['id'] ?>" customerid = "<?php echo $artist->getId()?>" view="<?php echo $key['viewed'] ?>" updated_portfolio="<?php echo $key['updated_portfolio'] ?>" ></div>
+											</td>
+										</tr>								
+								<?php } ?>
+							<?php } ?>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+	<div id="loader" class="cus-loader" style="display:none;">
+		<div class="over-lay"></div>
+		<div class="loader-body">
+			<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/loader.gif" ?>"/>
+		</div>
+	</div>
+	<div id="pop-outer" class="pop-outer" style="display:none;">
+		<div class="pop-overlay"></div>
+		<div class="pop-contain-outer">
+			<div class="close">X</div>
+			<div id="pop-contain" class="pop-contain"></div>
+		</div>
+	</div>
+	<div id="image-pop" class="image-pop-outer" style="display:none;">
+		<div class="image-pop-overlay"></div>
+		<div class="image-pop-contain-outer">
+			<div id="image-pop-contain" class="image-pop-contain"></div>
+		</div>
+	</div>
+	  <!-- Modal -->
+	  <div class="modal fade" id="myModal" role="dialog" style="display:none">
+		<div class="modal-dialog modal-dialog-centered">
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-body">
+			</div>
+		  </div>
+		</div>
+	  </div>		
+	
+</div>
+<script>
+window.onload = function(){
+	
+	jQuery('#myTable').DataTable({
+		"aoColumnDefs": [
+		  { "bSortable": false, "aTargets": [ 2 ] }
+		] ,		
+		"bLengthChange" : false,
+		"bInfo" : false,
+		language: { search: "" },
+	});
+	jQuery('.details').hide();
+	jQuery("div.dataTables_filter input").attr("placeholder","Search by Name");
+	
+	if( !jQuery.trim( jQuery('.account-message').html() ).length) {
+		jQuery('.account-message').hide();
+	}
+	jQuery('.tooltip-outer').prev('h1').css('display','inline-block'); // tooltip in same line
+	
+}
+
+jQuery('body').on('click', '.close', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+jQuery('body').on('click', '.image-pop-overlay', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+
+// Add event listener for opening and closing details
+jQuery('#myTable tbody').on('click', '.details-control', function () {
+	
+	var table = jQuery('#myTable').DataTable();
+	var tr = jQuery(this).closest('tr');
+	var row = table.row( tr );
+	var customerid = jQuery(this).attr('customerid');
+	var view = jQuery(this).attr('view');
+	var rowid = jQuery(this).attr('rowid');
+	var updated_portfolio = jQuery(this).attr('updated_portfolio');
+	if ( row.child.isShown() ) {
+		// This row is already open - close it
+		row.child.hide();
+		tr.removeClass('shown');
+		jQuery(this).removeClass('cus-less');
+		jQuery(this).addClass('cus-more');		
+	}
+	else {
+		table.rows().every( function ( rowIdx, tableLoop, rowLoop ) { //close all open child row
+			if(this . child.isShown()){
+			this .child().hide();
+			jQuery('.cus-less').addClass('cus-more');
+			jQuery('.cus-less').removeClass('cus-less');
+			}
+		
+		});	
+		// Open this row
+		jQuery(this).removeClass('cus-more');
+		jQuery(this).addClass('cus-less');
+		jQuery.ajax({
+		type: "get",
+		url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxArtistDetails/",
+		data: "id="+customerid+"&view="+view+"&rowid="+rowid+"&updated_portfolio="+updated_portfolio,
+		async: true,
+		success: function(data){
+			row.child(data).show();
+			tr.addClass('shown');
+			jQuery("#viewed_"+rowid).removeClass("notviewed");
+			jQuery("#viewed_"+rowid).addClass("viewed");
+			jQuery("#updated_portfolio_"+rowid).removeClass("pro-update");		
+		}
+	})	
+	}
+});
+
+jQuery('#myTable tbody').on('click', '.contact-btn', function () {
+	
+	var btnid = jQuery(this).attr('btnid');
+	
+	jQuery('#loader').css('display','block');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxArtistContact/",
+	data: "id="+btnid,
+	async: true,
+	success: function(data){
+		jQuery('#pop-contain').html(data);
+		jQuery('#pop-outer').css('display','block');
+		jQuery('#loader').css('display','none');
+		}
+	})
+});
+
+jQuery('#myTable tbody').on('click', '.following-btn', function () {
+	
+	jQuery('#loader').css('display','block');
+	var rowid = jQuery(this).attr('rowid');
+	var status = jQuery(this).attr('status');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxFollowing/",
+	data: "rowid="+rowid+"&status="+status,
+	async: true,
+	success: function(data){
+		if(status == 0){
+			jQuery("#following_"+rowid).addClass("following");
+			jQuery("#following-btn-"+rowid).attr("value","Unfollow");
+			jQuery("#following-btn-"+rowid).attr("status","1");
+		}
+		else{
+			jQuery("#following_"+rowid).removeClass("following");
+			jQuery("#following-btn-"+rowid).attr("value","Follow");
+			jQuery("#following-btn-"+rowid).attr("status","0");
+		}
+		jQuery('#loader').css('display','none');
+		}
+	})
+});
+
+jQuery('#myTable').on('click', '.blocked-btn', function () {
+	
+	jQuery('#loader').css('display','block');
+	var rowid = jQuery(this).attr('rowid');
+	var p = "<p>Blocking means their submission is moved to the very bottom of  your list and you will not see them again.</p>";
+	var b = "<button class='block-user button rev-btn' status='0' rowid='"+ rowid +"'>Yes, block this user</button><button class=' button rev-btn' status='2' rowid='"+ rowid +"'>Move user to the last</button>" 
+	var str = "<div><strong>Are you sure you want to block this user?</strong>" + p + b +"</div>";
+	jQuery('#pop-contain').html(str);
+	jQuery('#pop-outer').css('display','block');
+	jQuery('#loader').css('display','none');
+	
+});
+jQuery('body').on('click', '.block-user', function () {
+	
+	jQuery('#loader').css('display','block');
+	var rowid = jQuery(this).attr('rowid');
+	var status = jQuery(this).attr('status');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxBlocked/",
+	data: "rowid="+rowid+"&status="+status,
+	async: true,
+	success: function(data){
+			jQuery("#blocked_"+rowid).addClass("noaction");
+			jQuery("#blocked_"+rowid).addClass("blocked");
+			jQuery("#blocked_"+rowid).html("Blocked");
+			jQuery("#blocked-btn-"+rowid).attr("value","Unblock");
+			jQuery("#blocked-btn-"+rowid).removeClass("blocked-btn");
+			jQuery("#blocked-btn-"+rowid).addClass("unblock-btn");
+			jQuery("#blocked-btn-"+rowid).attr("status","1");
+			jQuery("#following_"+rowid).removeClass("following");// unfollow the user
+			jQuery("#following-btn-"+rowid).attr("value","Follow");
+			jQuery("#following-btn-"+rowid).attr("status","0");
+			jQuery("#following-btn-"+rowid).attr("disabled","disabled");
+			jQuery('#pop-outer').css('display','none');
+			jQuery('#loader').css('display','none');
+		}
+	})
+});
+
+jQuery('body').on('click', '.unblock-btn', function () {
+	
+	jQuery('#loader').css('display','block');
+	var rowid = jQuery(this).attr('rowid');
+	var status = jQuery(this).attr('status');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxBlocked/",
+	data: "rowid="+rowid+"&status="+status,
+	async: true,
+	success: function(data){
+			jQuery("#blocked_"+rowid).removeClass("noaction");
+			jQuery("#blocked_"+rowid).removeClass("blocked");
+			jQuery("#blocked_"+rowid).html("");
+			jQuery("#blocked-btn-"+rowid).attr("value","Block");
+			jQuery("#blocked-btn-"+rowid).removeClass("unblock-btn");
+			jQuery("#blocked-btn-"+rowid).addClass("blocked-btn");
+			jQuery("#blocked-btn-"+rowid).attr("status","0");
+			jQuery("#following-btn-"+rowid).removeAttr("disabled");
+			jQuery('#loader').css('display','none');
+		}
+	})
+});
+/* 
+jQuery('body').on('click', '.enlarge', function () {
+	jQuery('#loader').css('display','block');
+	var mageproductid = jQuery(this).attr('mageproductid');
+	var managesubmission = jQuery(this).attr('managesubmission');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxEnlargeProImage/",
+	data: "mageproductid="+mageproductid+"&managesubmission="+managesubmission,
+	async: true,
+	success: function(data){
+			jQuery('#image-pop-contain').html(data);
+			jQuery('#image-pop').css('display','block');
+			jQuery('#loader').css('display','none');
+		}
+	})		
+}); */
+jQuery('body').on('click', '.enlarge', function () {
+	jQuery('#loader').css('display','block');
+	var mageproductid = jQuery(this).attr('mageproductid');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxEnlargeProImage/",
+	data: "mageproductid="+mageproductid+"&artistdetails=1",
+	dataType:"json",
+	async: true,
+	success: function(data){
+			jQuery('.modal-body').html(data.html);
+			var orgwidth = data.width;
+			if (window.matchMedia("(max-width: 700px)").matches) {
+				jQuery('.modal-body').css('padding',0);
+			}else{
+				jQuery('.modal-dialog').addClass('modal-lg');
+				jQuery('.modal-dialog').css('width',orgwidth);
+				jQuery('.modal-body').css('padding',0);
+				//console.log(orgwidth+"*"+data.height);
+			}
+			jQuery('#myModal').modal('show');
+			jQuery('#loader').css('display','none');
+		}
+	})		
+});
+
+jQuery(document.body).on('mouseover','.intergotive-sign',function(){
+	jQuery(this).next('.tooltip').show();
+});
+jQuery(document.body).on('mouseout','.intergotive-sign',function(){
+	jQuery(this).next('.tooltip').hide();
+});
+</script>

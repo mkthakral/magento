@@ -1,0 +1,11 @@
+.meanbee-infinitescroll-busy {
+    padding: 20px;
+    text-align: center;
+    margin-left: 45%;
+}
+
+.meanbee-infinitescroll-showall {
+    text-align: right;
+    display: block;
+    width: 100%;
+}

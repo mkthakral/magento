@@ -1,0 +1,23 @@
+<?php 
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$baseurl = Mage::getBaseUrl();
+	$userId = $customer->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+?>
+<?php $customergroup = Mage::getSingleton('customer/session')->getCustomer()->getGroupId(); ?>
+<?php $collection = Mage::getModel('customer/customer')->getCollection()->addAttributeToSelect('*')->addFieldToFilter('group_id', 2);?>
+<div class="view-portfolio">
+    <div class="page-title">
+        <h1><?php echo $this->__('Portfolio') ?></h1>
+    </div>
+	<div class="account-message">
+	</div>	
+	<div class="page-body">	
+	</div>
+</div>
+<script>
+</script>

@@ -1,0 +1,193 @@
+### Version 2.0.1, Released 2018-10--3
+
+- Fixed order status issue when 'Email Copy of Invoice' is enabled with Stripe Payments
+
+### Version 2.0.0, Released 2018-08-17
+
+- Updated recurring orders implementation to work with newer versions of Stripe webhooks (tested with version 2018-05-21)
+- Other minor stability improvements
+
+### Version 1.9.9, Released 2018-04-15
+
+- Added subtotal figures on recurring order invoices
+- Fixed pausing/resuming subscriptions, which was broken in v1.9.8 of the module
+- Associate all recurring orders with the original recurring profile
+
+### Version 1.9.8, Released 2017-11-21
+
+- Stripe Webhooks re-engineering: All webhooks for all add-ons are now handled with a single endpoint from the core Stripe Payments module. You no longer need to configure a separate endpoint for each add-on. Duplicate event requests will be safely discarded and Magento's internal event dispatcher will be used. You can now also enable all events in your Stripe account and they will be handled only if they are implemented in Stripe Payments or in one of the add-ons. All webhook requests and responses are now logged under var/log.
+- Added configuration option to require guest customers to log in before buying subscriptions
+- Added admin notification mechanism to check if the minimum required version of Stripe Payments is installed
+- Fixed division by zero error
+- Fixed installation issue with database table prefixes
+
+### Version 1.9.7, Released 2017-09-25
+
+- Fixed issue when creating recurring order, affecting order status and order comments
+
+### Version 1.9.6, Released 2017-08-18
+
+- Subscriptions can now be created with Source API sources, which are created from Stripe Payments v2.7.0 onwards using Stripe Elements or 3D Secure Preview API
+- A changelog.txt file is now included in the package
+- Fixed issue in admin order page where the recurring billing period would not be displayed under the ordered item details
+- Updated add-on versioning with Stripe Payments
+
+### Version 1.9.5, Released 2017-06-12
+
+- If a subscription has a trial period, do not automatically invoice it
+- Added more error logging
+
+### Version 1.9.4, Released 2017-05-16
+
+- Various improvements with initial fees and recurring generated invoices
+- Added tax amount on generated pdf invoices
+- Improvements with the "Hide grand total when zero" feature
+
+### Version 1.9.3, Released 2017-04-20
+
+- Initial fees are now taxable to match Stripe's tax algorithm
+- Fixed multi-currency price miscalculation issue affecting versions 1.9.0 - 1.9.2
+
+### Version 1.9.2, Released 2017-04-10
+
+- Adjusted webhooks to handle Stripe's new API rate limiters - fixes a duplicate order issue after a very slowly delivered webhook
+- Trial-based subscriptions will now automatically mark the initial order as Closed
+
+### Version 1.9.1, Released 2017-04-04
+
+- Fixed an integrity constraint violation error affecting v1.9.0 when multiple subscriptions are purchased together
+
+### Version 1.9.0, Released 2017-03-28
+
+- A tax_percent parameter is now passed to the Stripe API when creating subscriptions
+- The shipping cost and discounts are now taxable in Magento, to match Stripe's tax calculation algorithm when tax_percent is used
+- Support for Weee taxes has been dropped as tax_percent is now used in Stripe for all tax calculations
+- When discount coupons are used for subscriptions that have tax and shipping costs, tax is now re-calculated correctly on the recurring orders when the discount coupon expires
+- Fixed a MySQL integrity contraint violation error when an initial subscription failed to be created in Stripe
+- Fixed an error logging warning message
+
+### Version 1.8.3, Released 2017-03-14
+
+- Upgraded to Stripe PHP library 4.4.2, requires Stripe Payments 2.5.0 [major]
+- Updated Stripe API to 2017-02-14, requires Stripe Payments 2.5.0
+- Fixed issue that unset the customer group when none was configured in the module's configuration section
+- Fixed cart calculation issues when Magento is configured not to redirect to the shopping cart
+- Fixed crash with customer.subscription.deleted webhook not canceling the recurring profile
+
+### Version 1.8.2, Released 2016-11-27
+
+- Now using separate translations file than Stripe Payments
+- Translations now also work in admin area
+- Fixed wrong items count when adding configurable products to the cart and Magento is configured to not redirect to the cart
+
+### Version 1.8.1, Released 2016-08-30
+
+- Upgrade to Stripe API 2016-07-06
+- Stripe Payments 2.2.0 compatibility provisions for 3D Secure
+- Added new locale strings
+- More user friendly error reporting
+- Bumped up the supported PHP version to 7.0
+
+### Version 1.8.0, Released 2016-07-13
+
+- Added new configuration option to create invoices Manually or Automatically
+- Added WEEE tax to recurring orders
+- Added new Stripe Webhook handler for 'customer.subscription.deleted' - cancel the recurring profile when the event is received
+- Fixed issue with Recurring Order Status being overwritten by invoicing
+- Fixed bug where a new order is created when the customer pauses and resumes a subscription
+
+### Version 1.7.6, Released 2016-01-13
+
+- Fixed recurring orders issue "The requested Payment Method is not available" with certain types of orders.
+
+### Version 1.7.5, Released 2015-12-29
+
+- Fixed recurring order issue with guest customers
+- Fixed tax not displaying on recurring orders
+
+### Version 1.7.4, Released 2015-12-15
+
+- The default Magento configurable product dropdown can now be converted into Radio Buttons or a Checkbox, useful for allowing the customer to select between a regular product or a subscription with a nicer interface.
+- The "Hide Grand Total When Zero" configuration option will now also hide the subtotal when it is zero.
+- 2 improvements with guest checkouts and customers registering through the checkout page.
+
+### Version 1.7.1, Released 2015-11-26
+
+- Two compatibility improvements with Idev's OneStepCheckout module.
+
+### Version 1.7.0, Released 2015-11-20
+
+- Configurable products are now fully supported
+- Guests can now purchase subscriptions
+- Guests who register at checkout can now purchase subscriptions, be assigned to customer groups and cancel/pause/resume subscriptions from their account
+- Admins can now place subscription back office orders for newly created customers (guest accounts)
+- Each recurring order now has a comment with the subscription ID and the original order number of the customer
+- Fixed subtotal and shipping cost display issue when prices are displayed with VAT tax included
+
+### Version 1.6.1, Released 2015-09-05
+
+- When a customer resumes a previously paused subscription, re-assign them to a subscription group if one is selected from the configuration.
+
+### Version 1.6.0, Released 2015-09-02
+
+- Subscriptions can now be paused or resumed (suspended or activated) by both the customer and the admins
+- Subscription products can now be added to orders in the back office
+- It is now possible to use ‘day’ as a valid recurring billing unit
+- Coupon codes are now applied on individual subscriptions rather than on the customer object
+- Fixed a core Magento issue with virtual products when purchased together with subscriptions
+- Fixed a query error with recurring orders when a DB table prefix is configured
+- Added new locales that change "recurring profile” labels into “subscriptions” labels
+
+### Version 1.5.1, Released 2015-07-20
+
+- Buying subscriptions will now adjust product inventory, both at the initial purchase as well as the recurring billing periods.
+- When viewing invoices of subscriptions in the back office, initial fees and discounts now display correctly in the totals if any are set.
+- Fixed an invoicing issue that only affected v1.5.0 of the module, with side effects both at the back office as well as the front-end.
+
+### Version 1.5.0, Released 2015-06-04
+
+- Added coupons and discount totals support to subscriptions which are normally not added by Magento. The subscription discount and initial fees are now displayed correctly in the shopping cart, checkout page, emails sent to the customers, order totals in admin area as well as recurring orders and recurring order emails that are created using Stripe webhooks.
+- When an order is re-created with a Stripe webhook event, the discount will now be dropped from the order totals if it was not applied on Stripe’s end.
+- If subscriptions are used in bundled products with other regular products, the subscriptions will now split off during checkout so that the customer can unsubscribe from each one individually if they want to.
+
+### Version 1.4.0, Released 2015-04-14
+
+- Support for purchasing a mixture of subscriptions and regular products in a single checkout session
+- Support for buying more than one subscription in the same checkout
+- Support for grouped and bundled product types, i.e. subscriptions can be bundled or grouped with other regular products and sold together
+- Support for coupons, i.e. Magento coupons are matched with Stripe coupons by coupon code so that discounts can be applied to the subscriptions
+- You can now optionally hide the grand total for regular products when it is zero, i.e. when only subscriptions are purchased
+- Order emails can now be sent to the customer both on the initial subscription as well as on every recurring billing period
+- Initial fees are now charged as invoice items and are clearly visible on Stripe’s dashboard
+- Support for zero-decimal currencies
+- The “Use store currency” feature of Stripe Payments can now also be used with subscriptions
+- 3rd party modules can now observe events triggered on subscription purchases and recurring billings
+- Added more translations in the locale files
+- Fix long standing issue with customers being locked into a specific currency
+
+### Version 1.3.0, Released 2014-11-24
+
+- Added support for Stripe Webhooks. Orders are now re-created every time a successful charge event is fired from Stripe's servers. Invoices are automatically created with each order.
+- Added support for variable fees such as taxation, shipping costs and qtys on subscriptions.
+- Added option for recurring order status.
+- Various fixes, better multi-currency handling, better error handling for the user.
+
+### Version 1.2.1, Released 2014-05-01
+
+- Fixed issue when saving multiple customer cards
+
+### Version 1.2.0, Released 2014-04-17
+
+- Added support for Amazon-style saved credit cards which are PCI compliant (requires Stripe Payments 1.5.0+). Also added the ability to automatically assign or un-assign customers from customer groups when they buy or cancel their subscription. This feature can be used for advanced subscriptions configuration using magento rules.
+
+### Version 1.1.0, Released 2014-03-24
+
+- Added support for multi-language websites + some bug fixes.
+
+### Version 1.0.0, Released 2014-03-05
+
+- Supports subscriptions for both physical and virtual products
+- Trial modes
+- Initial/setup fees
+- IWD One Page Checkout
+- Subscription management by customers and admin.

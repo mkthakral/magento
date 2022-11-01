@@ -1,0 +1,83 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$helper=Mage::helper('marketplace');
+$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+if($isPartner==1){
+	$partner=Mage::getModel('marketplace/userprofile')->getPartnerProfileById($customerid);
+	if(($partner['twitterid']=='')||($partner['facebookid']=='')||($partner['bannerpic']=='')||($partner['logopic']=='')||($partner['complocality']=='')||($partner['countrypic']=='')||($partner['compdesi']=='')){?>
+			<div class="wk_profile_alert">
+				<strong><?php echo $helper->__('Warning')?>! </strong><?php echo $helper->__('Please Complete')?>
+				<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/editprofile')?>" style="color: inherit;"><?php echo $helper->__('Your Profile')?></a>
+				<span class="wk_close">X</span>
+			</div>
+	<?php 
+	} ?>
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/new') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-new">
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('Add New Product') ?></h1>
+			<button class="wk_mp_btn button" title="Continue" type="submit" id="save_butn">
+				<span><span><?php echo $helper->__('Continue') ?></span></span>
+			</button>
+		</div>
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Add New Product') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />	
+				<ul class="form-list" id="wk_bodymain">
+					<input type="hidden"  name="producttypecustom" id="producttypecustom" value="customproductsimple" title="producttypecustom" class="" />
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Attribute Set') ?>:</label>
+						<div class="input-box">
+							<select name="set" class="required-entry">
+							<?php foreach($this->getAllowedSets() as $set) {?>
+								<option value="<?php echo $set['value'] ?>"><?php echo $set['label']?></option>
+							<?php } ?>
+							</select>
+						</div>
+					</li>
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Product Type') ?>:</label>
+						<div class="input-box">
+							<select name="type" class="required-entry">
+							<?php foreach($this->getAllowedProductTypes() as $type) {?>
+								<option value="<?php echo $type['value'] ?>"><?php echo $type['label']?></option>
+							<?php } ?>
+							</select>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>		
+	</form>
+	<div class="buttons-set">
+		<p class="required">* <?php echo $helper->__('Required Fields') ?></p>		
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+	<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+	</script>
+	<script> 
+	var $wk_jq=jQuery.noConflict();
+	(function($wk_jq){
+		var newCustomerProductForm = new VarienForm('form-customer-product-new', true);
+		$wk_jq('.wk_close').click(function(){
+			$wk_jq(this).parent().remove();
+		});		
+	})($wk_jq);
+	</script>
+<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact Admin"); ?>
+	</h2>
+	<?php
+} ?>
+

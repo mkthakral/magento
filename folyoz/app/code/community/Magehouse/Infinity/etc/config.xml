@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Magehouse_Infinity>
+      <version>0.1.0</version>
+    </Magehouse_Infinity>
+  </modules>
+  <global>
+    <helpers>
+      <infinity>
+        <class>Magehouse_Infinity_Helper</class>
+      </infinity>
+    </helpers>
+  </global>
+  <frontend>
+	<layout>
+		<updates>
+			<infinity>
+				<file>infinitescroll.xml</file>
+			</infinity>
+		</updates>
+	</layout>
+  </frontend>
+  <default>
+    <infinite_scroll>
+      <infinite_scroll_settings>
+	  	<scroll_container>.products-grid, .products-list</scroll_container>
+		<scroll_item>.item</scroll_item>
+		<scroll_pagination>.pager</scroll_pagination>
+		<scroll_next>.pages a.next</scroll_next>
+		<scroll_loader>media/images/loader.gif</scroll_loader>
+	  </infinite_scroll_settings>
+    </infinite_scroll>
+  </default>
+</config> 

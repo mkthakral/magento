@@ -1,0 +1,874 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Customer
+ * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * Customer account controller
+ *
+ * @category   Mage
+ * @package    Mage_Customer
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+
+ require_once("Mage/Customer/controllers/AccountController.php");
+ class  Mate_Customer_AccountController extends Mage_Customer_AccountController 
+
+{
+    /**
+     * Default customer account page
+     */
+    public function indexAction()
+    {
+        $this->loadLayout();
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+
+        $this->getLayout()->getBlock('content')->append(
+            $this->getLayout()->createBlock('customer/account_dashboard')
+        );
+        $this->getLayout()->getBlock('head')->setTitle($this->__('My Account'));
+        $this->renderLayout();
+    }	
+
+    /**
+     * Success Registration
+     *
+     * @param Mage_Customer_Model_Customer $customer
+     * @return Mage_Customer_AccountController
+     */
+    protected function _successProcessRegistration(Mage_Customer_Model_Customer $customer)
+    {
+        $session = $this->_getSession();
+        if ($customer->isConfirmationRequired()) {
+            /** @var $app Mage_Core_Model_App */
+            $app = $this->_getApp();
+            /** @var $store  Mage_Core_Model_Store*/
+            $store = $app->getStore();
+            $customer->sendNewAccountEmail(
+                'confirmation',
+                $session->getBeforeAuthUrl(),
+                $store->getId(),
+                $this->getRequest()->getPost('password')
+            );
+            $customerHelper = $this->_getHelper('customer');
+            $session->addSuccess($this->__('Account confirmation is required. Please, check your email for the confirmation link. To resend the confirmation email please <a href="%s">click here</a>.',
+                $customerHelper->getEmailConfirmationUrl($customer->getEmail())));
+            $url = $this->_getUrl('*/*/index', array('_secure' => true));
+        } else {
+            $session->setCustomerAsLoggedIn($customer);
+            $url = Mage::getBaseUrl()."customer/account";
+        }
+        $this->_redirectSuccess($url);
+        return $this;
+    }
+
+    public function membershipAction()
+    {
+        $this->loadLayout();
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+        $this->renderLayout();
+		if($this->getRequest()->isPost())
+		{
+			$cartHelper = Mage::helper('checkout/cart');
+			$items = $cartHelper->getCart()->getItems();        
+			foreach ($items as $item) 
+			{
+			   $itemId = $item->getItemId();
+			   $cartHelper->getCart()->removeItem($itemId)->save();
+			}
+			$productId = $this->getRequest()->getParam("subtype");
+			$cart = Mage::getModel('checkout/cart');
+			$cart->init();
+			$productCollection = Mage::getModel('catalog/product')->load($productId);
+			$cart->addProduct($productCollection,array( 'product_id' => $productId, 'qty' => 1,'form_key' => Mage::getSingleton('core/session')->getFormKey()));
+			$cart->save();
+			//$this->_redirect("checkout/onepage/");
+			$this->_redirectReferer();
+		}
+    }
+
+    /**
+     * Change customer password action
+     */
+    public function editPostAction()
+    {
+        if (!$this->_validateFormKey()) {
+            return $this->_redirect('*/*/edit');
+        }
+
+        if ($this->getRequest()->isPost()) {
+            /** @var $customer Mage_Customer_Model_Customer */
+            $customer = $this->_getSession()->getCustomer();
+            $customer->setOldEmail($customer->getEmail());
+            /** @var $customerForm Mage_Customer_Model_Form */
+            $customerForm = $this->_getModel('customer/form');
+            $customerForm->setFormCode('customer_account_edit')
+                ->setEntity($customer);
+
+            $customerData = $customerForm->extractData($this->getRequest());
+
+            $errors = array();
+            $customerErrors = $customerForm->validateData($customerData);
+            if ($customerErrors !== true) {
+                $errors = array_merge($customerErrors, $errors);
+            } else {
+                $customerForm->compactData($customerData);
+                $errors = array();
+
+                // If email change was requested then set flag
+                $isChangeEmail = ($customer->getOldEmail() != $customer->getEmail()) ? true : false;
+                $customer->setIsChangeEmail($isChangeEmail);
+
+                // If password change was requested then add it to common validation scheme
+                $customer->setIsChangePassword($this->getRequest()->getParam('change_password'));
+
+                if ($customer->getIsChangePassword()) {
+					if (!$customer->validatePassword($this->getRequest()->getPost('current_password'))) {
+						$errors[] = $this->__('Invalid current password');
+					}					
+                    $newPass    = $this->getRequest()->getPost('password');
+                    $confPass   = $this->getRequest()->getPost('confirmation');
+
+                    if (strlen($newPass)) {
+                        /**
+                         * Set entered password and its confirmation - they
+                         * will be validated later to match each other and be of right length
+                         */
+                        $customer->setPassword($newPass);
+                        $customer->setPasswordConfirmation($confPass);
+                    } else {
+                        $errors[] = $this->__('New password field cannot be empty.');
+                    }
+                }
+
+                // Validate account and compose list of errors if any
+                $customerErrors = $customer->validate();
+                if (is_array($customerErrors)) {
+                    $errors = array_merge($errors, $customerErrors);
+                }
+            }
+
+            if (!empty($errors)) {
+                $this->_getSession()->setCustomerFormData($this->getRequest()->getPost());
+                foreach ($errors as $message) {
+                    $this->_getSession()->addError($message);
+                }
+                $this->_redirect('*/*/edit');
+                return $this;
+            }
+
+            try {
+                $customer->cleanPasswordsValidationData();
+
+                // Reset all password reset tokens if all data was sufficient and correct on email change
+                if ($customer->getIsChangeEmail()) {
+                    $customer->setRpToken(null);
+                    $customer->setRpTokenCreatedAt(null);
+                }
+				
+				if($customer->getData('approval') == 65){
+					$customer->setData('approval',64);
+				}
+				if($customer->getData('email_for_approval')== 66){
+					
+					$customer->setData('email_for_approval',67);
+					$templateId = 2;
+					$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
+					$mail = Mage::getModel('core/email');
+					$mail->setToName('Folyoz');
+					$mail->setFromName('Folyoz');
+					$email = "shoubhikghosh15@gmail.com";
+					$email_template_variables = array(
+						'name' => $customer->getName(),
+					);
+					$mailSubject = 'Admin : Request To Approve My Account';
+					$from_email = "dibyendukanrar2010@gmail.com";
+					$processedTemplate = $emailTemplate->getProcessedTemplate($email_template_variables);
+
+					$mail = Mage::getModel('core/email');
+					$mail->setToName('folyoz');
+					$mail->setTemplateParam($email_template_variables);
+					$mail->setToEmail($email);
+					$mail->setBody($processedTemplate);
+					$mail->setSubject($mailSubject);
+					$mail->setFromEmail($from_email);
+					$mail->setType('Html');
+
+					try {
+						$mail->send();
+					} catch (Exception $ex) {}
+
+				}
+                $customer->save();
+                $this->_getSession()->setCustomer($customer)
+                    ->addSuccess($this->__('Thanks, we’re reviewing your account to make sure you’re a real person. You’ll receive a confirmation email.'));
+
+                if ($customer->getIsChangeEmail() || $customer->getIsChangePassword()) {
+                    $customer->sendChangedPasswordOrEmail();
+                }
+
+                $this->_redirect('customer/account');
+                return;
+            } catch (Mage_Core_Exception $e) {
+                $this->_getSession()->setCustomerFormData($this->getRequest()->getPost())
+                    ->addError($e->getMessage());
+            } catch (Exception $e) {
+                $this->_getSession()->setCustomerFormData($this->getRequest()->getPost())
+                    ->addException($e, $this->__('Cannot save the customer.'));
+            }
+        }
+
+        $this->_redirect('*/*/edit');
+    }
+	
+    public function helpwikiAction()
+    {
+        $this->loadLayout();
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+        $this->renderLayout();
+    }	
+
+    public function submitportfolioAction()
+    {
+        $this->loadLayout();
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+        $this->renderLayout();
+    }		
+    
+    public function managesubmissionAction()
+    {
+        $this->loadLayout();
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+        $this->renderLayout();
+    }		
+    /**
+     * Logout success page
+     */
+    public function logoutSuccessAction()
+    {
+        $this->_redirect('/');
+    }
+
+    /**
+     * Add welcome message and send new account email.
+     * Returns success URL
+     *
+     * @param Mage_Customer_Model_Customer $customer
+     * @param bool $isJustConfirmed
+     * @return string
+     */
+    protected function _welcomeCustomer(Mage_Customer_Model_Customer $customer, $isJustConfirmed = false)
+    {
+        if ($this->_isVatValidationEnabled()) {
+            // Show corresponding VAT message to customer
+            $configAddressType =  $this->_getHelper('customer/address')->getTaxCalculationAddressType();
+            $userPrompt = '';
+            switch ($configAddressType) {
+                case Mage_Customer_Model_Address_Abstract::TYPE_SHIPPING:
+                    $userPrompt = $this->__('If you are a registered VAT customer, please click <a href="%s">here</a> to enter you shipping address for proper VAT calculation',
+                        $this->_getUrl('customer/address/edit'));
+                    break;
+                default:
+                    $userPrompt = $this->__('If you are a registered VAT customer, please click <a href="%s">here</a> to enter you billing address for proper VAT calculation',
+                        $this->_getUrl('customer/address/edit'));
+            }
+            $this->_getSession()->addSuccess($userPrompt);
+        }
+
+        $customer->sendNewAccountEmail(
+            $isJustConfirmed ? 'confirmed' : 'registered',
+            '',
+            Mage::app()->getStore()->getId(),
+            $this->getRequest()->getPost('password')
+        );
+
+        $successUrl = $this->_getUrl('*/*/index', array('_secure' => true));
+        if ($this->_getSession()->getBeforeAuthUrl()) {
+            $successUrl = $this->_getSession()->getBeforeAuthUrl(true);
+        }
+        return $successUrl;
+    }
+	
+	public function sendPortfolioToDirectorAction()
+    {
+		if($_REQUEST['id']){
+			$userid = $_REQUEST['id'];
+			$loinuserid = $loginuser = Mage::getSingleton('customer/session')->getCustomer()->getId();
+			$match_value = $this->getRequest()->getParam('match_value');
+			$resource = Mage::getSingleton('core/resource');
+			$writeAdapter = $resource->getConnection('core_write');
+			$query = "INSERT INTO `submitted_portfolio` (`id`, `submitted_user_id`,`user_id`, `match_value`, `created`, `updated`) VALUES (NULL, $loinuserid, $userid, '$match_value', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+			$writeAdapter->query($query);						
+		}
+		$this->_getSession()->addSuccess($this->__('Portfolio submitted.'));
+		$this->_redirectReferer();
+		
+    }
+	
+// ajax action	
+    public function ajaxDirectorDetailsAction()
+    {
+		$id = $this->getRequest()->getParam('id');
+		$customer = Mage::getModel('customer/customer')->load($id);
+		$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+		$loginuserid = $loginuser->getId();
+				
+		if($customer)
+		{
+			$match = $fit = $match_value = 0;
+			$allow = 18;
+			if($loginuser->getData('profession') == 38){				
+				$a1 = explode(',', $customer->getData('work_type_use_for_illustration'));
+				$a2 = explode(',', $loginuser->getData('work_type_use_for_illustration'));
+				$match = array_intersect($a1,$a2);
+				$match = count($match)>0 ?count($match): 0;
+				if($customer->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+				elseif($customer->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+				elseif($customer->getData('hire_illustrators') == "Never"){$fit = 0;}
+				$match_value = round($fit + (((100 - 82)/$allow) * $match));
+				
+			}elseif($loginuser->getData('profession') == 35){
+				$a1 = explode(',', $customer->getData('work_type_use_for_photography'));
+				$a2 = explode(',', $loginuser->getData('work_type_use_for_photography'));
+				$match = array_intersect($a1,$a2);
+				$match = count($match)>0 ?count($match): 0;
+				if($customer->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+				elseif($customer->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+				elseif($customer->getData('hire_illustrators') == "Never"){$fit = 0;}
+				$match_value = round($fit + (((100 - 82)/$allow) * $match));			
+			}
+			if($match_value > 81){$str="<div class='cus-area green'>Good Match Go ahead and Submit.</div>";}
+			elseif($match_value < 82 and $match_value > 71 ){$str="<div class='cus-area yellow'>Narrow Match Your Submission may get blocked.</div>";}
+			elseif($match_value < 72 ){$str="<div class='cus-area red'>Bad Match Your Submission may get blocked.</div>";}
+			$match = '
+					<div class="dash-left-days subpotfolio-frms-outer">
+						<div class="s-c1">
+							<div class="big-front">'.$match_value.'%</div>
+							<div>Matching Criteria</div>
+						</div>
+						<div class="s-c2">'.$str.'</div>
+					</div>
+					';						
+			$resource = Mage::getSingleton('core/resource');
+			$readAdapter= $resource->getConnection('core_read');	
+			$query = "SELECT * FROM `user_subscription` WHERE user_id = $loginuserid and status='active' order by id DESC";
+			$result = $readAdapter->fetchAll($query);
+
+			$result = $readAdapter->fetchAll($query);
+			$datetime1 = new DateTime(date("Y-m-d"));
+			$datetime2 = new DateTime($result[0]["end_date"]);
+			$interval = $datetime1->diff($datetime2);
+			$intervalvalue = $interval->format('%a');
+			$interval = $interval->format('%R%a');			
+	
+			$disabled = "" ;
+			if($loginuser->getData('approval') != 63 or $interval <= 0){ 
+				$disabled = "disabled" ;
+			}
+			$readAdapter= $resource->getConnection('core_read');
+			$query = "SELECT * FROM `submitted_portfolio` WHERE `submitted_user_id` = $loginuserid and `user_id` = $id";
+			$result = $readAdapter->fetchAll($query);
+			if(count($result) == 0){
+				$form = '
+					<form action="'.Mage::getBaseUrl().'customer/account/sendPortfolioToDirector/" method="post">
+						<input type="hidden" name="id" value="'.$id.'">
+						<input class="button" type="submit" name="submit rev-btn" value="Submit Portfolio"'.$disabled.'>
+					</form>';
+			}else{
+				$form = '
+					<form action="'.Mage::getBaseUrl().'customer/account/sendPortfolioToDirector/" method="post">
+						<input type="hidden" name="id" value="'.$id.'">
+						<input class="button" type="submit" name="submit rev-btn" value="Submit Portfolio" disabled>
+					</form>';
+			}					
+			$worktypei = $worktypep = "";
+			$options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_photography')->getSource()->getAllOptions();
+			foreach ($options as $option):
+				if($option["value"] != "") {
+					if (in_array($option['value'], explode(',', $customer->getData('work_type_use_for_photography')))){
+						$worktypep .= $option['label'].",";
+					}
+				} 
+			endforeach;
+			$options = Mage::getResourceSingleton('customer/customer')->getAttribute('work_type_use_for_illustration')->getSource()->getAllOptions();
+			foreach ($options as $option):
+				if($option["value"] != "") {
+					if (in_array($option['value'], explode(',', $customer->getData('work_type_use_for_illustration')))){
+						$worktypei.= $option['label'].",";
+					}
+				} 
+			endforeach;			
+			if($customer->getAvatar()==""){
+			$img = '<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'customer/nopropimg.png" height="125px"; width="125px"/></span>';
+			} else {
+			$img =	'<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $customer->getAvatar().'" height="125px"; width="125px" /></span>';
+			}
+			$data = '
+			<div class="details-body">
+				<div class="row">
+					<div class="director-pic">'.
+						$img
+					.'</div>
+					<div class="director-personal">
+						<div class="d-p-c1">
+							<strong>'.$customer->getName().'</strong>
+							<div>
+								<span class="details-heading">Position:</span>
+								<span>'.$customer->getData('position').'</span>
+							</div>
+							<div>
+								<span class="details-heading">Publication:</span>
+								<span>'.$customer->getData('company_name').'</span>
+							</div>
+							<div>
+								<span class="details-heading">Uses Illustration:</span>
+								<span>'.$customer->getData('hire_illustrators').'</span>
+							</div>
+							<div>
+								<span class="details-heading">Uses Photography:</span>
+								<span>'.$customer->getData('hire_photographers').'</span>
+							</div>
+						</div>
+						<div class="d-p-c2">
+						'.$match.'
+							<div class="subpotfolio-frms-inner">'.$form.'</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="details-heading">Type of Illustration they use:</div>
+					<div>'.$worktypei.'</div>
+				</div>
+				<div class="row">
+					<div class="details-heading">Type of Photography they use:</div>
+					<div>'.$worktypep.'</div>
+				</div>
+				<div class="row">
+					<div class="details-heading">Other:</div>
+					<div>'.$customer->getData('looking_for_information').'</div>
+				</div>
+				<div class="row">
+					<div class="details-heading">Comments:</div>
+					<div>'.$customer->getData('not_want_to_see_information').'</div>
+				</div>
+			</div>';
+			echo $data;
+		}
+    }
+	
+    public function ajaxArtistDetailsAction()
+    {
+										
+		$id = $this->getRequest()->getParam('id');
+		$view = $this->getRequest()->getParam('view');
+		$rowid = $this->getRequest()->getParam('rowid');
+		$updated_portfolio = $this->getRequest()->getParam('updated_portfolio');
+		$customer = Mage::getModel('customer/customer')->load($id);
+		$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+		$loginuserid = $loginuser->getId();
+		$resource = Mage::getSingleton('core/resource');
+		$product = $data = "";
+		
+		if($view == 0 or $updated_portfolio == 1){
+			$writeAdapter = $resource->getConnection('core_write');
+			$query = "UPDATE `submitted_portfolio` SET `viewed` = 1 ,`updated_portfolio` = 0 WHERE `submitted_portfolio`.`id` = $rowid;";
+			$writeAdapter->query($query);		
+		}
+		
+		$readAdapter= $resource->getConnection('core_read');
+		$query = "SELECT * FROM `submitted_portfolio` WHERE `submitted_user_id` = $id and `user_id` = $loginuserid";
+		$result = $readAdapter->fetchAll($query);
+
+		if($result[0]['blocked']==0){$block	= '<input type="button" id="blocked-btn-'.$rowid.'" class="blocked-btn button rev-btn" status="0" rowid="'.$rowid.'" value="Block">'; $followdisabled="";}
+		else{$block	= '<input type="button" id="blocked-btn-'.$rowid.'" class="unblock-btn button rev-btn" status="1"  rowid="'.$rowid.'" value="Unblock">'; $followdisabled="disabled";}
+		
+		if($result[0]['following']==0){$follow = '<input type="button" id="following-btn-'.$rowid.'" class="following-btn button rev-btn" status="0" rowid="'.$rowid.'" value="Follow" '.$followdisabled.'>';}
+		else {$follow = '<input type="button" id="following-btn-'.$rowid.'" class="following-btn button rev-btn" status="1" rowid="'.$rowid.'" value="Unfollow">';}
+					
+		if($customer){
+			
+			$match = $fit = $match_value = 0;
+			$allow = 18;			
+			if($customer->getData('profession') == 38){				
+				$a1 = explode(',', $customer->getData('work_type_use_for_illustration'));
+				$a2 = explode(',', $loginuser->getData('work_type_use_for_illustration'));
+				$match = array_intersect($a1,$a2);
+				$match = count($match)>0 ?count($match): 0;
+				if($loginuser->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+				elseif($loginuser->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+				elseif($loginuser->getData('hire_illustrators') == "Never"){$fit = 0;}
+				$match_value = round($fit + (((100 - 82)/$allow) * $match));
+				
+			}elseif($customer->getData('profession') == 35){
+				$a1 = explode(',', $customer->getData('work_type_use_for_photography'));
+				$a2 = explode(',', $loginuser->getData('work_type_use_for_photography'));
+				$match = array_intersect($a1,$a2);
+				$match = count($match)>0 ?count($match): 0;
+				if($loginuser->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+				elseif($loginuser->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+				elseif($loginuser->getData('hire_illustrators') == "Never"){$fit = 0;}
+				$match_value = round($fit + (((100 - 82)/$allow) * $match));			
+			}
+			$match = '
+					<div class="s-c1">
+						<div class="big-front">'.$match_value.'%</div>
+						<div>Matching Criteria</div>
+					</div>';	
+			if($customer->getAvatar()==""){
+			$img = '<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'customer/nopropimg.png" height="125px"; width="125px"/></span>';
+			} else {
+			$img =	'<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $customer->getAvatar().'" height="125px"; width="125px" /></span>';
+			}				
+			$collection_product = Mage::getModel('marketplace/product')->getCollection()
+									->addFieldToFilter('userid',array('eq'=>$id));
+			foreach($collection_product as $key)
+			{
+				$mageproductid = $key->getData("mageproductid");
+				$p = Mage::getModel('catalog/product')->load($mageproductid);
+				$v = Mage::helper('catalog/image')->init($p, 'thumbnail')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(350);
+				$product .= '<li><img src="'.$v.'" mageproductid="'.$mageproductid.'" class="enlarge" managesubmission="1" artisid="'.$customer->getId().'"/></li>';
+			}
+			$data = '
+				<div class="details-body bootstrap-row-overwrite">
+					<div class="row">
+						<div class="artist-personal-outer">
+							<div class="artist-pic">'.
+								$img
+							.'</div>
+							<div class="artist-personal">
+								<strong>'.$customer->getName().'</strong>
+								<div>	
+									'.$customer->getData('address').'
+								</div>
+								<button class="contact-btn button rev-btn" btnid="'.$customer->getId().'">Contact Info</button>
+							</div>
+						</div>
+						<div class="dash-left-days managesubmission">
+							<div>'.$match.'<div class="m-follow-btn">'.$follow.$block.'</div></div>
+							<div style="text-align:right;">
+								<div class="tooltip-outer">
+									<span class="intergotive-sign">?</span>
+									<div class="tooltip" style="display:none">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>					
+								</div>							
+							</div>
+						</div>						
+					</div>
+					<div class="row">
+						<div class="mans-product-image"><ul class="product-image">'.$product.'</ul></div>
+					</div>
+					<div class="row bor-size-custom">
+						<strong>About this Creative:</strong>
+						<div class="product-education contain-custom">'.$customer->getData('education').'</div>
+					</div>
+					<div class="row bor-size-custom">
+						<strong>Clients Includs:</strong>
+						<div class="product-clients contain-custom">'.$customer->getData('clients').'</div>
+					</div>				
+				</div>';
+		}
+		echo $data;
+	}
+    public function ajaxArtistContactAction()
+    {
+		$id = $this->getRequest()->getParam('id');
+		$customer = Mage::getModel('customer/customer')->load($id);
+		$data="";
+		if($customer){
+			if($customer->getAvatar()==""){
+			$img = '<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'customer/nopropimg.png" height="125px"; width="125px"/></span>';
+			} else {
+			$img =	'<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $customer->getAvatar().'" height="125px"; width="125px" /></span>';
+			}
+			$html = '<div class="social-contact">';
+			if(!empty($customer->getData('website'))){
+				$html .= '<a href="'.$customer->getData('website').'" class="website" target="_blank"></a>';
+			}
+			if(!empty($customer->getData('facebook_url'))){
+				$html .= '<a href="'.$customer->getData('facebook_url').'" class="facebook" target="_blank"></a>';
+			}
+			if(!empty($customer->getData('twitter_url'))){
+				$html .= '<a href="'.$customer->getData('twitter_url').'" class="twitter" target="_blank"></a>';
+			}
+			if(!empty($customer->getData('instagram_url'))){
+				$html .= '<a href="'.$customer->getData('instagram_url').'" class="instagram" target="_blank"></a>';
+			}
+			$address = $customer->getData('city').",".$customer->getData('state');
+			$address = trim($address,", ");	
+			$html .= '</div>';
+			$data = '
+			<div class="row">
+				<div class="artist-personal">
+					<div class="artist-personal-inner1">
+						<div class="artist-pic">'.
+							$img
+						.'</div>
+						<div class="ap-sub-inn">
+							<strong>'.$customer->getName().'</strong>
+							<div>	
+								'.$address.'
+							</div>
+						</div>
+					</div>
+					<div class="artist-personal-inner2">
+						<div>
+							'.$customer->getData('phone').'
+						</div>
+						<div>
+							'.$customer->getData('email').'
+						</div>
+						'.$html.'
+					</div>
+				</div>				
+			<div>
+			';			
+		}
+		echo $data;
+	}
+	public function ajaxFollowingAction()
+	{
+		$rowid = $this->getRequest()->getParam('rowid');
+		$status = $this->getRequest()->getParam('status');
+		if($status == 0){$status=1;}else{$status=0;}
+		$resource = Mage::getSingleton('core/resource');
+		$writeAdapter = $resource->getConnection('core_write');
+		$query = "UPDATE `submitted_portfolio` SET `following` = $status WHERE `submitted_portfolio`.`id` = $rowid;";
+		$writeAdapter->query($query);
+	}
+
+	public function ajaxBlockedAction()
+	{
+		$rowid = $this->getRequest()->getParam('rowid');
+		$status = $this->getRequest()->getParam('status');
+		if($status == 0){$status=1;}else{$status=0;}
+		$resource = Mage::getSingleton('core/resource');
+		$writeAdapter = $resource->getConnection('core_write');
+		$query = "UPDATE `submitted_portfolio` SET `blocked` = $status, `following` = 0 WHERE `submitted_portfolio`.`id` = $rowid;";
+		$writeAdapter->query($query);
+	}
+	
+	public function ajaxEnlargeProImageAction()
+	{
+		$mageproductid = $this->getRequest()->getParam('mageproductid');
+		$list = $this->getRequest()->getParam('list');
+		$managesubmission = $this->getRequest()->getParam('managesubmission');
+		$artistdetails = $this->getRequest()->getParam('artistdetails');
+		$artisid = $this->getRequest()->getParam('artisid');
+		$customer = Mage::getSingleton('customer/session')->getCustomer();
+		$p = Mage::getModel('catalog/product')->load($mageproductid);
+		$v = Mage::helper('catalog/image')->init($p, 'thumbnail')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(700,625);
+		list($width, $height) = getimagesize($v);
+		if(!empty($artisid)){
+			$resource = Mage::getSingleton('core/resource');
+			$readAdapter= $resource->getConnection('core_read');			
+			$table = $resource->getTableName('user_subscription');
+			$query = "SELECT * FROM $table WHERE user_id = $artisid  and status='active' order by id DESC";
+			$result = $readAdapter->fetchAll($query);
+			$datetime1 = new DateTime(date("Y-m-d"));
+			$datetime2 = new DateTime($result[0]["end_date"]);
+			$interval = $datetime1->diff($datetime2);
+			$interval = $interval->format('%R%a');
+			$promember = "";
+			if($interval > 0 and $customer->getId()== $artisid){$promember = "<strong style='color:#94d0ff'>Pro Member</strong>";}		
+			elseif($interval <= 0 and $customer->getId()== $artisid){$promember = "<strong style='color:#94d0ff'>Not Pro Member</strong>";}		
+		}
+		$product = Mage::getResourceModel('catalog/product');
+		$options = $product->getAttribute('style')->getSource()->getAllOptions();
+		$mediam = "";
+		foreach ($options as $option){
+			if(in_array($option['value'], explode(',', $p->getData('style')))) {
+				$mediam .= $option['label'].', ';
+			}
+		 }
+		$html = '<img src="'.$v.'" mageproductid="'.$mageproductid.'" class="enlarged-img" id="enlarged-'.$mageproductid.'" />'; 
+		$mediam = trim($mediam,", ");
+		if($list == 1){
+			$artist = Mage::getModel('customer/customer')->load($artisid);
+			$allow = 18; $match="";
+			$string = strip_tags($artist->getData('education'));
+			if (strlen($string) > 150) {
+
+				// truncate string
+				$stringCut = substr($string, 0, 150);
+				$endPoint = strrpos($stringCut, ' ');
+
+				//if the string doesn't contain any space then it will cut without word basis.
+				$education = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+				$education .= '...<a target="_blank" href="'.Mage::getBaseUrl().'art_details?id='.$artisid.'" >more</a>';
+			}			
+			if($customer->getGroupId() == 2){ // this match section only for director login
+				if($artist->getData('profession') == 38){				
+					$a1 = explode(',', $customer->getData('work_type_use_for_illustration'));
+					$a2 = explode(',', $artist->getData('work_type_use_for_illustration'));
+					$match = array_intersect($a1,$a2);
+					$match = count($match)>0 ?count($match): 0;
+					if($customer->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+					elseif($customer->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+					elseif($customer->getData('hire_illustrators') == "Never"){$fit = 0;}
+					$match_value = round($fit + (((100 - 82)/$allow) * $match));
+					
+				}elseif($artist->getData('profession') == 35){
+					$a1 = explode(',', $customer->getData('work_type_use_for_photography'));
+					$a2 = explode(',', $artist->getData('work_type_use_for_photography'));
+					$match = array_intersect($a1,$a2);
+					$match = count($match)>0 ?count($match): 0;
+					if($customer->getData('hire_illustrators') == "Frequently"){$fit = 82;}
+					elseif($customer->getData('hire_illustrators') == "Sometimes"){$fit = 72;}
+					elseif($customer->getData('hire_illustrators') == "Never"){$fit = 0;}
+					$match_value = round($fit + (((100 - 82)/$allow) * $match));			
+				}
+				if($match_value > 81){$class="green";}
+				elseif($match_value < 82 and $match_value > 71 ){$class="yellow";}
+				elseif($match_value < 72 ){$class="red";}
+				$match = '
+						<div class="s-c1 '.$class.'">
+							<div class="big-front">'.$match_value.'%</div>
+							<div class="matching-c">Matching Criteria</div>
+						</div>
+						';						
+			}
+			if($artist->getAvatar()==""){
+			$img = '<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) .'customer/nopropimg.png" height="125px"; width="125px"/></span>';
+			} else {
+			$img =	'<span class="customer-img"><img id="preview" src="'. Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $artist->getAvatar().'" height="125px"; width="125px" /></span>';
+			}			
+			if($p->getData('inch_cm')==50){$unit=" cm";}elseif($p->getData('inch_cm')==51){$unit="\"";}
+			if($p->getData('re_licensing')){$availability="Yes contact the artist directly";}else{$availability="No";}
+			$html = '
+				<div class="img-pop-left">'.$html.'</div>
+				<div class="img-pop-right">
+					'.$promember.'
+					<strong>'.$p->getName().'</strong>
+					<div>
+						<span class="details-heading">Medium:</span>
+						<span>'.$mediam .'</span>
+					</div>
+					<div>
+						<span class="details-heading">Size:</span>
+						<span>'.$p->getData('width').'x'.$p->getData('height').$unit.'</span>
+					</div>
+					<div>
+						<span class="details-heading">Client:</span>
+						<span>'.$p->getData('client').'</span>
+					</div>
+					<div>
+						<span class="details-heading">Availability:</span>
+						<span>'.$availability.'</span>
+					</div>
+					<div>
+						<span class="c1">'.$img.'</span>
+						<span class="c2">'.$artist->getName().'</span>
+					</div>
+					<div  class="education">
+						<span>'.$education.'</span>
+					</div>	
+					<div>
+						<a target="_blank" href="'.Mage::getBaseUrl().'art_details?id='.$artisid.'" class="link-btn">View Portfolio</a>
+					</div>	
+					<div class="match-outer">'.$match.'</div>						
+				</div>
+			';
+			$resulet = array("html"=>$html,"width"=>$width,"height"=>$height);
+			return $this->getResponse()->setBody(json_encode($resulet));
+		}
+		if($managesubmission == 1){
+			
+			if($p->getData('inch_cm')==50){$unit=" cm";}elseif($p->getData('inch_cm')==51){$unit=" inches";}
+			$html .='
+					<div>
+						<span class="details-heading">'.$p->getData('name').'</span>
+					</div>
+					<div>
+						<span class="details-heading">Medium:</span>
+						<span>'.$mediam.'</span>
+					</div>
+					<div>
+						<span class="details-heading">Size:</span>
+						<span>'.$p->getData('width').'x'.$p->getData('height').$unit.'</span>
+					</div>
+					<div>
+						<span class="details-heading">Client:</span>
+						<span>'.$p->getData('client').'</span>
+					</div>			
+			';
+		}
+		if($artistdetails == 1){
+			if($p->getData('inch_cm')==50){$unit=" cm";}elseif($p->getData('inch_cm')==51){$unit=" inches";}
+			$html .='
+					<div class="pop-bottom-outer">
+						<div>
+							<span class="details-heading">'.$p->getData('name').'</span>
+						</div>
+						<div>
+							<span class="details-heading">Medium:</span>
+							<span>'.$mediam.'</span>
+						</div>
+						<div>
+							<span class="details-heading">Size:</span>
+							<span>'.$p->getData('width').'x'.$p->getData('height').$unit.'</span>
+						</div>
+						<div>
+							<span class="details-heading">Client:</span>
+							<span>'.$p->getData('client').'</span>
+						</div>			
+					</div>			
+			';			
+			$resulet = array("html"=>$html,"width"=>$width, "height"=>$height);
+			return $this->getResponse()->setBody(json_encode($resulet));
+		}
+		echo $html;
+	}
+	public function ajaxHideaccountAction()
+	{
+		$hide = $this->getRequest()->getParam('hide');
+		$html = $str ="";
+		$customer = $this->_getSession()->getCustomer();
+		if($customer->getData('hide_account') and $hide == '0'){
+			$customer->setData('hide_account',0);
+			$customer->save();
+		}elseif( !$customer->getData('hide_account') and $hide == '1'){
+			$customer->setData('hide_account',1);
+			$customer->save();
+		}		
+		if($customer->getData('hide_account')){
+			$str = '<button class="rev-btn hide-account" hide="0">Unhide My Account</button>';
+		}else{
+			$str = '<button class="rev-btn hide-account" hide="1">Hide My Account</button>';
+		}
+		$html = '
+			<strong>Deleting Your Account?</strong>
+			<p>If for any reason you want to delete your account, we made it easy. Simply click the Delete my Account button below and confirm deletion.</p>
+			<p>When you Delete your account, all of your information, images and corresponding details will be removed permanently from our records. Please make sure you really want to do this because it cannot be undone</p>
+			<p>Alternatively, you can simply Hide your account and anything related to it will be hidden from public view. If you change your mind later, simply reactivate your account from the Un-Hide my Account button.</p>
+			<div class="pop-btn-out"><button class="rev-btn delete-account">Delete My Account</button>'.$str.'</div>		
+		';
+
+		$resulet = array("html"=>$html,"none"=>1);
+		return $this->getResponse()->setBody(json_encode($resulet));
+	}
+}

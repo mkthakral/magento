@@ -1,0 +1,88 @@
+[26-Mar-2019 07:12:41 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function save() in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php:160
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Customer_AccountController->membershipAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('membership')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage::run('' in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php on line 160
+[26-Mar-2019 07:13:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function save() in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php:160
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Customer_AccountController->membershipAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('membership')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage::run('' in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php on line 160
+[04-Apr-2019 15:49:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:50:14 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:50:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:51:27 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:52:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:53:00 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:349
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 349
+[04-Apr-2019 15:59:03 UTC] PHP Fatal error:  Uncaught Error: Call to a member function setSenderName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php:63
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Customer_AccountController->indexAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('index')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage::r in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Customer/controllers/AccountController.php on line 63
+[05-Apr-2019 12:28:36 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:362
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage::run( in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 362
+[05-Apr-2019 12:29:22 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getName() on null in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php:362
+Stack trace:
+#0 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Action.php(418): Mate_Adminhtml_CustomerController->saveAction()
+#1 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Router/Standard.php(254): Mage_Core_Controller_Varien_Action->dispatch('save')
+#2 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Controller/Varien/Front.php(172): Mage_Core_Controller_Varien_Router_Standard->match(Object(Mage_Core_Controller_Request_Http))
+#3 /home/digitalmate/public_html/magento/folyoz/app/code/core/Mage/Core/Model/App.php(365): Mage_Core_Controller_Varien_Front->dispatch()
+#4 /home/digitalmate/public_html/magento/folyoz/app/Mage.php(688): Mage_Core_Model_App->run(Array)
+#5 /home/digitalmate/public_html/magento/folyoz/index.php(86): Mage::run( in /home/digitalmate/public_html/magento/folyoz/app/code/local/Mate/Adminhtml/controllers/CustomerController.php on line 362

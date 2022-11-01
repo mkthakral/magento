@@ -1,0 +1,38 @@
+<?php
+	$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');
+	$query = "SELECT * FROM `analytics_output` WHERE `artist_id` = ".$loginuser->getId();
+	$result = $readAdapter->fetchAll($query);
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="page-title">
+    <h1><?php echo $this->__('My Receipts') ?></h1>
+</div>
+<?php echo $this->getPagerHtml(); ?>
+
+<table class="data-table" id="my-orders-table">
+    <thead>
+        <tr>
+			
+            <th>click_website</th>
+            <th>click_facebook</th>
+            <th>click_twitter</th>
+            <th>click_instagram</th>
+            <th>viewed_contact</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($result as $key): ?>
+		<tr>
+        <td><?php echo $key['click_website']?></td>
+        <td><?php echo $key['click_facebook']?></td>
+        <td><?php echo $key['click_twitter']?></td>
+        <td><?php echo $key['click_instagram']?></td>
+        <td><?php echo $key['viewed_contact']?></td>
+		</tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script type="text/javascript"></script>
+

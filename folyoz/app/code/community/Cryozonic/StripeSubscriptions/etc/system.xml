@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!--
+ * Cryozonic
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Single Domain License
+ * that is available through the world-wide-web at this URL:
+ * http://cryozonic.com/licenses/stripe.html
+ * If you are unable to obtain it through the world-wide-web, 
+ * please send an email to info@cryozonic.com so we can send 
+ * you a copy immediately.
+ *
+ * @category   Cryozonic
+ * @package    Cryozonic_StripeSubscriptions
+ * @copyright  Copyright (c) Cryozonic Ltd (http://cryozonic.com)
+ * -->
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <cryozonic_stripesubscriptions translate="label comment" module="cryozonic_stripesubscriptions">
+          <label>Stripe Subscriptions</label>
+          <sort_order>14</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+            <active translate="label">
+              <label>Enabled</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>1</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </active>
+            <guestlogin translate="label">
+              <label>Require Guest Login</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <comment>
+                <![CDATA[Guest customers will be redirected to the login page when trying to buy a subscription.]]>
+              </comment>
+              <sort_order>20</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </guestlogin>
+            <scgroup translate="label">
+              <label>Subscription Group</label>
+              <comment>
+                <![CDATA[When a customer buys a subscription, automatically assign them to this group.]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>cryozonic_stripesubscriptions/source_groups</source_model>
+              <sort_order>30</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </scgroup>
+            <csgroup translate="label">
+              <label>Cancelled Subscription Group</label>
+              <comment>
+                <![CDATA[When a customer cancels their subscription, switch them to this group.]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>cryozonic_stripesubscriptions/source_groups</source_model>
+              <sort_order>40</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </csgroup>
+            <failed_payments_group translate="label">
+              <label>Failed Payments Group</label>
+              <comment>
+                <![CDATA[When a recurring payment fails for any reason, switch the customer to this group]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>cryozonic_stripesubscriptions/source_groups</source_model>
+              <sort_order>50</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </failed_payments_group>
+            <invoice_order>
+              <label>Invoice Orders</label>
+              <frontend_type>select</frontend_type>
+              <source_model>cryozonic_stripesubscriptions/source_invoice</source_model>
+              <sort_order>55</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </invoice_order>
+            <recurring_order_status translate="label">
+              <label>New &amp; Recurring Order Status</label>
+              <comment>
+                <![CDATA[Set this setting to overwrite the default order status (not recommended)]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_order_status</source_model>
+              <sort_order>60</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </recurring_order_status>
+            <recurring_emails>
+              <label>Send Recurring Emails</label>
+              <comment>
+                <![CDATA[Should we send an email to the customer with every recurring billing?]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>70</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </recurring_emails>
+            <pause_resume>
+              <label>Pause/Resume Subscriptions</label>
+              <comment>
+                <![CDATA[Should the customers be able to pause and resume subscriptions from their accounts?]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>75</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </pause_resume>
+            <fix_grand_total>
+              <label>Hide grand total when zero</label>
+              <comment>
+                <![CDATA[At the final step of the checkout and at the shopping cart page,
+                the subscriptions total is calculated separately from non-subscriptions grand total,
+                which may confuse the customer. Should we hide the non-subscriptions grand total when it is zero?]]>
+              </comment>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>80</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </fix_grand_total>
+            <configurable_products_input>
+              <label>Configurable Products Input</label>
+              <frontend_type>select</frontend_type>
+              <source_model>cryozonic_stripesubscriptions/source_configurable</source_model>
+              <sort_order>90</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </configurable_products_input>
+          </fields>
+        </cryozonic_stripesubscriptions>
+      </groups>
+    </payment>
+  </sections>
+</config>

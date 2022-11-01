@@ -1,0 +1,129 @@
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/bootstrap/3.3.7-bootstrap.min.css');?>">
+<script src="<?php echo Mage::getBaseUrl()."js/bootstrap/3.3.7-bootstrap.min.js";?>"></script>
+<?php 
+	$id = $this->getRequest()->getParam('id');
+	$customer = Mage::getModel('customer/customer')->load($id);
+?>
+<?php  if($customer){ ?>
+
+<div class="container">
+	<div class="artist-details">
+		<div class="page-title">    
+		</div>
+		<div class="page-body">	
+			<div class="name">
+				<h1><?php echo  $customer->getName(); ?></h1>
+			</div>
+			<div class="row">
+				<div class="head-left">
+					<?php if($customer->getAvatar() == ""){ ?>
+					<img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer/nopropimg.png' ?>" height="166px"; width="166px"/>
+					<?php } else { ?>
+					<img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'. $customer->getAvatar() ?>" height="166px"; width="166px" />
+					<?php }	?>
+					<div class="contain">		
+						<strong><?php echo $customer->getName(); ?></strong>
+						<div><?php echo $customer->getData('address'); ?></div>
+						<button class="contact-btn button rev-btn" btnid="<?php echo $id; ?>">Contact Info</button>	
+					</div>
+				</div>
+				<div class="head-right">
+				</div>
+			</div>
+			<div class="row">	
+				<div id="profile">
+					<?php $collection_product = Mage::getModel('marketplace/product')->getCollection()->addFieldToFilter('userid',array('eq'=>$id));?>
+					<ul class="product-grid">
+					<?php foreach($collection_product as $key) { ?>
+					<?php $mageproductid = $key->getData("mageproductid"); ?>
+					<?php $p = Mage::getModel('catalog/product')->load($mageproductid); ?>
+					<?php $v = Mage::helper('catalog/image')->init($p, 'thumbnail')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(350); ?>
+					<li><img class="enlarge" src="<?php echo $v ; ?>" mageproductid="<?php echo $mageproductid?>"/></li>
+					<?php }	?>				
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="creative-outer">
+					<div class="details-head">About this Creative:</div>
+					<div class="details"><?php echo $customer->getData('education'); ?></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="clients-outer">
+					<div class="details-head">Clients Include:</div>
+					<div class="details"><?php echo $customer->getData('clients'); ?></div>
+				</div>				
+			</div>
+		</div>
+	  <!-- Modal -->
+	  <div class="modal fade" id="myModal" role="dialog" style="display:none">
+		<div class="modal-dialog">
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-body">
+			</div>
+		  </div>
+		</div>
+	  </div>		
+		<div id="loader" class="cus-loader" style="display:none;">
+			<div class="over-lay"></div>
+			<div class="loader-body">
+				<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/ripple.svg" ?>"/>
+			</div>
+		</div>		
+		<div id="pop-outer" class="pop-outer" style="display:none;">
+			<div class="pop-overlay"></div>
+			<div class="pop-contain-outer">
+				<div class="close">X</div>
+				<div id="pop-contain" class="pop-contain"></div>
+			</div>
+		</div>	
+	</div>
+</div>
+<script>
+window.onload = function(){
+	
+};
+jQuery('body').on('click', '.contact-btn', function () {
+	
+	var btnid = jQuery(this).attr('btnid');
+	jQuery('#loader').css('display','block');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxArtistContact/",
+	data: "id="+btnid,
+	async: true,
+	success: function(data){
+		jQuery('#pop-contain').html(data);
+		jQuery('#pop-outer').css('display','block');
+		jQuery('#loader').css('display','none');
+		}
+	})
+});
+jQuery('body').on('click', '.close', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+jQuery('body').on('click', '.image-pop-overlay', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+
+jQuery('body').on('click', '.enlarge', function () {
+	jQuery('#loader').css('display','block');
+	var mageproductid = jQuery(this).attr('mageproductid');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxEnlargeProImage/",
+	data: "mageproductid="+mageproductid,
+	async: true,
+	success: function(data){
+			jQuery('.modal-body').html(data);
+			jQuery('#myModal').modal('show');
+			jQuery('#loader').css('display','none');
+		}
+	})		
+});
+</script>
+<?php } ?>

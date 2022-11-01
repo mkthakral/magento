@@ -1,0 +1,142 @@
+<div class="art-dsh-2">
+<p><strong class="say-google">Free 12 Piece Portfolio</strong></p>
+<p>To get started, complete your Profile Settings and click Save. We will review your information and send you a notification if approved, at that time your account will be active and you can begin uploading your work.</p>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/21.png" />
+<div class="desc"><a href="https://www.folyoz.com/customer/account/edit/"><span style="display: block;">My Profile Settings</span></a></div>
+</div>
+</div>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/22.png" />
+<div class="desc"><a href="https://www.folyoz.com/customer/account/analytics/"><span style="display: block;">View My Analytics</span></a></div>
+<div></div>
+</div>
+</div>
+<div class="clearfix"></div>
+<div style="padding: 0px;"></div>
+<ul>
+<li>Note: The review process is usually less than a day (We look for any of the following;&nbsp;published work, inclusion in competitions, industry directories, awards, and quality of work).&nbsp;There is no contract and independent Artists always keep 100% from Assignments, Commissions and Re-Licensing.</li>
+</ul>
+<p><strong class="say-google">Pro Member Account</strong></p>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/23.png" />
+<div class="desc"><a href="https://www.folyoz.com/customer/account/submitportfolio/"><span style="display: block;">Submit My Portfolio</span></a></div>
+<div></div>
+</div>
+</div>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/24.png" />
+<div class="desc"><a href="https://www.folyoz.com/marketplace/marketplaceaccount/myproductslist/"><span style="display: block;">Add to My Portfolio Library</span></a></div>
+<div></div>
+</div>
+</div>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/41.png" />
+<div></div>
+</div>
+</div>
+<div class="responsive">
+<div class="gallery"><img src="http://127.0.0.1/folyoz/media/wysiwyg/44.png" />
+<div></div>
+</div>
+</div>
+<div class="clearfix"></div>
+<div style="padding: 0px;"></div>
+<ul>
+<li>Note: Artist Representatives or groups of 5 and larger may qualify for a discount, please email us at:&nbsp;<a href="mailto:admin@folyoz.com" target="_blank">admin@folyoz.com</a>&nbsp;so we can create a Group ID Code for everyone in your group.</li>
+</ul>
+<p>Built for engagement and activity, FOLYOZ it's not a, "Set it and forget it," kind of site - it's an actionable platform. Our goal is to help Artists break free from traditional marketing methods by providing a great solution that saves them money, helps them find work, and at the same time reduces the amount of spam and junk mail in our industry.&nbsp;And of course, independent Artists keep 100% from every Assignment, Commission, or Re-Licensing sale.</p>
+<div class="clearfix"></div>
+<div style="padding: 0px;"></div>
+</div>
+<style><!--
+div.gallery {
+  border: 1px solid #94d0ff;
+padding: 10px;
+}
+
+div.gallery:hover {
+  border: 1px solid #94d0ff;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc:hover {
+background-color: #31465b;
+color: #ff6d34;
+border: 1px solid #31465b;
+}
+
+div.desc {
+  padding: 10px;
+  text-align: center;
+background-color: #ffffff;
+border: 1px solid #94d0ff;
+border-radius: 0px;
+color: #;
+}
+
+a:link {
+  color: #;
+}
+
+/* visited link */
+a:visited {
+  color: #;
+}
+
+/* mouse over link */
+a:hover {
+  color: #94d0ff;
+}
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.responsive {
+  padding-left: 15px;
+padding-right: 15px;
+padding-top: 5px;
+padding-bottom: 25px;
+  float: left;
+  width: 50%;
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 50%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+--></style>

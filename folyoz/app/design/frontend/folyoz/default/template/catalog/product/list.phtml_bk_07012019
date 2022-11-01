@@ -1,0 +1,196 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+<script type="text/javascript">window.location.href = '<?php echo $this->getUrl() ?>customer/account';</script>
+<?php } ?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+?>
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+
+<div class="list-search">
+<?php 
+$filter1='categories';
+$filter2='style';
+
+$attributeInfo1 = Mage::getResourceModel('eav/entity_attribute_collection')->setCodeFilter($filter1)->getFirstItem();
+$attributeId1 = $attributeInfo1->getAttributeId();
+$attribute1 = Mage::getModel('catalog/resource_eav_attribute')->load($attributeId1);
+$attributeOptions1 = $attribute1 ->getSource()->getAllOptions(false);
+
+//echo "<pre>"; print_r($attributeOptions1);
+
+$attributeInfo2 = Mage::getResourceModel('eav/entity_attribute_collection')->setCodeFilter($filter2)->getFirstItem();
+$attributeId2 = $attributeInfo2->getAttributeId();
+$attribute2 = Mage::getModel('catalog/resource_eav_attribute')->load($attributeId2);
+$attributeOptions2 = $attribute2 ->getSource()->getAllOptions(false);  
+
+?>
+
+</div>
+
+<div class="category-products">
+    <?php echo $this->getToolbarHtml() ?>
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+		<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+		try {
+			$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_read')->query($sqlPaymentSystem1);
+			$result1= $chkSystem->fetchall();
+		}
+		catch (Exception $e){
+			echo $e->getMessage();
+		}
+		foreach($result1 as $res){
+			$artisid=$res['userid'];
+		}
+		$artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>	
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="javascript:void(0)<?php //echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(383,383); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+            <?php // Product description ?>
+			<div artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image hover"><?php echo $artiscollection->getName(); ?></div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); ?>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+		<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+		try {
+			$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_read')->query($sqlPaymentSystem1);
+			$result1= $chkSystem->fetchall();
+		}
+		catch (Exception $e){
+			echo $e->getMessage();
+		}
+		foreach($result1 as $res){
+			$artisid=$res['userid'];
+		}
+		$artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>	
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="products-grid">
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="javascript:void(0)<?php //echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(383,383); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+				<div artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image hover"><?php echo $artiscollection->getName(); ?></div>
+			</li>
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+
+    <div class="toolbar-bottom">
+        <?php echo $this->getToolbarHtml() ?>
+    </div>
+	<!--div id="image-pop" class="image-pop-outer" style="display:none;">
+		<div class="image-pop-overlay"></div>
+		<div class="image-pop-contain-outer">
+			<div id="image-pop-contain" class="image-pop-contain lising-pop-contain"></div>
+		</div>
+	</div-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+	<div id="loader" class="cus-loader" style="display:none;">
+		<div class="over-lay"></div>
+		<div class="loader-body">
+			<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/ripple.svg" ?>"/>
+		</div>
+	</div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" style="display:none">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<?php endif; ?>
+<script>
+jQuery('body').on('click', '.product-image', function () {
+	jQuery('#loader').css('display','block');
+	var mageproductid = jQuery(this).attr('mageproductid');
+	var list = jQuery(this).attr('list');
+	var artisid = jQuery(this).attr('artisid');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxEnlargeProImage/",
+	data: "mageproductid="+mageproductid+"&list="+list+"&artisid="+artisid,
+	async: true,
+	dataType: "json",
+	success: function(data){
+			jQuery('.modal-body').html(data.html);
+			var orgwidth = data.width;
+			jQuery('.modal-dialog').css('width',orgwidth+300);
+			jQuery('#myModal').modal('show');
+			jQuery('#loader').css('display','none');
+		}
+	})		
+});
+jQuery('body').on('click', '.close', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+jQuery('body').on('click', '.image-pop-overlay', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+
+</script>

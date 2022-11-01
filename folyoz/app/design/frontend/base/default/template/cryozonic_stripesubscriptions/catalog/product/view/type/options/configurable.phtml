@@ -1,0 +1,100 @@
+<?php
+/**
+ * Cryozonic
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Single Domain License
+ * that is available through the world-wide-web at this URL:
+ * http://cryozonic.com/licenses/stripe.html
+ * If you are unable to obtain it through the world-wide-web,
+ * please send an email to info@cryozonic.com so we can send
+ * you a copy immediately.
+ *
+ * @category   Cryozonic
+ * @package    Cryozonic_StripeSubscriptions
+ * @copyright  Copyright (c) Cryozonic Ltd (http://cryozonic.com)
+ */
+
+$_product    = $this->getProduct();
+$_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+$_jsonConfig = $this->getJsonConfig();
+$_renderers = $this->getChild('attr_renderers')->getSortedChildren();
+$_inputType = $this->getConfigurableInputType($_product);
+
+?>
+<?php if ($_product->isSaleable() && count($_attributes)):?>
+    <dl>
+    <?php foreach($_attributes as $_attribute): ?>
+        <?php
+        $_rendered = false;
+        foreach ($_renderers as $_rendererName):
+            $_renderer = $this->getChild('attr_renderers')->getChild($_rendererName);
+            if (method_exists($_renderer, 'shouldRender') && $_renderer->shouldRender($_attribute, $_jsonConfig)):
+                $_renderer->setProduct($_product);
+                $_renderer->setAttributeObj($_attribute);
+                echo $_renderer->toHtml();
+                $_rendered = true;
+                break;
+            endif;
+        endforeach;
+
+        if (!$_rendered):
+        ?>
+        <dt><label class="required"><em>*</em><?php echo $_attribute->getLabel() ?></label></dt>
+        <dd<?php if ($_attribute->decoratedIsLast){?> class="last"<?php }?>>
+            <div class="input-box">
+                <?php $options = $this->getOptionsFromJson($_jsonConfig, $_attribute->getAttributeId()); ?>
+                <?php if ($_inputType == Cryozonic_StripeSubscriptions_Model_Source_Configurable::RADIO): ?>
+                    <ul class="options-list cryozonic-configurable">
+                    <?php foreach ($options as $option): ?>
+                        <li>
+                            <input type="radio" name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>_<?php echo $option['value']; ?>" value="<?php echo $option['value']; ?>" class="radio validate-one-required-by-name product-custom-option" price="<?php echo $option['price']; ?>">
+                            <span class="label">
+                                <label for="attribute<?php echo $_attribute->getAttributeId() ?>_<?php echo $option['value']; ?>">
+                                    <?php echo $option['label']; ?>
+                                    <?php if ($option['formattedPrice']): ?>
+                                        <span class="price-notice"><span class="price"><?php echo $option['formattedPrice']; ?></span></span>
+                                    <?php endif; ?>
+                                </label>
+                            </span>
+                        </li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php elseif ($_inputType == Cryozonic_StripeSubscriptions_Model_Source_Configurable::CHECKBOX): ?>
+
+                <?php $count = 0; foreach ($options as $option): ?>
+                    <?php if ($count++ == 0): ?>
+                        <input type="hidden" name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>_<?php echo $option['value']; ?>" value="<?php echo $option['value']; ?>" price="<?php echo $option['price']; ?>">
+                    <?php else: ?>
+                        <ul class="options-list">
+                            <li>
+                                <input type="checkbox" class="checkbox product-custom-option" name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>_<?php echo $option['value']; ?>" value="<?php echo $option['value']; ?>" price="<?php echo $option['price']; ?>">
+                                <span class="label">
+                                    <label for="attribute<?php echo $_attribute->getAttributeId() ?>_<?php echo $option['value']; ?>">
+                                        <?php echo $option['label']; ?>
+                                        <?php if ($option['formattedPrice']): ?>
+                                            <span class="price-notice"><span class="price"><?php echo $option['formattedPrice']; ?></span></span>
+                                        <?php endif; ?>
+                                    </label>
+                                </span>
+                            </li>
+                        </ul>
+                    <?php break; endif; ?>
+                <?php endforeach; ?>
+
+                <?php else: /* Dropdown */ ?>
+                <select name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>" class="required-entry super-attribute-select">
+                    <option><?php echo $this->__('Choose an Option...') ?></option>
+                </select>
+                <?php endif; ?>
+              </div>
+        </dd>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    </dl>
+    <script type="text/javascript">
+        var spConfig = new Product.Config(<?php echo $_jsonConfig ?>);
+    </script>
+    <?php echo $this->getChildHtml('after') ?>
+<?php endif;?>

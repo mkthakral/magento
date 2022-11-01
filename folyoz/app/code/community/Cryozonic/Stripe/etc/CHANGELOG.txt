@@ -1,0 +1,496 @@
+### Version 3.2.2, Released 2019-01-07
+
+- Adjustments for Stripe ACH Payments add-on
+
+### Version 3.2.1, Released 2018-12-10
+
+- Added payment source type (Card, Three D Secure etc) to the Magento admin payment info block
+
+### Version 3.2.0, Released 2018-12-07
+
+- Payments which have been placed under review, and which were then manually captured in the Stripe dashboard, can now also be captured in Magento by detecting the capture and simulating Offline invoicing instead of an Online capture
+- Added support for issuing multiple partial refunds for the same order invoice through Magento. Multiple partial refunds from Sripe will also create multiple credit memos in Magento for the same charge
+- The module will not show the Save card checkbox for guest customers that select to register during the checkout
+- Updated Lotus OSC integration
+- Updated IWD OSC integration
+- Updated Idev OSC integration
+- Added Spanish translation file
+- 202 webhook responses will now be logged more silently (no stacktrace)
+
+### Version 3.1.1, Released 2018-09-26
+
+- Update Idev OneStepCheckout integration
+
+### Version 3.1.0, Released 2018-09-21
+
+- Order cancelation emails will now be triggered for: a) 3D Secure authorization failures, b) Bank charge declines after a successful 3D Secure authorization and c) When a customer abandons the 3D Secure authorization process
+- Orders refunded in Stripe will now automatically create a Credit Memo in Magento. Supports partial refunds and multi-currency refunds.
+- Card declined errors at the review step will now send the customer back to the payment step
+- Swapped around API key fields in config section to match the Stripe dashboard
+- Fixed postcode not being passed to Stripe with Stripe Elements
+
+### Version 3.0.1, Released 2018-09-06
+
+- Added support for Magik OneStepCheckout v1.0.1
+- Prevent Stripe from re-trying webhooks that have crashed in the codebase, and discard webhooks for orders placed with a different payment method
+- Added more logging for webhook crashes
+- Translated an error message about cards not enrolled to 3D Secure with something more user friendly
+
+### Version 3.0.0, Released 2018-08-12
+
+- Added core support for Stripe ACH Payments add-on
+- Added core support for Stripe Express add-on
+- Added support for Aitoc All-In-One Checkout v1.1.0
+- Fixed 3D Secure slow connection issue causing the error "The payment was not authorized." to appear even with a successful authorization.
+
+### Version 2.9.9, Released 2018-07-25
+
+- Added support for setting custom store view statement descriptors
+- Added order number in every charge's metadata, in a way that can be extended with additional metadata
+- Upgraded the Idev OneStepCheckout integration to show the loader screen correctly
+- Added support for FancyCheckout 1.2.6
+- Added support for Lotusbreath OSC 4.2.0
+- Improved Apple Pay integration with certain OSC modules
+
+### Version 2.9.8, Released 2018-04-15
+
+- Added saved card icons in customer account section
+- Apple Pay compatibility improvements with OneStepCheckout modules that remove the telephone from the billing section
+
+### Version 2.9.7, Released 2018-03-20
+
+- Implemented charge.failed webhook for 3D Secure, so that if 3DS authentication succeeds but the charge fails due to insufficient funds etc, the order is still cancelled
+- Made the checkout padlock green
+
+### Version 2.9.6, Released 2018-03-11
+
+- Minor CSS improvements
+
+### Version 2.9.5, Released 2018-03-10
+
+- Added card icon swapping animation to Stripe Elements / Stripe.js v3
+
+### Version 2.9.4, Released 2018-03-08
+
+- Restyled Stripe Elements form: Splitted expiry and CVC fields into separate lines, added PCI DSS v3.2 security message, added svg card icon and various cosmetics
+- Stripe Elements will automatically detect the page locale and adjust the placeholders
+- Improved customizability of Stripe Elements
+
+### Version 2.9.3, Released 2018-02-16
+
+- In the admin area, prevent offline capturing of "Pending" invoices for 3D secure orders that have not yet consumed a chargeable source
+
+### Version 2.9.2, Released 2018-02-16
+
+- Added configuration option to enable or disable automatic invoicing of orders placed under Authorize Only mode
+- For pending 3D Secure authorizations, the order state and order status are now set to 'Pending Payment'
+
+### Version 2.9.1, Released 2018-02-09
+
+- New customers that have not yet been synchronized with Stripe can now add saved cards from their account section
+
+### Version 2.9.0, Released 2018-02-08
+
+- Fixed Stripe.js error occuring when 3D Secure is configured as "Required or Optional" and the card does not need to be authenticated.
+
+### Version 2.8.9, Released 2018-02-04
+
+- Added support for multi-stripe account configurations with redirect-based payment methods.
+- Store-view overwritten settings are now used in webhook events
+
+### Version 2.8.8, Released 2018-01-25
+
+- When the payment method is in "Authorize Only" mode: a) Admins no longer need to manually invoice orders, an invoice is now automatically created in Pending status. b) Orders with Pending invoices will now have a status of "Payment review". c) The new invoicing system will now use the "Email Invoice Copy" setting of the module for orders created from the admin area.
+- Small card deduplication fix when adding a new card that has been added before
+- The default security method is now Stripe.js v3 + Stripe Elements
+- 3D Secure is now enabled by default
+- Fixed 3D Secure cards not being saved after the source.chargeable webhook event
+- Fixed 3D Secure orders not changing status to Canceled after a failed authorization
+- Improved how Stripe.js errors are displayed at the checkout
+
+### Version 2.8.7, Released 2017-12-14
+
+- Integration improvements for Apptha 1StepCheckout
+- Added new caching strategy to reduce API requests
+- Added support for selecting saved Direct Debit mandates at the checkout when Stripe Euro Payments is installed
+- Mark a webhook event as processed only if there were no crashes
+- Fixed order sending email for older versions of Magento
+
+### Version 2.8.6, Released 2017-12-05
+
+- Compatibility improvements with Magecheckout OSC
+- Fixed javascript crash in admin area affecting v2.8.5
+
+### Version 2.8.5, Released 2017-11-29
+
+- Updated all OSC integrations to better detect the selected payment method
+- Fixed reported javascript crash in IE10
+
+### Version 2.8.4, Released 2017-11-26
+
+- Added support for Apptha 1StepCheckout v1.9
+- Improved form validation at checkout
+- Save a missing charge ID on the invoices of some add-on payment methods
+
+### Version 2.8.3, Released 2017-11-24
+
+- The Stripe Webhooks notification is now permanently hidden after the first webhook arrives (no longer uses the cache)
+- Fixed issue affecting v2.8.2 - when Stripe.js v2 was the selected security method, Apple Pay would not display
+
+### Version 2.8.2, Released 2017-11-23
+
+- Fixed Stripe.js initialization issue when Apple Pay is disabled
+
+### Version 2.8.1, Released 2017-11-22
+
+- Updated integration for GoMage LightCheckout OSC
+
+### Version 2.8.0, Released 2017-11-21
+
+- Implemented Android Pay and Pay by Google, for both Stripe.js v2 (traditional payment form) and Stripe.js v3 (Stripe Elements form)
+- Apple/Android Pay improvements for OneStepCheckout modules. It is no longer unnecessary to reload the payment form when the billing address changes.
+- Stripe Webhooks re-engineering: All webhooks for all add-ons are now handled with a single endpoint from the core Stripe Payments module. You no longer need to configure a separate endpoint for each add-on. Duplicate event requests will be safely discarded and Magento's internal event dispatcher will be used. You can now also enable all events in your Stripe account and they will be handled only if they are implemented in Stripe Payments or in one of the add-ons. All webhook requests and responses are now logged under var/log.
+- Fixed a payment method validation issue in the admin area
+
+### Version 2.7.8, Released 2017-11-09
+
+- Apple Pay no longer requires a customer email to be displayed at the checkout (improves compatibility with OSC modules and guest customers)
+- When Stripe Radar is enabled, orders can now be placed under "Manual Review" based on custom rules defined in Stripe Radar
+- The outcome of charges is now displayed in the admin area under the payment info section
+- Adjustments required by Stripe Euro Payments v1.1.2
+
+### Version 2.7.7, Released 2017-10-25
+
+- The zip/postcode is no longer collected through Stripe.js v3 & Stripe Elements. The billing address is used instead.
+- Added support for MageWorx OneStepCheckoutPro v3.4.4
+- Added support for GoMage LightCheckout v5.8, v5.9
+- Added support for MageCloud Clarion OSC v1.0.2
+- Updated integration for Idev OSC v4.1.0. Added CSS it's 3-column layout.
+- Minor locale additions
+
+### Version 2.7.6, Released 2017-09-20
+
+- Bugfix when viewing the Billing Agreements section
+
+### Version 2.7.5, Released 2017-09-19
+
+- Fixed Apple Pay security check when used with Stripe Elements
+- Fixed initialization crash in v2.7.4 when both Stripe.js v2 and Stripe.js v3 are loaded together
+
+### Version 2.7.4, Released 2017-09-13
+
+- Apple Pay can now be enabled with both Stripe.js v2 and Stripe.js v3 (Stripe Elements)
+- Updated integrations for MageBay OneStepCheckout, AdvancedCheckout OSC and Idev OneStepCheckout
+- Fixed: In some cases when a 3D Secure authorization is canceled, the canceled order's cart items would not be re-added to the active quote
+
+### Version 2.7.3, Released 2017-09-01
+
+- Various fixes with card saving and deduplication across all payment methods
+
+### Version 2.7.2, Released 2017-08-28
+
+- Fixed issue affecting Magento 1.9.3.4 where captured 3D Secure invoices would be stuck in Pending status
+- Fixed missing Zip and Street checks in admin for cards created with Stripe Elements
+- Added CVC check results in admin area
+
+### Version 2.7.1, Released 2017-08-24
+
+- Fixed card saving error for card sources generated with Stripe Elements
+
+### Version 2.7.0, Released 2017-08-18
+
+- DEPRECIATED: The Beta API for 3D Secure has been replaced with the newer Preview API. 3D Secure is now officially and fully supported.
+- Stripe.js v3 + Stripe Elements now create sources instead of tokens - Major module-wide changes to support sources instead of tokens.
+- 3D Secure: Added new webhooks endpoint for handling redirect-based 3DS authentications. Module upgrades will need to configure this endpoint.
+- 3D Secure: The merchant can now enable 3D Secure for either "Required" verifications only, or for both "Required and Optional"
+- 3D Secure: Supports saving cards that have been verified after a redirect and a successful webhook charge
+- 3D Secure: Saved cards in customer account section and at the checkout can now be either Sources (created from the Sources API) or the old-style card objects. Both can be added and deleted from the customer account section.
+- 3D Secure: The 3DS verification will also trigger if a customer selects a saved card at the checkout page
+- 3D Secure: Failed authorizations will now re-add order items to the customer's cart after redirecting back to the merchant's website.
+- 3D Secure: Admin orders using sources will work with both "Authorize Only" and with "Authorize and Capture" settings
+- 3D Secure: Order emails will now be triggered only after a successful charge in the webhooks controller.
+- 3D Secure: Capturing admin orders that have not been authorized yet will notify the admin with an appropriate message.
+- 3D Secure: When placing an admin order with card details that require a customer 3DS verification, the admin will be notified with an appropriate message.
+- New and improved card saving deduplication algorithm that works with sources as well. Single-use sources are now ignored.
+- Stripe Radar / Address verification details now additionally send the billing address line 2, customer name, city, country, state and telephone
+- Stripe Radar checks run on top of 3D Secure verification checks for combined security.
+- The card's origin country is now displayed in the payment information box in the admin area to help with fraud detection
+- Added a new module configuration setting to automatically email a copy of the order invoice.
+- Added a new module configuration setting to specify a Minimum Order Amount. The payment method is hidden if this is not met.
+- The payment form validation has been replaced with Magento's inline form validation, which works better with OneStepCheckout modules.
+- Added Stripe.js and Stripe Elements support for AdvancedCheckout OSC v2.5.0
+- Added Stripe.js and Stripe Elements support for Magesolution Athlete Ultimate Magento Theme v1.1.2
+- Improved payment data cleanup when the customer changes from one payment method to another
+- Fixed Apple Pay issue with large amounts that contain commas
+- Fixed a customer address issue that prevented customers from adding new cards from the customer account section
+- Fixed shipping tax calculation issue when Apple Pay is used for Stripe Subscription purchases
+- A changelog.txt file is now included with the package
+
+### Version 2.6.0, Released 2017-06-25
+
+- Added support for Stripe Euro Payments add-on which adds 5 new payment methods: Bancontact, Giropay, iDEAL, SEPA Direct Debit and SOFORT
+
+### Version 2.5.7, Released 2017-06-12
+
+- Upgraded Stripe PHP library to v4.12.0
+- Small CSS fixes on checkout
+- If an OSC module is used, inline errors are displayed as an alert instead
+
+### Version 2.5.6, Released 2017-05-23
+
+- Allow cards that do not support 3D Secure to fall back to regular charges
+- If a logged-in customer has multiple saved addresses, use the selected dropdown value at checkout instead of the customer's default billing address
+- Tested FireCheckout 4.0.2, fixed integration issue
+
+### Version 2.5.5, Released 2017-05-17
+
+- Fixed a javascript crash when reading the email of guest customers in OSC modules
+
+### Version 2.5.4, Released 2017-05-16
+
+- Improvements with retrieving and sending the customer's billing address and email to Stripe across many parts of the system. Affects OSC modules, Apple Pay, guest customers etc
+
+### Version 2.5.3, Released 2017-05-04
+
+- Added support for Magecheckout OSC 2.2.1
+- Fixed issue with Stripe Radar caused in v2.5.1 - card name is now used again in Radar
+
+### Version 2.5.2, Released 2017-04-20
+
+- Added support for Stripe.js v3 + Stripe Elements at the checkout, customer account section and in the admin area.
+- Added support for NextBits OneStepCheckout 1.0.3
+
+### Version 2.5.1, Released 2017-04-06
+
+- Added support for Amasty OneStepCheckout 3.0.5
+- The IWD OSC integration has been updated so that the 3D Secure modal appears when the final Place Order button is clicked
+- Tested with IWD OSC 4.3.4
+- Payment form elements are no longer disabled when the customer navigates to the final review step of the checkout
+- Removed AVS configuration option, billing details are now always sent to Stripe for all transactions
+- Logged in customers with no billing address will now be directed to their address book before adding saved cards from their account
+- The card name is no longer a required field - Magento validations will still apply on the form
+- Fixed warning in logs caused by trying to retrieve Stripe Radar results for recurring subscription orders
+- Block and templates refactoring so that the AVS billing address and customer email are retrieve and sanitized from a helper
+
+### Version 2.5.0, Released 2017-03-14
+
+- Upgraded to Stripe PHP library v4.4.2 [major]
+- Updated Stripe API to 2017-02-14
+- Added support for MageBay OSC 1.1.5
+- Added the ability to disable Apple Pay from the configuration section
+- Trim whitespace from API keys in configuration
+- Removed unnecessary order status change when an order is refunded in full or partially
+- Stripe.js compatibility improvement with some themes
+- Fixed Stripe.js issue when zip code validation fails
+- Fixed Stripe.js place order button bindings in admin area
+- Fixed Apple Pay initialization issue with IWD OSC
+- Fixed javascript crash with Apple Pay in saved cards section
+
+### Version 2.4.1, Released 2016-12-29
+
+- Adjusted a statement using PHP 5.4 array syntax to work with older versions of PHP.
+- Added Stripe.js support for Ultimo Theme when used together with FireCheckout OSC
+
+### Version 2.4.0, Released 2016-12-15
+
+- Added support for Apple Pay [major]
+- Apple Pay can be used with the Stripe Subscriptions add-on to purchase subscriptions
+- Apple Pay can be used with 3D Secure
+- The 3D Secure modal width now adjusts on narrow mobile devices
+- Saved cards radio buttons now have card icons based on the card brand
+- It is now possible to capture expired authorizations of guest customers that have saved cards in their Stripe account
+- CSS fix for Idev OneStepCheckout
+
+### Version 2.3.3, Released 2016-11-27
+
+- Stripe Radar will now create uncaptured invoices for orders placed in Authorize Only mode, so that they can later be captured from admin if they are legitimate
+- Added a new validation for scenarios where Stripe.js is not used correctly by OSC modules
+- Added official support for MageStore OSC 3.5.0
+- Updated Stripe.js integration for Idev OneStepCheckout 4.5.x, which broke with the 2.3.0 release
+
+### Version 2.3.2, Released 2016-11-11
+
+- Stripe.js is now enabled by default on a stock installation
+- Translation CSV files can now be used to also translate the admin area
+- Added a way to cancel orders for authorizations that have expired
+- Fixed javascript validation issue with Magegiant OneStepCheckout
+- Fixed an error logging bug in the admin area affecting 2.3.0 and 2.3.1
+
+### Version 2.3.1, Released 2016-11-04
+
+- Bugfix when retrieving Stripe Radar results in the admin area
+
+### Version 2.3.0, Released 2016-11-02
+
+- Stripe Radar support - Automatically mark orders as fraudulent based on a pre-selected risk level
+- The admin payment info block now links to the customer and payment objects in the Stripe Dashboard
+- The admin payment info block now displays Radar Risk level, captured status, refund status
+- Improved AVS support for OSC modules that do not refresh the payment form when the billing address changes
+- Imporoved OSC checkout loader for 3D Secure and payment form styling
+- 3D Secure API calls will now always use the secure Magento base URL
+- Converted some templates into blocks for better Magento coding standards compliance
+- Added additional server-side card validations with user friendly error messages
+- Increased Stripe.js security when javascript crashes prevent form inputs from becoming disabled
+- Fixed Stripe.js initialization issue in the admin area when refreshing a semi-completed new order page
+
+### Version 2.2.2, Released 2016-09-30
+
+- Will now save cards for guest customers too when the "Save without asking" option is selected
+- Fixed javascript crash with certain themes when merged javascript is enabled; caused by prototype's window.js (issue appeared in v2.2.0)
+
+### Version 2.2.1, Released 2016-09-14
+
+- Added official support for Awesome Checkout 1.5.0
+- Improved generic support for all OSC modules
+- 3D Secure now works with custom URL multi-store configurations
+- Various Javascript refactoring
+- Under the customer account, the saved cards section will now display even with saved cards disabled
+- Added appropriate error messages when adding new cards with saved cards disabled
+
+### Version 2.2.0, Released 2016-08-30
+
+- Added iframe based 3D Secure support for new and saved cards [major]
+- Added 3D Secure support in the Stripe PHP library
+- Added Stripe.js support for MageGiant OSC 4.0.0
+- Stripe.js is now loaded dynamically during the checkout only, improving page load performance everywhere else
+- The loading spinner at the checkout step now appears before the Stripe.js API call, giving a better checkout flow
+- Improved Address Verification checks (AVS) to prevent hackers from manipulating javascript to bypass AVS
+- Removed obsolete AdminHead overwrites which seemed to conflict with some reporting modules
+- All credit card icons are now preloaded to make the CSS3 card auto-detect animation smoother
+- Placing orders from admin will now disable the Save button while the Stripe.js token is generated
+- Bumped up the supported PHP version to 7.1
+- Upgrade to Stripe API 2016-07-06
+- Moved all JS code and CSS selectors out of templates and into asset files, cleaned duplicates, combined multiple asset files into one
+- Disable Stripe API fallback when there is a javascript crash. Force usage of Stripe.js when it is enabled.
+- Moved IWD OSC specific code from a core method to the rest of the OSC modules
+- Remove xxxx-xxxx-xxxx- from the card infobox, now only using the last4 digits
+- Added new locale strings
+- Fixed an admin JS validation issue
+
+### Version 2.1.1, Released 2016-03-15
+
+- Added new configuration option to trigger receipt emails from Stripe for successful payments and refunds
+- AVS can now be used in the back office for newly created customers without a saved billing address
+- Improved Stripe.js support for multi-stripe account setups
+- Two compatibility improvements for Idev's OneStepCheckout
+- Added official Stripe.js support for FireCheckout 3.2.0
+- Fixed stuck spinner in saved cards section when Stripe responds with an error after adding a new card
+- Other codebase cleanup and stability improvements
+
+### Version 2.1.0, Released 2015-11-20
+
+- Added Stripe.js support for 2 new OneStepCheckout modules
+- The payment info block now displays the used card’s last 4 digits
+- If saved cards are disabled, hide the saved cards section from the customer account
+- Performance improvements in the back office
+- Now saving guest checkout session IDs which are required by Stripe Subscriptions 1.7.0 onwards
+- Fixed new card not saving issue at checkout page when changing already entered shipping address and Stripe.js is enabled
+- Fixed refund issue when "Pay in store currency" is disabled but the customer placed an order in the store currency
+
+### Version 2.0.0, Released 2015-10-29
+
+- Optionally select and display which card types are accepted for a more professional look (implemented as icons)
+- Added real-time card type detection with sliding and fading CSS3 animations
+- Added Stripe.js support for the multi-address shipping mode
+- Fixed compatibility issue with PayPal Express
+- Fixed Stripe.js issue when the customer has no saved cards
+- Fixed some PHP notices logged in the web server's log
+
+### Version 1.9.9, Released 2015-07-31
+
+- Customers can now add saved cards from their account section
+- AVS checks results are displayed on each order in the back office
+- Card type and last 4 digits are now displayed in the back office
+- Synchronization of Magento customers with Stripe customers now happens upon payment
+- Various improvements for guest checkouts
+- The module can now be disabled for specific store views
+- Small CSS fixes
+
+### Version 1.9.4, Released 2015-02-26
+
+- Upgraded stripe-php library to v1.18.0 (https://github.com/stripe/stripe-php/tree/v1.18.0)
+- Module updates to reflect the latest Stripe API changes (https://stripe.com/docs/upgrades#2015-02-18)
+
+### Version 1.9.3, Released 2015-02-22
+
+- Added support for capturing invoices and credit memos in addition to orders in multi-store configurations.
+
+### Version 1.9.2, Released 2015-02-20
+
+- Added support for adjusting/partially refunding orders that have already been adjusted or partially refunded.
+
+### Version 1.9.1, Released 2015-02-14
+
+- Stripe.js mode now works with IWD OnePage Checkout
+- Stripe.js library is now loaded in a different way, improves compatibility with certain themes
+- Improved support for running cron job order placements
+
+### Version 1.9.0, Released 2015-02-03
+
+- Added a configuration option for switching between Stripe API or Stripe.js modes.
+
+### Version 1.8.0, Released 2014-12-19
+
+- Added ability to handle expired authorizations by re-creating them with a saved card
+- Improved logging of payments against the customer object in the Stripe dashboard
+
+
+### Version 1.7.4, Released 2014-11-24
+
+- Added support for multi-address shipping.
+- Added support for multi-stripe account configurations on the same website.
+- Added support for charging in either local or remote currency in multi-currency setups.
+- Fixed issue with new order status, improved CSS for better theme support.
+
+### Version 1.7.0, Released 2014-06-08
+
+- Added checkbox that allows users to opt-out from saving their card when this feature is enabled.
+- Saving cards now also works with customers who register during the checkout process.
+
+### Version 1.6.0, Released 2014-05-07
+
+- Customers can now remove saved cards from their account page
+
+### Version 1.5.1, Released 2014-05-01
+
+- Fixed issue when saving multiple customer cards
+
+### Version 1.5.0, Released 2014-04-17
+
+- Added support for Amazon-style saved credit cards which are PCI compliant.
+
+### Version 1.4.1, Released 2014-03-23
+
+- Added translation files to be used with multi-language websites.
+- Updated documentation.
+- Fixed small html markup inconsistency.
+
+### Version 1.4.0, Released 2014-02-28
+
+- Added support files for integrating Stripe Subscriptions and Magento Recurring Profiles. Stripe Payments 1.4.0+ is now required for our Stripe Subscriptions 1.0.0+ add-on module which available on our website.
+
+### Version 1.3.0, Released 2014-02-03
+
+- Added support for the Address Verification System (AVS) - prevent fraud by automatically validating the customer's billing address against the card owner's address. Can be optionally enabled from the configuration section. Works for both regular orders and with back office telephone orders.
+
+### Version 1.2.0, Released 2014-01-28
+
+- Added support for taking telephone orders from the magento back office, also known as Mail Orders/Telephone Orders (MOTO).
+- Bugfix with refunds on Magento 1.8.x
+
+### Version 1.1.0, Released 2014-01-22
+
+- Added support for authorization only payments and partial invoicing with automatic partial refunds triggered on Stripe.
+
+### Version 1.0.2, Released 2014-01-09
+
+- Bugfix on displaying customer information in the Stripe dashboard
+
+### Version 1.0.1, Released 2014-01-02
+
+- Validate the cardholder name during Stripe's token generation
+
+### Version 1.0.0, Released 2013-12-12
+
+- Supports all major credit, debit, gift and prepaid cards. All countries supported, your customers can be anywhere in the world. All currencies in the world are supported. Works with Magento 1.4 to 1.8.
+

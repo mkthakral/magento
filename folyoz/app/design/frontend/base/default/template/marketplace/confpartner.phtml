@@ -1,0 +1,93 @@
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+		document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<?php 
+$helper=Mage::helper('marketplace'); 
+$profile_hint_status = $helper->getProfileHintStatus();
+?>
+<li class="field" id="wantptr">
+	<label for="wantpartner" class="required"><?php echo $helper->__('Do You Want To Become Seller / Vendor?') ?> </label>
+	<?php
+	if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/become_seller',Mage::app()->getStore())){?>
+		<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/become_seller',Mage::app()->getStore()) ?>"/>
+	<?php
+	} ?>
+	<div class="input-box">
+		<input type="radio" id="wantpartner" class="wantpartner" name="wantpartner" value='1' title="<?php echo $helper->__('Agree as Seller') ?>"  /> <?php echo $helper->__("Yes"); ?>&nbsp;&nbsp;
+		<input type="radio" id="wantpartner" class="wantpartner" name="wantpartner" value='0' title="<?php echo $helper->__('Disagree as Seller') ?>" checked /> <?php echo $helper->__("No"); ?>
+	</div>
+	<div id="wk_load_conf">
+		<img src="<?php echo $this->getSkinUrl('marketplace/images/ajax-loader-tr.gif'); ?>" height="20px" width="20px"/>
+	</div>
+</li>
+<script>
+<?php
+if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/shopurl_seller',Mage::app()->getStore())){
+	$shopurl_hint = '<img src="'.$this->getSkinUrl('marketplace/images/quest.png').'" class="questimg" title="'.Mage::getStoreConfig('marketplace/marketplace_profile/shopurl_seller',Mage::app()->getStore()).'"/>';
+
+}else{
+	$shopurl_hint = '';
+} ?>
+var $wk_jq= jQuery.noConflict();
+$wk_jq(function(){
+	$wk_jq('#email_address').parents('li').after($wk_jq('#wantptr'));
+	$wk_jq('#wantptr').show();
+	
+	$wk_jq('.wantpartner').change(function(){
+		if($wk_jq(this).val()==1){
+			$wk_jq('.button').attr('disabled','disabled');
+			$username=$wk_jq('<li/>').addClass('profileurl')
+									 .append($wk_jq('<label/>')
+										.addClass('required')
+									    .text('<?php echo $helper->__('Shop URL'); ?>')
+										.append($wk_jq('<em/>').text('*')))
+									 .append('<?php echo $shopurl_hint ?>')
+								     .append($wk_jq('<div/>')
+										.addClass('input-box')
+										.append($wk_jq('<input/>').addClass('input-text')
+											.attr('title','<?php echo $helper->__(' Shop URL For Your Marketplace Shop ')?>')
+										    .addClass('required-entry')
+											.attr('type','text')
+											.attr('name','profileurl'))
+										.append($wk_jq('<span/>')
+											.text('<?php echo $helper->__(" (This will be used to display your public profile) ")?>')
+										    .addClass('required-entry')
+											.attr('type','text')
+											.attr('name','profileurl'))
+								    );
+			$wk_jq('#wantptr').next('li').after($username);
+		}else{
+			$wk_jq('.button').removeAttr('disabled');
+			$wk_jq('.profileurl').remove();
+		}
+	});
+	$wk_jq('ul').delegate('.profileurl input','keyup',function(){
+		$wk_jq(this).val($wk_jq(this).val().replace(/[^a-z^A-Z^0-9\.\-]/g,''));
+	});
+	$wk_jq('#form-validate').delegate('.profileurl input','change', function(){
+		$wk_jq('.unavailable,.available').remove();
+		var profileurl=$wk_jq('.profileurl input').val();
+		$wk_jq('.button').attr('disabled','disabled');
+		if(profileurl!=''){
+			$wk_jq('#wk_load_conf').show();
+			$wk_jq.ajax({
+				url:'<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."index.php/marketplace/seller/usernameverify"?>',
+				type:'POST',
+				data:{profileurl:profileurl},
+				dataType:'JSON',
+				success:function(data){
+					$wk_jq('#wk_load_conf').hide();
+					if(data==0){
+						$wk_jq('.button').removeAttr('disabled');
+						$wk_jq('.profileurl').append($wk_jq('<span/>').addClass('available success-msg').text('<?php echo $helper->__("available")?>'));
+					}else{
+						$wk_jq('.profileurl').append($wk_jq('<span/>').addClass('unavailable error-msg').text('<?php echo $helper->__("unavailable")?>'));
+					}
+				}
+			});
+		}
+	});
+});
+</script>

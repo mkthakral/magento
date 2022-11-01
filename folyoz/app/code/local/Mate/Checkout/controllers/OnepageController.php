@@ -1,0 +1,239 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Checkout
+ * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * Onepage controller for checkout
+ *
+ * @category    Mage
+ * @package     Mage_Checkout
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+require_once("Mage/Checkout/controllers/OnepageController.php");
+class  Mate_Checkout_OnepageController extends Mage_Checkout_OnepageController
+{
+    public function myAction()
+	{
+		exit("li");
+	}
+	
+    /**
+     * Order success action
+     */
+    public function successAction()
+    {
+        $session = $this->getOnepage()->getCheckout();
+        if (!$session->getLastSuccessQuoteId()) {
+            $this->_redirect('checkout/cart');
+            return;
+        }
+
+        $lastQuoteId = $session->getLastQuoteId();
+        $lastOrderId = $session->getLastOrderId();
+        $lastRecurringProfiles = $session->getLastRecurringProfileIds();
+        if (!$lastQuoteId || (!$lastOrderId && empty($lastRecurringProfiles))) {
+            $this->_redirect('checkout/cart');
+            return;
+        }
+/* 		 
+		//echo "<pre>"; print_r($lastRecurringProfiles); exit;
+		
+		//exit;
+		
+		$resource = Mage::getSingleton('core/resource');
+		$readAdapter= $resource->getConnection('core_read');			
+		$table = $resource->getTableName('sales_recurring_profile_order');
+		$query = "SELECT * FROM $table WHERE link_id = $lastRecurringProfiles[0]";
+		$result = $readAdapter->fetchAll($query);
+		$lastOrderId=$result[0]['order_id'];
+		
+		
+		// load order and product for subscription
+		$order = Mage::getModel('sales/order')->load($lastOrderId); 
+		$items = $order->getAllVisibleItems();
+		$productId = $items[0]->getProductId();
+		// echo "id".$productId;exit;
+		$product = Mage::getModel('catalog/product')->load($productId);
+		$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+		$userId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+		$duration = $product->getDuration();
+		
+		// get last user subscription data
+		$resource = Mage::getSingleton('core/resource');
+		$readAdapter= $resource->getConnection('core_read');			
+		$table = $resource->getTableName('user_subscription');
+		$query = "SELECT * FROM $table WHERE user_id = $userId order by id desc limit 0,1";
+		$result = $readAdapter->fetchAll($query);
+		
+		// check if any subscription already activated. 
+		if($result[0] != null and $result[0]['end_date'] >= date('Y-m-d'))
+		{
+			$date = new DateTime(date("Y-m-d"));
+			$create = $startDate = $date->format('Y-m-d');
+			
+			$datetime1 = new DateTime(date("Y-m-d"));
+			$datetime2 = new DateTime($result[0]['end_date']);
+			$interval = $datetime1->diff($datetime2);
+			$interval = $interval->format('%a');
+			$duration += $interval;
+			$startDate = $date->format('Y-m-d');
+			$duration = 'P'.$duration.'D';
+			$date->add(new DateInterval($duration));
+			$endDate = $date->format('Y-m-d');
+			$status = "active";
+			
+			$writeAdapter = $resource->getConnection('core_write');
+			$query = "UPDATE `user_subscription` SET `status` = 'inactive' WHERE `user_subscription`.`id` = ".$result[0]['id'];
+			$writeAdapter->query($query);
+			//subsctiption renewed email.
+			$templateId = 6;
+			$email = $loginuser->getEmail();
+			$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
+			$mail = Mage::getModel('core/email');
+			$mail->setToName('Folyoz');
+			$mail->setFromName('Folyoz');
+			$email_template_variables = array(
+				'name' => $loginuser->getName(),
+			);
+			$mailSubject = 'Subscription Renewed';
+			$from_email = Mage::getStoreConfig('trans_email/ident_custom1/email');
+			$processedTemplate = $emailTemplate->getProcessedTemplate($email_template_variables);
+			$mail = Mage::getModel('core/email');
+			$mail->setToName('folyoz');
+			$mail->setTemplateParam($email_template_variables);
+			$mail->setToEmail($email);
+			$mail->setBody($processedTemplate);
+			$mail->setSubject($mailSubject);
+			$mail->setFromEmail($from_email);
+			$mail->setType('Html');
+			try {
+				$mail->send();
+			} catch (Exception $ex) {}			
+		}
+		else
+		{
+			$date = new DateTime(date("Y-m-d"));
+			$create = $startDate = $date->format('Y-m-d');
+			$duration = 'P'.$duration.'D';
+			$date->add(new DateInterval($duration));
+			$endDate = $date->format('Y-m-d');
+			$status = "active";
+			
+			// first subsctiption email.
+			$templateId = 5;
+			$email = $loginuser->getEmail();
+			$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
+			$mail = Mage::getModel('core/email');
+			$mail->setToName('Folyoz');
+			$mail->setFromName('Folyoz');
+			$email_template_variables = array(
+				'name' => $loginuser->getName(),
+			);
+			$mailSubject = 'Successful Subscription';
+			$from_email = Mage::getStoreConfig('trans_email/ident_custom1/email');
+			$processedTemplate = $emailTemplate->getProcessedTemplate($email_template_variables);
+			$mail = Mage::getModel('core/email');
+			$mail->setToName('folyoz');
+			$mail->setTemplateParam($email_template_variables);
+			$mail->setToEmail($email);
+			$mail->setBody($processedTemplate);
+			$mail->setSubject($mailSubject);
+			$mail->setFromEmail($from_email);
+			$mail->setType('Html');
+			try {
+				$mail->send();
+			} catch (Exception $ex) {}						
+		}	
+		//add user subscription
+		$writeAdapter = $resource->getConnection('core_write');
+		$table = $resource->getTableName('user_subscription');
+		$query = "INSERT INTO {$table} (`user_id`,`product_id`,`start_date`,`end_date`,`created`,`status`) VALUES ($userId, $productId, '$startDate', '$endDate', '$create', '$status');";
+		$writeAdapter->query($query);
+
+ */     
+ 
+		$artistid = Mage::getSingleton('customer/session')->getCustomer()->getId();
+		$maxPortfolioImage = Mage::getStoreConfig('marketplace/marketplace_inventory/max_allowed_portfolio_product_images');
+		$resource = Mage::getSingleton('core/resource');
+		$readAdapter = $resource->getConnection('core_read');
+		$writeAdapter = $resource->getConnection('core_write');
+		$query = "SELECT * FROM `submitted_portfolio` WHERE `submitted_user_id` = ".$artistid." order by id asc";
+		$result = $readAdapter->fetchAll($query);
+		foreach($result as $key) {
+			$query = "UPDATE `submitted_portfolio` SET `visible_to_art_director` = '1' WHERE `submitted_portfolio`.`id` = ".$key['id'];
+			$writeAdapter->query($query);
+		}
+		
+		$session->clear();
+        $this->loadLayout();
+        $this->_initLayoutMessages('checkout/session');
+        Mage::dispatchEvent('checkout_onepage_controller_success_action', array('order_ids' => array($lastOrderId)));
+        $this->renderLayout();
+    }
+
+    /**
+     * Save checkout billing address
+     */
+    public function saveBillingAction()
+    {
+        if ($this->_expireAjax()) {
+            return;
+        }
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost('billing', array());
+            $customerAddressId = $this->getRequest()->getPost('billing_address_id', false);
+
+            if (isset($data['email'])) {
+                $data['email'] = trim($data['email']);
+            }
+            $result = $this->getOnepage()->saveBilling($data, $customerAddressId);
+
+            if (!isset($result['error'])) {
+                if ($this->getOnepage()->getQuote()->isVirtual()) {
+                    $result['goto_section'] = 'payment';
+                    $result['update_section'] = array(
+                        'name' => 'payment-method',
+                        'html' => $this->_getPaymentMethodsHtml()
+                    );
+                } elseif (isset($data['use_for_shipping']) && $data['use_for_shipping'] == 1) {
+                    $result['goto_section'] = 'shipping_method';
+                    $result['update_section'] = array(
+                        'name' => 'shipping-method',
+                        'html' => $this->_getShippingMethodsHtml()
+                    );
+
+//                    $result['allow_sections'] = array('shipping');
+//                    $result['duplicateBillingInfo'] = 'true';
+                } else {
+                    $result['goto_section'] = 'shipping';
+                }
+            }
+
+            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        }
+    }
+
+	
+}

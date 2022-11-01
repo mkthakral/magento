@@ -1,0 +1,33 @@
+<?php
+	$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');
+	$query = "SELECT * FROM `analytics_output` WHERE `artist_id` = ".$loginuser->getId();
+	$result = $readAdapter->fetchAll($query);
+?>
+<div class="analytics">
+    <div class="page-title">
+        <h1><?php echo $this->__('Analytics') ?></h1>
+    </div>
+	<p>
+		These results are only measured from Art Director actions, and only from those Art Directors who completed their profile settings and are verified. The 
+		sum total numbers are aggregated from multiple Art Directors to show a combined total. *Other member data is not reported, including other Artists, or 
+		visiting Art Directors who registered but have incomplete or unverified accounts and are just browsing.
+	</p>
+	<p>We currently provide basic analytics, but we’re working on new ways to show more data and will post the update in your Dashboard.</p>
+	<div class="blue-outer-border">
+		<ul>
+			<li><span class="red space"><?php echo $result[0]['following_director'] ?></span><span>Art Directors Following You</span></li>
+			<li><span class="red space"><?php echo $result[0]['viewed_submitted_portfolio'] ?></span><span>Viewed Your Portfolio Submission</span></li>
+			<li><span class="red space"><?php echo $result[0]['viewed_profile_page'] ?></span><span>Viewed Your Portfolio Page</span></li>
+			<li><span class="red space"><?php echo $result[0]['viewed_product_on_listing']+$result[0]['viewed_product_on_submitted_portfolio']+$result[0]['viewed_product_on_profile_page'] ?></span><span>Clicked On Your Images</span></li>
+			<li><span class="red space"><?php echo $result[0]['viewed_contact'] ?></span><span>Clicked, View Contact</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_email'] ?></span><span>Clicked Your, Email Link</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_phone'] ?></span><span>Clicked Your, Phone Link</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_website'] ?></span><span>Clicked Your, Website Link</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_facebook'] ?></span><span>Clicked Your, Facebook Page Link</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_twitter'] ?></span><span>Clicked Your, Twitter Page Link</span></li>
+			<li><span class="red space"><?php echo $result[0]['click_instagram'] ?></span><span>Clicked Your, Instagram Page Link</span></li>
+		</ul>
+	</div>
+</div>

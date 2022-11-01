@@ -1,0 +1,16 @@
+<?php
+/**
+ * Webkul Marketplace Mysql4 Order collection
+ *
+ * @category    Webkul
+ * @package     Webkul_Marketplace
+ * @author      Webkul Software Private Limited 
+ */
+class Webkul_Marketplace_Model_Mysql4_Order_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+{
+    public function _construct()
+    {
+        parent::_construct();
+        $this->_init('marketplace/order');
+    }
+}

@@ -1,0 +1,126 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="dashboard">
+    <?php echo $this->getMessagesBlock()->toHtml() ;
+	$baseurl = Mage::getBaseUrl();
+	$loginuser = Mage::getSingleton('customer/session')->getCustomer();
+	$userid = $loginuser->getId(); 
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userid and status='active' order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+
+	$datetime1 = new DateTime(date("Y-m-d"));
+	$datetime2 = new DateTime($result[0]["end_date"]);
+	$interval = $datetime1->diff($datetime2);
+	$intervalvalue = $interval->format('%a');
+	$interval = $interval->format('%R%a');
+	?>
+    <div class="page-title">
+        <h1><?php echo $this->__('My Dashboard') ?></h1>
+    </div>
+	<div class="account-message">
+	<?php if($loginuser->getGroupId() == 1){ ?>
+		<?php if($loginuser->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($loginuser->getData('approval') == 64) { ?>
+		<h2>We are currently reviewing your profile. If it took longer than a day, <a href="<?php echo $baseurl."contacts"; ?>">contact us</a> to know status.</h2>
+		<?php } else { ?>
+			<?php if($interval <= 0) { ?>
+			<h2>Subscribe <a href="<?php echo $baseurl."customer/account/membership/"; ?>">here</a> to avail unlimited uploads and submissions.</h2>
+			<?php } ?>				
+		<?php } ?>
+	<?php } ?>
+	<?php if($loginuser->getGroupId() == 2){ ?>
+		<?php if($loginuser->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($loginuser->getData('approval') == 64) { ?>
+		<h2>We are currently reviewing your profile.</h2>
+		<?php } ?>
+	<?php } ?>
+	</div>
+	<div class="dashbord-hello">Hello <?php echo $loginuser->getFirstname(); ?>,</div>
+	<?php if($loginuser->getGroupId() == 1){ ?>
+	<?php if($interval > 0) { ?>
+	<div class="dash-left-days">
+		<strong>Days Remaining <?php echo $intervalvalue ?></strong>
+		<span>See Membership from the left menu.</span>
+	</div>
+	<?php } ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist_dashboard_block_1')->toHtml(); ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist_dashboard_block_2')->toHtml(); ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist_dashboard_block_3')->toHtml(); ?>
+	<?php } ?>
+	<?php if($loginuser->getGroupId() == 2){ ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('art_director_dashboard_block_1')->toHtml(); ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('art_director_dashboard_block_2')->toHtml(); ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('art_director_dashboard_block_3')->toHtml(); ?>
+	<?php } ?>
+	<div id="pop-outer" class="pop-outer" style="display:none;">
+		<div class="pop-overlay"></div>
+		<div class="pop-contain-outer">
+			<div class="close">X</div>
+			<div id="pop-contain" class="pop-contain del-pop-contain"></div>
+		</div>
+	</div>		
+</div>
+<script>
+window.onload = function(){
+	if( !jQuery.trim( jQuery('.account-message').html() ).length) {
+		jQuery('.account-message').hide();
+	}
+};
+jQuery('body').on('click', '.hide-account', function () {
+	
+	var hide = jQuery(this).attr('hide');
+	var string = "id="+<?php echo $userid; ?>+"&hide="+hide;
+
+	
+	jQuery('#loader').css('display','block');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxHideaccount/",
+	data: string,
+	dataType:"json",
+	async: true,
+	success: function(data){
+			if(data.hide == 0){
+				jQuery('#pop-contain').html(data.html);
+				jQuery('#pop-outer').css('display','block');
+			}else{
+				jQuery('#pop-contain').html(data.html);
+				jQuery('#pop-outer').css('display','block');				
+			}	
+		}
+	})
+});
+jQuery('body').on('click', '.close', function () {
+	jQuery('#pop-outer').css('display','none');
+});
+
+</script>

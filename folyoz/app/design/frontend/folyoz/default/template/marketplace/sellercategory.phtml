@@ -1,0 +1,48 @@
+<?php 
+$partner=$this->getProfileDetail();
+$helper = Mage::helper('marketplace');
+$get_cat = '';
+$arr_have_child_cat = array();
+if(isset($_GET["c"])){
+	$get_cat = $_GET["c"];
+} ?>
+<div class="wk_mp_design">
+	<div class="block block-layered-nav">	
+		<div class="block-title">	
+			<strong><span><?php echo $helper->__("Browse BY") ?></span></strong>
+		</div>
+		<div class="block-content">
+        <dl id="narrow-by-list2">
+            <dt class="last odd"><?php echo $helper->__("SELLER'S CATEGORY") ?></dt>
+            <dd class="last odd">
+                <ol>
+					<?php 
+					foreach($this->getCategoryList() as $key => $value){
+						array_push($arr_have_child_cat, $value['category_id']);
+						if($value['category_id']!=1){ ?>
+							<li><a href="<?php echo $helper->getRewriteUrl('marketplace/seller/collection/'.$partner['profileurl'])."/?c=".$value['category_id'];?>" <?php if($get_cat == $value['category_id']){ ?> class="current" <?php }?>><?php echo $value['name']." (".sprintf('%02d',$value['countCategory']).") "; ?></a></li>
+							<?php
+						}
+					} 
+					if($get_cat!=''){
+						$cat = Mage::getModel('catalog/category')->load($get_cat);
+						$subcats = $cat->getChildren();
+						foreach(explode(',',$subcats) as $subCatid)
+						{
+							$_category = Mage::getModel('catalog/category')->load($subCatid);
+							if($_category->getIsActive()) {
+								if(!in_array($_category->getId(), $arr_have_child_cat)){
+									 ?>
+									<li><a href="<?php echo $helper->getRewriteUrl('marketplace/seller/collection/'.$partner['profileurl'])."/?c=".$_category->getId();?>" <?php if($get_cat == $_category->getId()){ ?> class="current" <?php }?>><?php echo $_category->getName()." (0) "; ?></a></li>
+									<?php
+								}			
+							}
+						}
+					}
+					?>
+				</ol>
+			</dd>
+		</dl>
+	</div>
+	</div>	
+</div>

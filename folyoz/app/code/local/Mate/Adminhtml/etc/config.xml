@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mate_Adminhtml>
+            <version>0.7.1</version>
+        </Mate_Adminhtml>
+    </modules>
+    <admin>
+        <routers>
+        <adminhtml>
+            <args>
+                <modules>
+                    <Mate_Adminhtml before="Mage_Adminhtml">Mate_Adminhtml</Mate_Adminhtml>
+                </modules>
+            </args>
+        </adminhtml>
+        </routers>
+    </admin>	
+</config>

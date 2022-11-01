@@ -1,0 +1,180 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+if($isPartner==1){
+	$filter_data_to = '';
+    $filter_data_frm = '';
+    $transid = '';	
+	?>
+	<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+	</script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<div class="page-title">
+		<h1 style="float:left;"><?php echo $helper->__('Transactions') ?></h1>
+	</div>
+	<div class="wk_mp_design">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4 class="wk_mp_legend"><?php echo $helper->__('Transaction List') ?></h4></span></strong>					
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">
+			<div class="grid">
+				<div class="hor-scroll">
+					<b><?php echo $helper->__('Remaining Transactions:') ?></b> &nbsp <?php echo Mage::helper('core')->currency($this->getremaintotal(), true, false);?>
+					<form action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" method="get">
+						<table cellspacing="0" class="border wk_mp_list_table">
+						    <thead>
+						        <tr id="wk_mp_tr_heading">
+						            <th><span><?php echo $helper->__('Transaction Id') ?></span></th>
+						            <th><span><?php echo $helper->__('Date') ?></span></th>
+						            <th><span>&nbsp;</span></th>
+						        </tr>
+						    </thead>
+						    <tbody class="wk_mp_body">
+						    	<tr>
+						    		<td>
+						    			<input type="text" class="input-text" name="transid" placeholder='<?php echo $helper->__('Search by Transaction Id') ?>' value="<?php echo $transid?>"/>
+						    		</td>
+						    		<td>
+						    			<span class="wk_mp_td_span">
+						    				<?php echo $helper->__('From: ') ?>
+						    				<input name="from_date" id="special_from_date" class="input-text" value="<?php echo $filter_data_frm?>" />
+						    			</span>				    			
+						    			<span class="wk_mp_td_span">
+						    				<?php echo $helper->__('To: ') ?>
+						    				<input name="to_date" id="special_to_date" class="input-text" value="<?php echo $filter_data_to?>" />
+						    			</span>
+						    		</td>
+						    		<td style="width: 31%;">
+						    			<button class="button" title="Save" id="save_butn" type="submit">
+											<span><span><span><?php echo $helper->__('Submit') ?></span></span></span>
+										</button>
+										<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/downloadtranscsv',array('from_date'=>$filter_data_frm,'to_date'=>$filter_data_to));?>">
+											<button class="button" title="Save" id="save_butn" type="button">
+												<span><span><span><?php echo $helper->__('Download .CSV') ?></span></span></span>
+											</button>
+										</a>
+						    		</td>
+						    	</tr>
+						    </tbody>
+						</table>
+					</form>
+					<?php 
+					if(count($this->getCollection())==0){ ?>		
+						<div class="fieldset wk_mp_fieldset">
+							<div class="wk_emptymsg">
+								<?php echo $helper->__('No Record Available') ?>
+							</div>
+						</div>
+						<?php 
+					} else{						
+						?>
+						<table cellspacing="0" class="border wk_mp_list_table wk_mp_list_container_table">
+						    <thead>
+						        <tr class="wk_content">
+						    		<th class="wk_first_td">
+						    			<span class="label">
+											<?php echo $helper->__('Date')?>
+										</span>
+						    		</th>
+						    		<th>
+						    			<span class="label">
+											<?php echo $helper->__('Transaction Id')?>
+										</span>
+						    		</th>
+						    		<th>
+						    			<span class="label name">
+											<?php echo $helper->__('Comment Message')?>
+										</span>
+						    		</th>
+						    		<th>
+						    			<span class="label">
+											<?php echo $helper->__('Transaction Amount')?>
+										</span>
+						    		</th> 
+						    		<th>
+						    			<span class="label">
+											<?php echo $helper->__('Action')?>
+										</span>
+						    		</th>   		
+						    	</tr>
+						    </thead>
+						    <tbody>
+						    	<?php 
+						    	$i = 0;
+								foreach($this->getCollection() as $transactioncoll){
+									$i++;
+									?>
+							    	<tr class="wk_row_view <?php echo $class = ($i == count($this->getCollection()))? 'wk_last_tr':''?>">
+							    		<td class="wk_first_td">
+											<span class="label">
+												<?php echo  Mage::helper('core')->formatDate($transactioncoll->getCreatedAt(), 'medium', false)  ; ?>
+											</span>	
+							    		</td>
+							    		<td>
+											<span class="label">
+												<?php echo $transactioncoll->getTransactionid(); ?>
+											</span>	
+							    		</td>								    		
+										<td>
+											<?php
+											if($transactioncoll->getCustomnote()){
+												$customnote = $transactioncoll->getCustomnote();
+											}else{
+												$customnote = $helper->__('None');
+											}
+											?>
+											<span class="label name">
+												<?php	
+												 echo "<span class='bol'>". $customnote. "</span>" ;
+											?>
+											</span>	
+										</td>
+										<td>
+											<span class="label price">
+												<?php 
+												echo Mage::helper('core')->currency($transactioncoll->getTransactionamount(), true, false);
+												?>
+											</span>	
+							    		</td>
+							    		<td>
+											<span class="label">
+												<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/viewtransdetails',array('id'=>$transactioncoll->getTransid()))?>"><?php echo $helper->__('View');?></a>
+											</span>	
+							    		</td>
+							    	</tr>
+							    	<?php
+							    }?>
+						    </tbody>
+						</table>
+						<?php
+					}?>
+				</div>
+			</div>
+			<?php echo $this->getPagerHtml(); ?>		
+		</div>	
+		<div class="buttons-set">
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+			</p>
+		</div>
+	</div>
+	<script> 
+	var $wk_jq=jQuery.noConflict();
+	(function($wk_jq){
+		$wk_jq( "#special_from_date" ).datepicker({dateFormat: "yy-mm-dd"});
+		$wk_jq( "#special_to_date" ).datepicker({dateFormat: "yy-mm-dd"});
+	})($wk_jq);
+	</script>
+	<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

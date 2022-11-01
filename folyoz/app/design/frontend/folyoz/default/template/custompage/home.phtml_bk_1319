@@ -1,0 +1,29 @@
+<div class="home-content">
+	<div class="banner-section">
+	
+	<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('slider1')->toHtml(); ?>
+
+	</div>
+	<div class="home-page-block">
+			<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('home-block')->toHtml(); ?>
+	</div>
+</div>
+<div class="home-testimonial">
+<div class="container"><div class="testimonial-inner"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('testimonial')->toHtml(); ?></div></div>
+</div>
+</div>
+</div>
+<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+<script type="text/javascript">
+
+	var x="<?php echo $this->getUrl() ?>customer/account";
+	//alert(x);
+	
+//document.getElementsByClassName("ajaxlogin-login").href=x;
+//document.getElementsByClassName("ajaxlogin-login").innerHTML="My Account";
+document.getElementsByClassName("ajaxlogin-login")..style.display = "none";
+
+
+
+</script>
+<?php } ?>

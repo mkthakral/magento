@@ -1,0 +1,662 @@
+<?php 
+$helper=Mage::helper('marketplace');
+$product = Mage::getResourceModel('catalog/product');
+$customer=Mage::getSingleton('customer/session')->getCustomer();
+$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$allproduct = Mage::getResourceModel('catalog/product_collection');
+$prductcount = count($allproduct) +1;
+$product_hint_status = Mage::helper('marketplace')->getProductHintStatus();
+if($isPartner==1){ ?>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/simpleproduct') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-new" onSubmit="return checkimg()">
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('Portfolio Piece') ?></h1>
+		</div>		
+		<div class="wk_mp_design my-prot-outer">
+			<div class="fieldset wk_mp_fieldset my-account"><!-- my-account class for multi select design-->
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+				<input type="hidden" name="attribute_set_id" id="attribute_set_id" value="4" />
+				<input type="hidden" name="type_id" id="producttype" value="simple" />
+				<input type="hidden"  name="wstoreids" id="wstoreids" value="<?php echo Mage::app()->getStore()->getStoreId(); ?>" title="wstoreids" class="" />
+				<?php if($customer->getProfession() == 38 ) { ?>
+				<input type="hidden"  name="category[]" value="3"/>
+				<?php } elseif($customer->getProfession() == 35 ) {?>
+				<input type="hidden"  name="category[]" value="4"/>
+				<?php } ?>
+				<input type="hidden"  name="description" value="Folyoz product description"/>
+				<input type="hidden"  name="short_description" value="Folyoz product short description"/>
+				<input type="hidden"  name="sku" value="<?php echo 'folyz_sku_'.$prductcount.'_'.time(); ?>"/>
+				<input type="hidden"  name="price" value="0"/>
+				<input type="hidden"  name="stock" value="1"/>
+				<input type="hidden"  name="is_in_stock" value="1"/>
+				<input type="hidden"  name="artist_id" value="<?php echo $customer->getId() ?>">
+				<input type="hidden"  name="artist_name" value="<?php echo $customer->getName() ?>">
+				<input type="hidden"  name="artist_city" value="<?php echo $customer->getData('city') ?>">
+				<input type="hidden"  name="artist_state" value="<?php echo $customer->getData('state') ?>">
+				<input type="hidden"  name="artist_country" value="<?php echo $customer->getData('country') ?>">
+				<?php $options = $product->getAttribute('artist_gender')->getSource()->getAllOptions();?>
+				<?php $options2 = $product->getAttribute('artist_ethnicity')->getSource()->getAllOptions();?>
+				<?php $genderoption = Mage::getResourceSingleton('customer/customer')->getAttribute('gender_new')->getSource()->getOptionText($customer->getData('gender_new')); ?>
+				<?php $ethnicityoption = Mage::getResourceSingleton('customer/customer')->getAttribute('ethnicity')->getSource()->getOptionText($customer->getData('ethnicity')); ?>
+				<?php $gender = ""; $ethnicity = ""; ?>
+				<?php foreach ($options as $option) { ?>
+				<?php if($option['label'] == $genderoption) { $gender = $option['value']; break; } }?>
+				<?php foreach ($options2 as $option) { ?>
+				<?php if($option['label'] == $ethnicityoption) { $ethnicity = $option['value']; break; } }?>										
+				<input type="hidden"  name="artist_gender" value="<?php echo $gender ?>">
+				<input type="hidden"  name="artist_ethnicity" value="<?php echo $ethnicity ?>">							
+				<ul class="form-list" id="wk_bodymain">
+					<li id="image-li">
+						<label class="required img-size-alrt" style="margin-bottom: 0.8em;"><span>Image size: <b>2MB</b> max. Extensions: <b>.jpeg .jpg .png</b> only.</span> <span>Cannot have a dot (.) within the file name.</span></label>
+						<?php if($product_hint_status && Mage::helper('marketplace')->getProductImageHint()){?>
+						<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductImageHint() ?>"/>
+						<?php } ?>
+						<div class="out-custom-img">
+							<div id="otherimages">
+								<div id="childDiv1">
+									<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px; ">
+										<div style="width: 100%;height: 264px;line-height: 264px; text-align:center">Upload an Image
+											<img id="preview1" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0" />
+										</div>
+									</div>
+									<div class="otimg">
+										<div class="img-choosefile" style="width: auto;margin-right: 20px;background: none;position: relative;top: -5px;">
+										<label for="rad1" style="cursor: pointer;width: auto;">Upload Image</label>
+										<input type="file" accept=".png,.jpg,.jpeg" id="rad1"  name="images[]" class='wk_imagevalidate'  style="display: none"/></div>
+										<input type="hidden" value='' id="dim1" class='defaultimage' name="defaultimage">
+										<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl1(this);"><?php echo $helper->__('Delete Image'); ?></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						 <span id="img-error"
+                              style='display:none; color:#ff0000'><?php echo $this->__('Please upload an image'); ?></span>
+					</li>					
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Enter a title') ?>:</label>
+						<div class="input-box">
+							<input type="text" class="required-entry input-text" placeholder="Title" name="name" id="name" />
+						</div>
+					</li>				
+					<li>
+						<label class=""><?php echo $helper->__('Enter a Client (If none, leave blank)') ?>:</label>
+						<div class="input-box">
+							<input type="text" class="input-text" name="client" placeholder="Client" id="client" />
+						</div>
+					</li>
+					<li class="sp-li-outer is-this-img">
+						<div class="input-box">
+							<label class="required"><em>*</em><?php echo $helper->__('Is this image available for Re-Licensing?') ?></label>
+							<div class="li-c3">
+								<input type="radio" class="validate-one-required-by-name" name="re_licensing" id="re_licensing" value="1"/> 
+								<label for="1"><span></span>Yes<label>
+							</div>
+							<div class="li-c3">
+								<input type="radio" class="validate-one-required-by-name" name="re_licensing" id="re_licensing" value="0"/> 
+                                <label for="0"><span></span>No</label>
+							</div>
+						</div>
+					</li>
+					<li class="sp-li-outer is-this-img">
+                        <div class="input-box">
+                            <label class="required"><?php echo $helper->__('This image is part of 12 piece portfolio?') ?></label>
+                            <div class="li-c3">
+                                    <input type="radio" class="validate-one-required-by-name" name="is_portfolio" id="is_portfolio_yes" value="1"/> 
+                                    <label for="1"><span></span>Yes<label>
+                            </div>
+                            <div class="li-c3">
+                                    <input type="radio" class="validate-one-required-by-name" name="is_portfolio" id="is_portfolio_no" value="0"/> 
+                                    <label for="0"><span></span>No<label>
+                            </div>
+                        </div>
+					</li>						
+                    <li>
+                        <label class="make-work-searchable">How Art Directors should find this work:</label>
+                    </li>
+					<li>
+						<label class="required search-artwork-label"><em>*</em><?php echo $helper->__('Enter Descriptive Keywords (e.g. red, kite, sky, clouds, flying, sunny, sun)') ?>:</label>
+						<div class="input-box">
+                            <input type="hidden" name="project_desc" id="project_desc" value="<?php echo $customer->getName(); ?>" />
+							<textarea class="textarea required-entry" placeholder="e.g., red kite sky clouds flying sunny sun" cols="15" rows="2" title="Information about what you’re looking for" name="search_keyword" id="search_keyword"></textarea>					
+						</div>
+					</li>
+                    <li class="fields">
+						<div class="field">
+							<label for="style" class="required search-artwork-label" style="display:inline-block;"><em>*</em><?php echo $this->__('Select up to 10 Style / Medium categories&nbsp;') ?>:</label> <label class="how_many_selected" id="how_many_style_selected"></label>
+                            <div class="validation-advice" style="display:none" id="minstyle">Please select 10 Styles</div>
+							<div class="input-box">
+									<?php if($customer->getData("profession") == 38) { ?>
+									<?php $options = $product->getAttribute('style')->getSource()->getAllOptions();?>
+									<ul class="custom-checkbox" id="style-ul">
+									<?php foreach ($options as $option):?>
+										<?php if($option["value"] != "") { ?>
+										<li><input type="checkbox" value="<?php echo $option['value'] ?>" name="style[]" class="style_checked"><span class="chaked-mark"></span><?php echo $option['label'] ?></li>
+										<?php } ?>
+									<?php endforeach;?>	
+									</ul>									
+									<?php } else { ?>
+
+									<?php $options = $product->getAttribute('style_photography')->getSource()->getAllOptions();?>
+									<ul class="custom-checkbox" id="style-ul">
+									<?php foreach ($options as $option):?>
+										<?php if($option["value"] != "") { ?>
+										<li><input type="checkbox" value="<?php echo $option['value'] ?>" name="style_photography[]" class="style_checked"><span class="chaked-mark"></span><?php echo $option['label'] ?></li>
+										<?php } ?>
+									<?php endforeach;?>	
+									</ul>									
+									<?php } ?>
+									
+								<!--/select-->
+							</div>
+						</div>
+					</li>
+					<li class="fields">
+						<div class="field">
+							<label for="categories" style="display:inline-block;" class="required search-artwork-label"><em>*</em><?php echo $this->__('Select up to 20 descriptive (Genre) categories. Be very specific and relative to this image&nbsp;') ?>:</label>    <label class="how_many_selected" id="how_many_categories_selected"></label>
+                            <div class="validation-advice" style="display:none" id="mincategories">Please select 20 Categories.</div>
+							<div class="input-box">
+									<?php if($customer->getData("profession") == 38) { ?>
+
+									<?php $options = $product->getAttribute('categories')->getSource()->getAllOptions();?>
+									<ul class="custom-checkbox" id="categories-ul">
+									<?php foreach ($options as $option):?>
+										<?php if($option["value"] != "") { ?>
+										<li><input type="checkbox" value="<?php echo $option['value'] ?>" name="categories[]"  class="cat_checked"><span class="chaked-mark"></span><?php echo $option['label'] ?></li>
+										<?php } ?>
+									<?php endforeach;?>	
+									</ul>									
+									<?php } else { ?>
+<!--<<<<<< HEAD
+                                    <!--select multiple="multiple" size="5" id="categories_photography" name="categories_photography[]" title=""  class="required-entry multiselect multipleSelect"-->
+<!--=======
+                                    <select multiple="multiple" size="5" id="categories_photography" name="categories_photography[]" title=""  class="required-entry multiselect multipleSelect">
+>>>>>>> release-1-->
+									<?php $options = $product->getAttribute('categories_photography')->getSource()->getAllOptions();?>
+									<ul class="custom-checkbox" id="categories-ul">
+									<?php foreach ($options as $option):?>
+										<?php if($option["value"] != "") { ?>
+										<li><input type="checkbox" value="<?php echo $option['value'] ?>" name="categories_photography[]" class="cat_checked"><span class="chaked-mark"></span><?php echo $option['label'] ?></li>
+										<?php } ?>
+									<?php endforeach;?>	
+									</ul>
+									<?php } ?>
+								<!--/select-->
+							</div>
+						</div>
+					</li>				
+					<li style="display:none;">
+						<label class="required"><em>*</em><?php echo $helper->__('Tax Class') ?>:</label>
+						<?php
+						if($product_hint_status && Mage::helper('marketplace')->getProductTaxHint()){?>
+							<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductTaxHint() ?>"/>
+						<?php
+						} ?>
+						<div class="input-box">
+							<select id="tax_class_id" class=" required-entry required-entry select" name="tax_class_id">
+								<option value=""><?php echo $helper->__('Please Select')?></option>
+								<option value="0"><?php echo $helper->__('None')?></option>
+								<?php
+								$taxes=Mage::getModel('tax/class')->getCollection()
+											->addFieldToFilter('class_type',array('eq'=>'PRODUCT'));
+								foreach($taxes as $tax){
+									?>
+									<option value="<?php echo $tax->getId() ?>"><?php echo $tax->getClassName()?></option>
+								<?php 
+								} ?>
+							</select>
+						</div>
+					</li>
+					<li style="display:none;">
+						<label class="required"><em>*</em><?php echo $helper->__('Weight') ?>:</label>
+						<?php
+						if($product_hint_status && Mage::helper('marketplace')->getProductWeightHint()){?>
+							<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductWeightHint() ?>"/>
+						<?php
+						} ?>
+						<div class="input-box">
+							<input type="text" class="required-entry validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999 input-text" name="weight" id="weight" value="1"/>
+						</div>
+					</li>
+					<?php echo $this->getChildHtml(); ?>
+				</ul>
+			</div>
+		</div>
+		<div class="simple-save add-to-pro">
+			<button class="button wk_mp_btn btn-portfolio" title="<?php echo $helper->__('Add to Portfolio') ?>" type="submit" id="save_butn">
+				<span><span><?php echo $helper->__('Add to Portfolio') ?></span></span>
+			</button>
+		</div>
+	</form>
+	<script id="imageTemplate" type="text/x-jquery-tmpl">
+		<div id='childDiv${index}'>
+			<input type='file' name='images[]' class='wk_imagevalidate'/>
+			<input type='radio'  onClick='defaultimagevalue(this)'  value=''  class='defaultimage' name='defaultimage'>
+			<span class='defaultimageset'>
+				<?php echo $helper->__('Base image'); ?>
+			</span>
+			<a href="javascript:void(0)" onclick="removeEvent('childDiv${index}')"><?php echo $helper->__('Remove'); ?></a>
+		</div>
+	</script>
+	<!--<div class="buttons-set">
+		<p class="required">* <?php echo $helper->__('Required Fields') ?></p>		
+	</div>-->
+	<?php
+	$allowed_images = $helper->getAllowedImageExtension();
+	?>	
+	<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+	</script>
+	<script src="<?php echo $this->getSkinUrl('marketplace/js/jquery.tmpl.min.js') ?>" type="text/javascript"></script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS).'tiny_mce/tiny_mce.js' ?>"></script>
+	<script type="text/javascript">
+	window.onload=function()
+	{
+	   	tinyMCE.init({
+		    mode : "exact",
+		    elements: "description_,descriptions_",
+		    theme : "advanced",
+		    plugins : "inlinepopups,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
+		    theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+		    theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		    theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		    theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,|,visualchars,nonbreaking",
+		    theme_advanced_toolbar_location : "top",
+		    theme_advanced_toolbar_align : "left",
+		    theme_advanced_path_location : "bottom",
+		    extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		    theme_advanced_resize_horizontal : 'true',
+		    theme_advanced_resizing : 'true',
+		    apply_source_formatting : 'true',
+		    convert_urls : 'false',
+		    force_br_newlines : 'true',
+		    doctype : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
+		});
+	};
+	</script>
+	<script> 
+	var $wk_jq=jQuery.noConflict();	
+
+	var newCustomerProductForm = new VarienForm('form-customer-product-new', true);
+
+	$wk_jq( "#special_from_date").datepicker({'dateFormat':'yy:mm:dd'});
+	$wk_jq( "#special_to_date" ).datepicker({'dateFormat':'yy:mm:dd'});
+
+	var i=2;
+
+	function showOtherImage(){
+		$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+		i++;
+	}
+	function removeEvent(divNum){
+		var d = document.getElementById('otherimages');
+		var olddiv = document.getElementById(divNum);
+		d.removeChild(olddiv);
+		i--;
+	}
+	function defaultimagevalue(object){
+		var strs=$wk_jq(object).prev('input').val().split('\\'); 
+	    $wk_jq(object).val(strs[strs.length-1]);
+	}
+	(function($wk_jq){
+
+		
+		
+		$wk_jq('.input-text').change(function(){
+			var validt = $wk_jq(this).val();
+			var regex = /(<([^>]+)>)/ig;
+			var mainvald = validt .replace(regex, "");
+			$wk_jq(this).val(mainvald);	
+	    });
+
+	    $wk_jq("body").delegate('.wk_imagevalidate',"change",function(){
+			$wk_jq( ".defaultimage" ).prop( "checked",false);
+			var ext = $wk_jq(this).val().split('.').pop().toLowerCase();
+			if($wk_jq.inArray(ext, [<?php echo $allowed_images ?>]) == -1) {
+				$wk_jq(this).val('');
+				alert('<?php echo $helper->__("Invalid extension! Please Upload an image")?>');
+			}
+		});
+
+		$wk_jq('input#sku').change(function(){
+			var len=$wk_jq('input#sku').val();
+			var len2=len.length;
+			if(len2==0){
+				alert('<?php echo $helper->__("SKU can\'t be left empty")?>');
+				$wk_jq('div#skuavail').css('display','none');
+				$wk_jq('div#skunotavail').css('display','none');
+			}
+			else{
+				$wk_jq.ajax({
+					url: "<?php echo Mage::getUrl('marketplace/marketplaceaccount/verifysku');?>",
+					type: "POST",
+					data: {sku:$wk_jq('input#sku').val()},
+					dataType: 'html',
+					success:function($data){
+						$data=JSON.parse($data);
+						if($data.avl==1){
+							$wk_jq('div#skuavail').css('display','block');
+							$wk_jq('div#skunotavail').css('display','none');
+						}
+						else{
+							$wk_jq('div#skunotavail').css('display','block');
+							$wk_jq('div#skuavail').css('display','none');
+							$wk_jq("input#sku").attr('value','');
+						}
+					}
+				});
+			}
+		});
+
+		$wk_jq("#wk_bodymain").delegate('.wk_plus ,.wk_plusend,.wk_minus, .wk_minusend ',"click",function(){
+			var thisthis=$wk_jq(this);	
+			if(thisthis.hasClass("wk_plus") || thisthis.hasClass("wk_plusend")){
+				if(thisthis.hasClass("wk_plus"))
+					thisthis.removeClass('wk_plus').addClass('wk_plus_click');
+				if(thisthis.hasClass("wk_plusend"))
+					thisthis.removeClass('wk_plusend').addClass('wk_plusend_click');
+				thisthis.prepend("<span class='wk_node_loader'></span>");
+				$wk_jq.ajax({
+					url  	:   "<?php echo $this->getUrl('marketplace/marketplaceaccount/categorytree/');?>",
+					type 	:   "POST",
+					data 	:   {CID:thisthis.siblings("input").val(),
+								ML:thisthis.parent(".wk_cat_container").css("margin-left").replace("px","")},
+					dataType:   "html",
+					success :   function(content){
+						var newdata=  $wk_jq.parseJSON(content);
+						len= newdata.length;
+						var pxl= parseInt(thisthis.parent(".wk_cat_container").css("margin-left").replace("px",""))+20;
+						thisthis.find(".wk_node_loader").remove();
+						if(thisthis.attr("class") == "wk_plus")
+						thisthis.attr("class","wk_minus");
+						if(thisthis.attr("class") == "wk_plusend")
+							thisthis.attr("class","wk_minusend");
+						if(thisthis.attr("class") == "wk_plus_click")
+							thisthis.attr("class","wk_minus");
+						if(thisthis.attr("class") == "wk_plusend_click")
+							thisthis.attr("class","wk_minusend");
+					    for(i=0;i<len; i++){     
+							id=newdata[i].id;
+							nam=newdata[i].name;
+							if(newdata[i].counting ==0){
+								thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_no"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" name="category[]" value='+ id +'></div>');
+							}else{
+								thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_plusend"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" name="category[]" value='+ id +'></div>');   
+							}
+						}
+						thisthis.parent(".wk_cat_container").nextAll().slideDown(300);
+					}
+				});			
+			}
+			if(thisthis.hasClass("wk_minus") || thisthis.hasClass("wk_minusend")){
+				if(thisthis.attr("class") == "wk_minus")
+					thisthis.attr("class","wk_plus");
+				if(thisthis.attr("class") == "wk_minusend")
+					thisthis.attr("class","wk_plusend");
+				var thiscategory = thisthis.parent(".wk_cat_container");
+				var marg= parseInt(thiscategory.css("margin-left").replace("px",""));
+				while(thiscategory.next().hasClass("wk_removable")){
+				  
+				if(parseInt(thiscategory.next().css("margin-left").replace("px",""))>marg)
+					thiscategory.next().slideUp("slow",function(){$wk_jq(this).remove();});
+					thiscategory = thiscategory.next();	
+					if(typeof thiscategory.next().css("margin-left")!= "undefined"){
+						if( marg==thiscategory.next().css("margin-left").replace("px",""))
+						{
+						  break;
+						}
+					}
+				}
+			}		
+		});
+	})($wk_jq);
+	</script>
+<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>
+<script>
+//upload
+	$j(document).ready(function () {
+
+		function isFileValid(fileName, fileSize){
+			var isFileValid = true;
+			var numberOfDotsInFilename = fileName.split('.').length - 1;
+
+			if(numberOfDotsInFilename > 1 ){
+				isFileValid = false;
+				alert('File name cannot have Dot (.) within the name, please rename your file and upload');
+			}
+			//size in KB
+			fileSize = fileSize*1;
+			if(fileSize > 2048){
+				isFileValid = false;
+				alert('File size must be less than 2MB. Please optimize your file - See Help/ Image Sizes');
+			}
+
+			return isFileValid;
+		}
+		resizeImageFn = function(id){
+						$j(id).css('visibility','hidden');
+						setTimeout(function(){
+							$j(id).removeAttr('style');
+							$j(id).css({'vertical-align':'middle','display':'inline-block','margin-bottom':0,'border':0});
+							if($j(id).height() > 264){
+								$j(id).css({'display':'block','max-height':264,'margin':'auto'});
+								$j(id).width('auto');
+							}else if($j(id).width() > 264){
+								$j(id).css('max-width',264);
+								$j(id).height('auto');
+							}
+							$j(id).css('visibility','visible');
+						},100);
+		}
+		$j('#rad1').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview1').parent().html($j('#preview1').parent().children());
+							$j('#preview1').attr('src', e.target.result);
+							//$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview1');
+						}
+						reader.readAsDataURL(this.files[0]);
+						var strs = jQuery('#rad1').val().split('\\'); 
+						jQuery('#dim1').val(strs[strs.length-1]);
+					}
+				}
+		});
+
+	});
+//remove	
+    $j = jQuery.noConflict();
+	var checkAltTextExists = function(id){
+		if ($j(id).html().indexOf('Upload an Image')!=-1){
+			//alert("already have it");
+		}
+		else {
+			$j(id).prepend("Upload an Image");
+		}
+	}
+    function removeUrl1() {
+		checkAltTextExists($j('#preview1').parent());
+        $j('#preview1').removeAttr('src');
+		$j('#rad1').val('');
+		$j('#dim1').val('');
+    }
+	
+	var style = 0;
+	var categories = 0;
+	var selected = [];	
+	window.onload = function (){
+		
+		jQuery('#style-ul input:checked').each(function() {
+			selected.push(jQuery(this).attr('name'));
+		});
+		style = selected.length;
+		selected = [];
+		jQuery('#categories-ul input:checked').each(function() {
+			selected.push(jQuery(this).attr('name'));
+		});		
+		categories = selected.length;
+		
+		jQuery.ajax({
+			type: "get",
+			url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxPortfolioImage/",
+			data: "imgcount=1",
+			async: true,
+			dataType: "json",
+			success: function(data){
+				if(data.imgcount < <?= Mage::getStoreConfig('marketplace/marketplace_inventory/max_allowed_portfolio_product_images') ?>) {
+					jQuery('#is_portfolio_yes').prop( "checked", true);
+				}else{
+                    jQuery('#is_portfolio_no').prop( "checked", true);
+                }
+			}
+		});			
+	}
+	
+	 function checkimg() {
+		 
+		 jQuery("#minstyle").hide();
+		 jQuery("#mincategories").hide();
+		 jQuery("#img-error").hide();
+		 var imcheck=jQuery("#preview1").attr('src');
+		 var status = false;
+		 var focus = 0;
+         
+         if(imcheck) {
+				status = true;
+		 }
+		 else {
+             status = false;
+			 document.getElementById("img-error").style.display = "block";
+		 }
+         
+         
+		if(style < 10) {
+			focus = 1;
+			jQuery("#minstyle").show();
+		} else {
+			status = true;
+		}
+		if(categories < 20) {
+			if(focus != 1)
+			focus = 2;
+			jQuery("#mincategories").show();
+		} else {
+			status = true;
+		}
+		if(focus == 1) {
+			jQuery('#style-ul input')[0].focus();
+			status = false;
+		} else if(focus == 2) {
+			jQuery('#categories-ul input')[0].focus();
+			status = false;
+		}
+         
+         
+        var formValidation = newCustomerProductForm.validator.validate();
+
+         if(imcheck == undefined){
+            jQuery('html, body').animate({ scrollTop: jQuery('#image-li').offset().top }, 'slow');
+         }
+         
+		
+		if(status && formValidation && imcheck != undefined) {
+			document.getElementById("img-error").style.display = "none";
+			jQuery('#save_butn span span').text('<?php echo $helper->__("Saving")?>..');
+			jQuery('.button').css('opacity','0.7');
+			jQuery('.button').css('cursor','default');
+			jQuery('.button').attr('disabled','disabled'); 		
+			return true;
+		} else {
+			return false;
+		}
+
+    }
+	jQuery('body').on('click', '.style_checked', function () {
+		selected = []
+		jQuery('#style-ul input:checked').each(function() {
+			selected.push(jQuery(this).attr('name'));
+		});		
+		style = selected.length;
+		if(style > 10){
+            jQuery(this).prop( "checked", false );
+            alert("Selection Complete. If you wish to change, un-select already selected.");
+        }
+			
+	});
+	jQuery('body').on('click', '.cat_checked', function (event) {
+		selected = []
+		jQuery('#categories-ul input:checked').each(function() {
+			selected.push(jQuery(this).attr('name'));
+		});
+		categories = selected.length;
+		if(categories > 20){
+            jQuery(this).prop( "checked", false );
+            alert("Selection Complete. If you wish to change, un-select already selected.");
+        }
+			
+	});	
+    
+    jQuery('body').on('change', '#style-ul li', function (event) {
+		var selecteditems = jQuery('#style-ul li .style_checked:checked').length;
+        selecteditems = selecteditems * 1;
+        var message;
+        if(selecteditems == 10){
+            message = "Selection Complete";
+        }else{
+            var leftItems = 10 - selecteditems;
+            message = "Select " + leftItems + " more";
+        }
+        
+        jQuery("#how_many_style_selected").text(message);
+        //Hide Validation
+        jQuery("#minstyle").hide();
+        
+	});	
+    
+    jQuery('body').on('change', '#categories-ul li', function (event) {
+		var selecteditems = jQuery('#categories-ul li .cat_checked:checked').length;
+        selecteditems = selecteditems * 1;
+        var message;
+        if(selecteditems == 20){
+            message = "Selection Complete";
+        }else{
+            var leftItems = 20 - selecteditems;
+            message = "Select " + leftItems + " more";
+        }
+        
+        jQuery("#how_many_categories_selected").text(message);
+        //Hide Validation
+        jQuery("#mincategories").hide();        
+	});	
+	
+	jQuery('body').on('click', '#is_portfolio_yes', function () {
+		jQuery.ajax({
+			type: "get",
+			url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxPortfolioImage/",
+			data: "imgcount=1",
+			async: true,
+			dataType: "json",
+			success: function(data){
+				if(data.imgcount >= <?= Mage::getStoreConfig('marketplace/marketplace_inventory/max_allowed_portfolio_product_images') ?>) {
+					jQuery('#is_portfolio_yes').prop( "checked", false);
+					alert('You already have 12 images selected, you will need to deselect one of them in order to select another.');
+				}
+			}
+		});
+	});
+    
+</script>

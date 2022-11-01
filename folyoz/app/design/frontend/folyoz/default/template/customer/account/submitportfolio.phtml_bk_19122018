@@ -1,0 +1,95 @@
+<?php 
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$baseurl = Mage::getBaseUrl();
+	$userId = $customer->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+?>
+<?php $customergroup = Mage::getSingleton('customer/session')->getCustomer()->getGroupId(); ?>
+<?php $collection = Mage::getModel('customer/customer')->getCollection()->addAttributeToSelect('*')->addFieldToFilter('group_id', 2);?>
+<div class="dashboard">
+    <div class="page-title">
+        <h1><?php echo $this->__('Submit Portfolio') ?></h1>
+    </div>
+	<div class="account-message">
+		<?php if($customer->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($customer->getData('approval') == 64) { ?>
+		<h2>Your account is not yet approved.</h2>
+		<?php } else {?>
+			<?php if(count($result)==0) {?>
+				<h2>You do not have active subscription. Click here to subscribe to unlock submission to Art Directors</h2>
+			<?php } ?>
+		<?php } ?>
+	</div>	
+	<div class="page-body">	
+		<div class="row">
+			<div class="col-lg-12">
+				<table id="myTable" class="display"> 
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Illust</th>
+							<th>Photo</th>
+							<th class="details"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($collection as $customer) { ?>
+						<tr>
+							<td><?php echo $customer->getName()?></td>
+							<td><?php echo $customer->getData('hire_illustrators')?></td>
+							<td><?php echo $customer->getData('hire_photographers')?></td>
+							<td class="details-control" customerid = "<?php echo $customer->getId()?>">view</td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+	<div id="loader" style="display:none;">
+		 <img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."loader/ajax-loader.gif" ?>"/>
+	</div>
+</div>
+<script>
+jQuery(document).ready( function () {
+    jQuery('#myTable').DataTable();
+} );
+window.onload = function(){
+	 jQuery('.details').hide();
+}
+
+// Add event listener for opening and closing details
+jQuery('#myTable tbody').on('click', 'td.details-control', function () {
+	
+	var table = jQuery('#myTable').DataTable();
+	var tr = jQuery(this).closest('tr');
+	var row = table.row( tr );
+	var customerid = jQuery(this).attr('customerid');
+	if ( row.child.isShown() ) {
+		// This row is already open - close it
+		row.child.hide();
+		tr.removeClass('shown');
+	}
+	else {
+		// Open this row
+		jQuery('#loader').css('display','block');
+		jQuery.ajax({
+		type: "get",
+		url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxDirectorDetails/",
+		data: "id="+customerid,
+		async: true,
+		success: function(data){
+			row.child(data).show();
+			tr.addClass('shown');
+			jQuery('#loader').css('display','none');
+		}
+	})	
+		jQuery('#loader').css('display','none');
+	}
+} );
+</script>

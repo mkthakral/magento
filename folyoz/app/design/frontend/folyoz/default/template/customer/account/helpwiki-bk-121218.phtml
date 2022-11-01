@@ -1,0 +1,13 @@
+<?php $customergroup = Mage::getSingleton('customer/session')->getCustomer()->getGroupId(); ?>
+<div class="dashboard">
+    <div class="page-title">
+        <h1><?php echo $this->__('Help Wiki') ?></h1>
+    </div>
+	<div class="page-body">
+	<?php if($customergroup == 1){ ?>	
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist_wiki_block')->toHtml(); ?>
+	<?php } elseif($customergroup == 2) { ?>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('director_wiki_block')->toHtml(); ?>
+	<?php } ?>
+	</div>
+</div>

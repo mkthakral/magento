@@ -1,0 +1,4 @@
+AuthUserFile C:\\Mohit\\Workspace\\WAMP\\folyoz\\solr\\.htpasswd
+AuthType Basic
+AuthName "Login Details"
+Require valid-user

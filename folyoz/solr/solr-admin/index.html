@@ -1,0 +1,169 @@
+<html> 
+<head> 
+    <title> Folyoz Solr Admin </title> 
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head> 
+<body style="text-align:center;">
+	  <div class="row">
+  <div class="column left" style="background-color:#aaa;">
+         <h2><u>ADMIN</u></h2>
+		<input type="submit" name="button1" onclick="getProducts()" value="Get Qualified Products"/> 
+          <br/>
+		  <br/>
+        <input type="submit" name="button2" onclick="reindexAllProducts()" value="Re-Index all listed prodicts"/> 
+		<br/>
+		<br/>
+		<span id="label-count-qualified-products" class="label-status"></span>
+		 <br/>
+		<div id="status-get-products" class="label-status"></div>
+		<br/>
+		<hr/>
+		<br/>
+        <input type="submit" name="button2" onclick="deleteAllProducts()" value="Delete All Indexed Products"/> 
+		<br/>
+		<div id="status-delete-products" class="label-status"></div>
+		<br/>
+		<hr/>
+		<br/>
+        <input type="submit" name="button2" onclick="reindexSingleProduct()" value="Reindex this product: "/> <input type="text" id="re-index-single-product-id" style="float: right;width: 35px;"/>
+		<br/>
+		<div id="status-index-single-product" class="label-status"></div>
+		<br/>
+		<hr/>
+		<br/>
+        <input type="submit" name="button2" onclick="deleteSingleProduct()" value="Delete this product: "/> <input type="text" id="delete-single-product-id" style="float: right;width: 35px;"/>
+		<br/>
+		<div id="status-delete-single-product" class="label-status"></div>
+		
+
+  </div>
+  <div class="column middle">
+    <h2><u>PRODUCTS</u></h2>
+    <br/>
+	<p id="total-illustration"></p>
+	<table id="table-products">
+		<tr>
+			<th>INDEX</th>
+			<th>PRODUCT ID</th>
+			<th>PRODUCT NAME</th>
+			<th>QUEUE STATUS</th>
+		</tr>
+	</table>
+  </div>
+ 
+</div>
+<div id="loader" style="display:none;"></div>
+<script type="text/javascript">
+function getProducts(){
+	$("#loader").show();
+	$.ajax({
+	  url: "php/getProducts.php",
+	}).done(function(productResponse) {
+
+		var productArray = productResponse.split("<br>");
+		$('#label-count-qualified-products').html("Qualified Products: " + ((productArray.length) - 1));
+		
+		$.each(productArray, function(index, product) {
+            if(product != null && product != ""){
+				var productSplit =  product.split(",");
+				$('#table-products tr:last').after('<tr><td>' + (index+1) + '</td><td>' + productSplit[0] + '</td><td>' + productSplit[1] + '</td><td></td></tr>');
+			}
+		});
+		
+		$("#loader").hide();
+	}).fail(function (jqXHR, textStatus, errorThrown){
+		$('#status-get-products').html('Error: Reach out to developer');
+		$("#loader").hide();
+	});
+}
+
+function reindexAllProducts(){
+	$("#loader").show();
+	var table = document.getElementById('table-products');
+	var rowLength = table.rows.length;
+
+	for(var i=1; i<rowLength; i+=1){
+
+		  var row = table.rows[i];
+		  var productID = $(row.cells[1]).text();
+		  
+		  $.ajax({
+				  url: "php/indexProduct.php",
+				  data: {"productId" : productID, "action":"UPDATE"},
+				  currentRow: row
+		  }).done(function(productResponse) {
+
+				row = this.currentRow;
+				if(productResponse.indexOf("UPDATE") != -1)
+					$(row.cells[3]).text("SUCCESS");
+				else
+					$(row.cells[3]).text("ERROR");
+				$("#loader").hide();
+		  }).fail(function (jqXHR, textStatus, errorThrown){
+				alert("Error");
+				$("#loader").hide();
+		  });
+	}
+	
+}
+
+function deleteAllProducts(){
+	$("#loader").show();
+	$.ajax({
+	   url: "php/indexProduct.php",
+	   data:{"action":"DELETE_ALL"},
+	}).done(function(productResponse) {
+		if(productResponse.indexOf("DELETE_ALL") != -1)
+			$('#status-delete-products').html("Created DELETE_ALL queue.");
+		else
+			$('#status-delete-products').html("ERROR, reach out to developer.");
+			
+		$("#loader").hide();
+	}).fail(function (jqXHR, textStatus, errorThrown){
+			$('#status-delete-products').html("ERROR, reach out to developer.");
+			$("#loader").hide();
+	});
+}
+
+function reindexSingleProduct(){
+	$("#loader").show();
+	$.ajax({
+	   url: "php/indexProduct.php",
+	   data: {"productId" : $('#re-index-single-product-id').val(), "action":"UPDATE"},
+	}).done(function(productResponse) {
+		if(productResponse.indexOf("UPDATE") != -1)
+			$('#status-index-single-product').html("Success: added to queue");
+		else
+			$('#status-index-single-product').html("ERROR: reach out to developer");
+			
+		$("#loader").hide();
+	}).fail(function (jqXHR, textStatus, errorThrown){
+			$('#status-index-single-product').html("ERROR: reach out to developer.");
+			$("#loader").hide();
+	});
+}
+
+function deleteSingleProduct(){
+	$("#loader").show();
+	$.ajax({
+	   url: "php/indexProduct.php",
+	   data: {"productId" : $('#delete-single-product-id').val(), "action":"DELETE"},
+	}).done(function(productResponse) {
+		if(productResponse.indexOf("DELETE") != -1)
+			$('#status-delete-single-product').html("Success: added to queue");
+		else
+			$('#status-delete-single-product').html("ERROR: reach out to developer");
+			
+		$("#loader").hide();
+	}).fail(function (jqXHR, textStatus, errorThrown){
+			$('#status-delete-single-product').html("ERROR: reach out to developer.");
+			$("#loader").hide();
+	});
+}
+
+
+</script>
+</body> 
+  
+</html> 

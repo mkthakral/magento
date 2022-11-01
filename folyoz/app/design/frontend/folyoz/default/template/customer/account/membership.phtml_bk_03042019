@@ -1,0 +1,103 @@
+<?php
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$userId = $customer->getId();
+	$subscription = Mage::getModel('customer/customer')->stripeApi($userId); // check user user subscription form stripe api	
+	$cart = Mage::getModel('checkout/cart')->getQuote();
+	foreach ($cart->getAllItems() as $item) {
+		$productName = $item->getProduct()->getName();
+		$productPrice = $item->getProduct()->getPrice();
+		$productid=$item->getProduct()->getId();
+	}
+?>
+<div class="membership">
+    <div class="page-title">
+        <h1><?php echo $this->__('Membership') ?></h1>
+    </div>
+	<div id="loader" class="cus-loader" style="display:none;">
+		<div class="over-lay"></div>
+		<div class="loader-body">
+			<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/loader.gif" ?>"/>
+		</div>
+	</div>
+	<div class="account-message">
+		<?php if($customer->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($customer->getData('approval') == 64) { ?>
+		<h2>Your account is not yet approved.</h2>
+		<?php } else { ?>
+			<?php if($subscription['code'] == 503) { ?>
+			<h2>You do not have any active subsription. Subscribe to avail unlimited uploads and submissions.</h2>
+			<?php } ?>	
+		<?php } ?>	
+	</div>
+	<p>Foundfolio provides Illustrators and Photographers a new and unique way to market their work directly to the people who hire, Art Directors. Select your plan below.</p>
+	<div class="blue-heading-area">Plan Selection</div>
+	<div class="sub-frm-outer">
+		<?php $collectionVirtual = Mage::getResourceModel('catalog/product_collection')->addAttributeToFilter('type_id', array('eq' => 'virtual')); ?>
+		<form name="subscription" id="subscription" method="POST" action="">
+		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		<input type="hidden" name="customerid" value="<?php echo $userId;  ?>"/>
+		<?php foreach($collectionVirtual as $key) { ?>
+		<?php $product = Mage::getModel('catalog/product')->load($key->getId()); ?>
+		<?php $url = Mage::getBaseUrl()."customer/account/redirect/?id=".$product->getId(); ?>
+			<div class="sub-frm-inner1">
+				<div class="sub-details">
+					<div class="s-d-s1"><?php echo $product->getsubscriptionprice(); ?></div>
+					<div class="s-d-s2">
+						<?php echo $product->getName(); ?>
+						<span class="description"><?php echo substr($product->getDescription(), 0, 100) ; ?></span>
+					</div>
+				</div>
+				<div class="sub-name">
+					<input type="radio" name="subtype" value="<?php echo $product->getId(); ?>" required <?php if($productid==$product->getId()) {?>checked<?php } ?> ><span><?php echo $product->getDuration(); ?></span>
+				</div>
+			</div>
+			
+
+		<?php } ?>
+
+			<div class="sub-frm-inner2">
+				<input type="submit" name="submit" class="button mem-btn" id="submit" value="Continue" <?php if($customer->getData('approval') != 63) echo disabled?> >
+			</div>
+		</form>
+	</div>
+	<?php $count= Mage::helper('checkout/cart')->getItemsCount(); ?>
+   <?php if($count!=0){ ?>
+	<div class="blue-heading-area">Payment Information</div>
+	
+
+	
+	<?php } ?>
+</div>
+<?php if($count!=0){ ?>
+<script type="text/javascript">
+jQuery(window).load(function(){
+	
+ jQuery('html, body').animate({
+    scrollTop: jQuery(".check-outer").offset().top
+  }, 1000)
+	
+});
+
+</script>
+<div class="check-outer">
+	
+<iframe src="http://digitalmate.in/magento/folyoz/onestepcheckout" id="chk" height="800" width="800"></iframe>
+
+</div>
+<?php } ?>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery(".mem-btn").click(function(){
+		//alert("hi");
+	jQuery("#loader").show();	
+		
+	});
+	
+});
+
+
+
+</script>
+

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<package>
+    <name>Cryozonic_StripeSubscriptions</name>
+    <version>2.0.1</version>
+    <stability>stable</stability>
+    <license uri="http://cryozonic.com/licenses/stripe.html">http://cryozonic.com/licenses/stripe.html</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Sell subscriptions by integrating the Stripe Payment Gateway with Magento Recurring Profiles.</summary>
+    <description>The subscriptions add-on will allow you to use Magento as a powerful subscriptions platform. It can be used for both physical products and virtual services and supports trial modes and initial/setup fees. Your users can cancel their plans from their account, with you being in full audit from both the Magento back office and from the Stripe dashboard.</description>
+    <notes>For a full list of changes, see https://store.cryozonic.com/magento-extensions/stripe-subscriptions.html</notes>
+    <authors><author><name>Cryozonic</name><user>Cryozonic</user><email>info@cryozonic.com</email></author><author><name>Cryozonic</name><user>Cryozonic</user><email>info@cryozonic.com</email></author></authors>
+    <date>2018-10-03</date>
+    <time>16:48:44</time>
+    <contents><target name="magecommunity"><dir name="Cryozonic"><dir name="StripeSubscriptions"><dir name="Block"><dir name="Adminhtml"><file name="Notifications.php" hash="50b81b2ae6ab846018d91bae27a0756a"/><dir name="Sales"><dir name="Items"><dir name="Column"><file name="Name.php" hash="3bf71411e5407556865b3837080c2d91"/></dir></dir><dir name="Order"><dir name="Invoice"><file name="Totals.php" hash="8469e541b405b5cb8695bef2c1d18617"/></dir><file name="Totals.php" hash="0538e119b30e4e5aeb3c600891806761"/></dir></dir></dir><dir name="Catalog"><dir name="Product"><dir name="View"><dir name="Type"><file name="Configurable.php" hash="fc4b95f9daf1da6ab767c2d7c075fb54"/></dir></dir></dir></dir><dir name="Checkout"><file name="Grandtotal.php" hash="531d25f1cb88f0f0291772ac8657936d"/><file name="Shipping.php" hash="72c542afc7df9b81e10935436395874b"/><file name="Subtotal.php" hash="c64ceda7fef94cbce88e440c5122e12d"/><dir name="Total"><file name="Nominal.php" hash="e1c0fed8ca0cedb8e98b76d370b69ad5"/></dir></dir><dir name="Order"><dir name="Email"><dir name="Items"><dir name="Order"><file name="Default.php" hash="6c170ea193f65610b3f9431555273a5d"/></dir></dir></dir><dir name="Invoice"><file name="Totals.php" hash="84680a1e8d21716ce4274f83039ba3a7"/></dir><file name="Totals.php" hash="006226485300b63e70b6ae3acc5b05fa"/></dir></dir><dir name="Helper"><file name="Data.php" hash="9bd93376fd23d7fcafd9a5457fe7bacd"/></dir><dir name="Model"><dir name="Adminhtml"><dir name="Sales"><dir name="Order"><file name="Create.php" hash="87b4c8128a1f83b9d15060774f62dbee"/></dir></dir></dir><dir name="Bundle"><dir name="Product"><file name="Type.php" hash="5feae5f078c422e7b30b41b5595cd145"/></dir></dir><file name="Observer.php" hash="c1899f7245db88d366ef7c1c0d9337e0"/><dir name="Payment"><file name="Observer.php" hash="d0ce0995b685769553c98ed627ae9b76"/></dir><dir name="Product"><dir name="Type"><file name="Configurable.php" hash="a6d91a23eef7cd4f4d7db201c69b1f1e"/></dir></dir><file name="Quote.php" hash="101e31774c7377dbf8c2055482586747"/><dir name="Recurring"><file name="Order.php" hash="afce710c21b666e5737c33a383f83987"/><file name="Profile.php" hash="b712f3ba4da740a0da2c0a2e96118ece"/></dir><dir name="Resource"><dir name="Option"><file name="Collection.php" hash="7d4ba3a7904823204647d4edb6634316"/></dir></dir><dir name="Source"><file name="Configurable.php" hash="1dcb166af843b722e556124d8db9c13a"/><file name="Groups.php" hash="dd856faebc7bba600078926fc61ff067"/><file name="Invoice.php" hash="3a7c33add280162d763af918cb514bb4"/></dir><file name="Subscriptions.php" hash="ab29880f8cc0832067d499a7d84118ad"/><dir name="Tax"><dir name="Sales"><dir name="Total"><dir name="Quote"><dir name="Nominal"><file name="Subtotal.php" hash="075b50e09b999e5909042a7c18f9ae5a"/><file name="Tax.php" hash="17faabb13be9ca8c935054c160a5ec88"/></dir></dir></dir></dir></dir><dir name="Webhooks"><file name="Observer.php" hash="234693d3b017180fc2db85fb55b02f9c"/></dir></dir><dir name="controllers"><file name="WebhooksController.php" hash="c62abc2f923f25218901ac5d01136ba1"/></dir><dir name="etc"><file name="CHANGELOG.txt" hash="ad1de9236f2d7ee4e39b4e9f1b2f7c71"/><file name="config.xml" hash="99980d80432188aac5bf801c3a258c49"/><file name="system.xml" hash="68f41f707cadc2bb8935ec2a33d5c406"/></dir><dir name="sql"><dir name="cryozonic_stripesubscriptions_setup"><file name="mysql4-install-1.0.0.php" hash="8d3bb3aa04ee0e53f6c4f46c983c33ee"/><file name="mysql4-upgrade-1.0.0-1.2.0.php" hash="8fe5d704f8524628b85e438052d54324"/><file name="mysql4-upgrade-1.2.0-1.7.3.php" hash="f7b3e9133b2031dde2782f4e6a2023c0"/><file name="mysql4-upgrade-1.7.3-1.7.4.php" hash="750dc427ffbf69d04c1d8bf5baad9300"/><file name="mysql4-upgrade-1.7.4-1.8.0.php" hash="33d3f80886a467a217781e81b93e814c"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Cryozonic_StripeSubscriptions.xml" hash="efa4a111292eff40cbec31904529ef8e"/></dir></target><target name="magelocale"><dir name="en_US"><file name="Cryozonic_StripeSubscriptions.csv" hash="e6ebdfeb26a7202aa8e96f5aa30b11ed"/></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="template"><dir name="cryozonic_stripesubscriptions"><dir name="catalog"><dir name="product"><dir name="view"><dir name="type"><dir name="options"><file name="configurable.phtml" hash="c6da44df41c5a25ca6620c3ad7775d5e"/></dir></dir></dir></dir></dir><dir name="checkout"><dir name="total"><file name="nominal.phtml" hash="18c190dee220bc6bd9b8107aca70b774"/></dir></dir><dir name="tax"><dir name="checkout"><file name="grandtotal.phtml" hash="d349f05ecc43b18b88bb549d5d575d2e"/><file name="shipping.phtml" hash="406416665721adb258a1107a9ab76843"/><file name="subtotal.phtml" hash="9940c56b628b50b68ee483acee87d3d8"/></dir></dir></dir></dir><dir name="layout"><file name="cryozonic_stripesubscriptions.xml" hash="d151faa87af6ad26ecaa07f101a046a5"/></dir></dir></dir></dir><dir name="adminhtml"><dir name="base"><dir name="default"><dir name="layout"><dir name="cryozonic_stripesubscriptions"><file name="adminhtml.xml" hash="9390d9dfd7f781a3b9ea09126d9fcefa"/></dir></dir><dir name="template"><dir name="cryozonic_stripesubscriptions"><dir name="adminhtml"><file name="notifications.phtml" hash="8804470d8833273f054dfcc6147c591a"/></dir></dir></dir></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.2.0</min><max>7.1.0</max></php></required></dependencies>
+</package>
+<package>
+    <name>Facebook_Ads_Extension</name>
+    <version>2.6.0</version>
+    <stability>stable</stability>
+    <license uri="https://raw.githubusercontent.com/fbsamples/audience-network-support/master/LICENSE">Facebook License</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Easily set up a pixel and catalog to use advanced advertising products and drive sales on Facebook.</summary>
+    <description>Marketing on Facebook helps your business build lasting relationships with people, find new customers and increase sales for your online store. With this Facebook ad extension, we make it easy to reach the people who matter to your business and track the results of your advertising across devices. _This extension will help you:_&#xD;
+&#xD;
+**Reach the right people**&#xD;
+Set up the Facebook pixel to find new customers, optimize your ads for people likely to buy and reach people with relevant ads on Facebook after they've visited your website.&#xD;
+&#xD;
+**Show them the right products**&#xD;
+Connect your product catalog to Facebook to use dynamic ads. Reach shoppers when they're on Facebook with ads for the products they viewed on your website.&#xD;
+&#xD;
+**Measure the results of your ads**&#xD;
+When you have the Facebook pixel set up, you can use Facebook ads reporting to understand the sales and revenue that resulted from your ads.&#xD;
+&#xD;
+&#xD;
+_Many online retailers have found success using the Facebook pixel to track the performance of their ads and run dynamic ads:_&#xD;
+&#xD;
+&#xD;
+&#x201C;The ability to measure sales was the first sign that our business would be a success.  Our first day of breaking 100-plus sales always sticks out.  Point blank, our marketing plan is Facebook, Facebook, and more Facebook... Facebook is 100% the backbone of our customer acquisition efforts and it's been made even better with the improved Facebook pixel&#x201D; &#x2014; Ali Najafian, co-founder, Trendy Butler&#xD;
+&#xD;
+&#xD;
+&#x201C;I'm thrilled with the results we've seen since launching dynamic ads.  We saw a rise in conversions almost immediately after launch and have been able to scale the program at an impressive pace over the past 6 months.  These ads have proven to be a key component of our marketing efforts&#x201D; &#x2014; Megan Lang, Digital Marketing Manager, Food52&#xD;
+&#xD;
+&#xD;
+&#x201C;With dynamic ads, Target has been able to easily engage consumers with highly relevant creative.  The early results have exceeded expectations.  Performance has been especially strong on mobile devices &#x2014; an important and fast-growing area for Target &#x2014; where we're seeing two times the conversion rate&#x201D; &#x2014; Kristi Argyilan, Senior Vice President, Media and Guest Engagement at Target&#xD;
+&#xD;
+&#xD;
+&#xD;
+_What's included?_&#xD;
+**(a) Pixel installer**&#xD;
+Installing the Facebook pixel allows you to access the features below:&#xD;
+&#xD;
+* Conversion tracking: See how successful your ad is by seeing what happened as a direct result of your ad (including conversions and sales)&#xD;
+* Optimization:  Show your ads to people most likely to take a specific action after clicking on them, like adding an item to their cart or making a purchase&#xD;
+* Remarketing: When people visit your website, reach them again and remind them of your business with a Facebook ad&#xD;
+&#xD;
+** (b) Product catalog integration**&#xD;
+Importing your product catalog to Facebook allows you to use dynamic ads.  Dynamic ads look identical to other link ads or carousel-format ads that are available on Facebook. However, instead of individually creating an ad for each of your products, Facebook creates the ads for you and personalizes them for each of your customers.&#xD;
+&#xD;
+* Scale: Use dynamic ads to promote all your products without needing to create individual ads for each item&#xD;
+* Highly relevant: Show people ads for products they're interested in to increase the likelihood of a purchase&#xD;
+* Always-on: Set up your campaigns once and continually reach people with the right product at the right time&#xD;
+* Cross-device: Reach people with ads on any device they use, regardless of where they first see your products&#xD;
+&#xD;
+&#xD;
+_Installation Instructions_&#xD;
+&#xD;
+1. Install the extension from Magento Connect&#xD;
+2. Go to your Admin Panel&#xD;
+3. Select Facebook Ads Extension&#xD;
+4. Click Get Started&#xD;
+&#xD;
+&#xD;
+Additional FAQ&#xD;
+https://www.facebook.com/help/532749253576163</description>
+    <notes>- Introduce Debug Mode&#xD;
+- AddToCart firing wrong product id fix.&#xD;
+- Upgrade notice.</notes>
+    <authors><author><name>Jordan Rogers-Smith</name><user>jordanrs</user><email>jordanrs@fb.com</email></author><author><name>Yu Li</name><user>liyuhk</user><email>liyuhk@fb.com</email></author><author><name>Dmitri Dranishnikov</name><user>dmitrid</user><email>dmitrid@fb.com</email></author><author><name>Adam Hoff</name><user>ahoff</user><email>ahoff@fb.com</email></author><author><name>Xia Wu</name><user>xiawuthu</user><email>xiawuthu@fb.com</email></author></authors>
+    <date>2018-08-16</date>
+    <time>21:21:31</time>
+    <contents><target name="magecommunity"><dir name="Facebook"><dir name="AdsExtension"><dir><dir name="Block"><file name="AddToCart.php" hash="d838e1027d8056067c7d8f41044308ab"/><dir name="Adminhtml"><file name="Diaindex.php" hash="4a8fa69952bbc97a9715e340d39db32d"/><file name="Feedindex.php" hash="11a1064a868e8b36f84b021259891002"/><file name="Pixelindex.php" hash="29f21842ff2440eb7459dafbea16c389"/></dir><file name="Head.php" hash="990584d3b2599f8f6bc782d0a7b43a82"/><file name="InitiateCheckout.php" hash="b8b889f1889c8560f96b376f96b46490"/><file name="MessengerChat.php" hash="679fecb29833068aee41bb6bd65b44ae"/><file name="Purchase.php" hash="98d9b202351be743c03b1e7855b7c75a"/><file name="Search.php" hash="fedf7abfe3f5e35d6089442e2889c5fd"/><file name="ViewCategory.php" hash="8d40741b4c4b4b5a1cda50b59a6b57b7"/><file name="ViewContent.php" hash="088286842078c341bdbfecba0ffb57a5"/><file name="common.php" hash="adac7f7fdebab00ec16f94cd82948959"/></dir><dir name="Helper"><file name="Data.php" hash="1b0a7c57bc216cb939effa71c95654db"/></dir><dir name="Model"><file name="FBDebugProduct.php" hash="1804e935eaac8b1d3c17937804ba629b"/><file name="FBProductFeed.php" hash="c630173d38078731b2307d110d22ed89"/><file name="FBProductFeedSamples.php" hash="d05404fbff4a01739cc3c6a08ce42bdd"/><file name="FBProductFeedTSV.php" hash="cf89d9924fdef5378d34f82ab61656ac"/><file name="FBProductFeedXML.php" hash="8cab1201de5172b023e3dc0f09c7ceeb"/><file name="Observer.php" hash="31a5be249743cec0619596e8131a8fae"/></dir><dir name="controllers"><dir name="Adminhtml"><file name="FbdebugController.php" hash="77723a802ed3fd4a40f5078f3b4d276d"/><file name="FbfeedController.php" hash="5fe86cb514e50d65973db8a9667c39af"/><file name="FbmainController.php" hash="5094fdf1ceeb3ac346329b3c06334dfc"/><file name="FbmsgerchatsetupController.php" hash="0774349ebe561f3fe31e8ff1c3959cc0"/><file name="FbpixelController.php" hash="7c1ba272a579cb41ebaf9c42fa63b2fb"/><file name="FbregenController.php" hash="578bfc26d26fc36cd6cea4c12edc3016"/><file name="FbstoreController.php" hash="f69a9d975343b881c7aa0dbf64584a44"/><file name="FbupgradeController.php" hash="d2caf677441bae534aa84324318d7725"/></dir><file name="DebugController.php" hash="64b78c8e31abf0cc336a28cf4f6113d7"/><file name="ProductfeedController.php" hash="1b7a62c765e70f73f97aedbda6e4e366"/></dir><dir name="etc"><file name="adminhtml.xml" hash="9da1d504b5ef41620a54968d9c64ec0c"/><file name="config.xml" hash="6c8771d864a64259670a38eef28e37ef"/></dir><dir name="lib"><file name="fb.php" hash="2076e7adcba2af3642612a57dab73a14"/></dir></dir><file name="LICENSE" hash="1a0c85492c893e916fc1a4c1918076ad"/></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><file name="facebook_ads_extension.xml" hash="aec9c8a96d35404f7c82e5736a7aa660"/></dir><dir name="template"><dir name="facebook_ads_extension"><file name="addtocart.phtml" hash="c1a930b7c09e75f0d9746cba611e3c76"/><file name="head.phtml" hash="1e88a4c25c4f61904b33bec84b8d1398"/><file name="initiate_checkout.phtml" hash="676e97512a1653bb3965c7171594db98"/><file name="messengerchat.phtml" hash="963c223296f2274f67675c81ed47b178"/><file name="purchase.phtml" hash="1a0383a64698a9d4c2131afc69762fc6"/><file name="search.phtml" hash="35d58ba1a53f73f715c81d2011a9a2d7"/><file name="viewcategory.phtml" hash="c8b8997a60d3129dd2c3bb72e21b5fb5"/><file name="viewcontent.phtml" hash="55f054f759b06537376774ccbe6dddbe"/></dir></dir></dir></dir></dir><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="layout"><file name="facebook_ads_extension.xml" hash="82ffa3268ea53571af52036fc54d8c4e"/></dir><dir name="template"><dir name="facebook_ads_extension"><file name="fae_debug.phtml" hash="7281e3dfd830180ee6a25a2b2f776452"/><file name="fae_index.phtml" hash="a4baf15d003d1f1713d0f2b3add9ff50"/></dir></dir></dir></dir></dir></target><target name="mageweb"><dir name="js"><dir name="Facebook"><dir name="AdsExtension"><dir><dir name="Adminhtml"><file name="fae.js" hash="3281431ffb2cb810d4f0332cd3e93166"/><dir name="lib"><file name="IEOverlay.js" hash="f25278fd86bd7c89a14ad16e2aadf8b6"/><file name="Modal.js" hash="85b1ee5ba5e31bc5e4cf3c1e163d407b"/><file name="debug.js" hash="e06cd1c65136e1efe923e55f7bffac6d"/><file name="react-dom.min.js" hash="80dd76fff4872e658666dec43913360c"/><file name="react.min.js" hash="c3207f7bf39699d4279ba404ea55f163"/><file name="utils.js" hash="850f3345b738d12645d29479c150eb0f"/></dir></dir></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Facebook_AdsExtension.xml" hash="ceabca57f051b452079da7a9394e62ec"/></dir></target><target name="mageskin"><dir name="adminhtml"><dir name="base"><dir name="default"><dir name="Facebook"><dir name="AdsExtension"><dir><dir name="css"><dir name="Adminhtml"><file name="fae.css" hash="42fc8dd1fe044a13bcf6041eb56cf277"/><file name="fbe.css" hash="5aba346a937ef2e54e5e5b2d613fffe0"/></dir></dir><dir name="images"><dir name="Adminhtml"><file name="buttonbg.png" hash="09adbacda0d592a215277230c48df285"/><file name="facebook.png" hash="e01a9e2dc852c08283e8b27621873eaa"/><file name="fbicons.png" hash="8f1b559a279a3785f1b2492a79f518d8"/><file name="small-store.png" hash="53a02560570f8b38405648165c87959e"/></dir></dir></dir></dir></dir></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.3.0</min><max>8.0.0</max></php></required></dependencies>
+</package>
+

@@ -1,0 +1,430 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+<script type="text/javascript">window.location.href = '<?php echo $this->getUrl() ?>customer/account';</script>
+<?php } ?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $this Mage_Catalog_Block_Product_List
+ */
+?>
+<!-- or -->
+
+	<?php
+	$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+	$search=strpos($currentUrl,'catalogsearch');
+	if($search==false){
+	$currentCategory = Mage::registry('current_category');
+	$catid=$currentCategory->getId();
+	 $categoryLink = Mage::getModel("catalog/category")->load($catid)->getUrl();
+	
+
+	}
+	else
+	{
+		$catid=$_REQUEST['cat'];
+		 $categoryLink = Mage::getModel("catalog/category")->load($catid)->getUrl();
+	}
+	if($catid == 3) {
+		$filter1='categories';
+		$filter2='style';
+	}
+	else {
+		$filter1='categories_photography';
+		$filter2='style_photography';
+	}	
+	?>
+
+    <?php if($_REQUEST['submit_action']=="search"){  ?>
+
+		<?php
+		$categories=$_REQUEST['categories'];
+		$style=$_REQUEST['style'];
+
+		if($categories==0){
+		$_productCollection = Mage::getModel('catalog/product')
+						->getCollection()
+						->joinField('category_id', 'catalog/category_product', 'category_id', 'product_id = entity_id', null, 'left')
+						->addAttributeToSelect('*')
+						->addFieldToFilter('status',Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+						/*->addFieldToFilter('galcode', array('notnull'=> false ))*/
+						->addAttributeToFilter('category_id',$catid);
+						
+						
+						$_productCollection->joinField('is_in_stock',
+						'cataloginventory/stock_item',
+						'is_in_stock',
+						'product_id=entity_id',
+						'is_in_stock=1',
+						'{{table}}.stock_id=1',
+						'left');  
+						
+						//echo "ck";
+		}
+		else{
+            
+            if($catid == '3'){
+                $categoryAttribute = 'categories';
+            }else if($catid == '4'){
+                $categoryAttribute = 'categories_photography';
+            }
+            
+			$_productCollection = Mage::getModel('catalog/product')
+						->getCollection()
+						->joinField('category_id', 'catalog/category_product', 'category_id', 'product_id = entity_id', null, 'left')
+						->addAttributeToSelect('*')
+						->addFieldToFilter('status',Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+						/*->addFieldToFilter('galcode', array('notnull'=> false ))*/
+						->addAttributeToFilter('category_id',$catid)
+<<<<<<< HEAD
+						->addAttributeToFilter($categoryAttribute, array('finset' => $categories));
+=======
+						->addAttributeToFilter($filter1, array('finset' => $categories));
+>>>>>>> 3012a8d... Point as per discuss 04-07-2019
+						
+						$_productCollection->joinField('is_in_stock',
+						'cataloginventory/stock_item',
+						'is_in_stock',
+						'product_id=entity_id',
+						'is_in_stock=1',
+						'{{table}}.stock_id=1',
+						'left'); 
+
+		//echo "ck1";				
+			
+		  }
+
+		?>
+		<?php if($categories!=0){?>
+		<?php
+		//echo "ck2";
+		$_productCollection; 
+		}?>
+		<?php if($style!=0){ ?>
+		<?php 
+<<<<<<< HEAD
+            if($catid == '3'){
+                $styleAttribute = 'style';
+            }else if($catid == '4'){
+                $styleAttribute = 'style_photography';
+            }
+            
+		$_productCollection->addAttributeToFilter($styleAttribute, array('finset' => $style)); 
+=======
+		//echo "ck3";
+		$_productCollection->addAttributeToFilter($filter2, array('finset' => $style)); 
+>>>>>>> 3012a8d... Point as per discuss 04-07-2019
+		?>
+		<?php } ?>
+		<?php } else { ?>
+		<?php
+		$_productCollection=$this->getLoadedProductCollection();
+		$_helper = $this->helper('catalog/output');
+		echo $this->getToolbarHtml();
+		?>
+
+       <?php } ?>
+
+		<?php 
+		
+
+		$attributeInfo1 = Mage::getResourceModel('eav/entity_attribute_collection')->setCodeFilter($filter1)->getFirstItem();
+		$attributeId1 = $attributeInfo1->getAttributeId();
+		$attribute1 = Mage::getModel('catalog/resource_eav_attribute')->load($attributeId1);
+		$attributeOptions1 = $attribute1 ->getSource()->getAllOptions(false);
+
+		//echo "<pre>"; print_r($attributeOptions1);
+
+		$attributeInfo2 = Mage::getResourceModel('eav/entity_attribute_collection')->setCodeFilter($filter2)->getFirstItem();
+		$attributeId2 = $attributeInfo2->getAttributeId();
+		$attribute2 = Mage::getModel('catalog/resource_eav_attribute')->load($attributeId2);
+		$attributeOptions2 = $attribute2 ->getSource()->getAllOptions(false);  
+
+		?>
+		<?php $actionurl=$categoryLink.'?categories='.$_REQUEST['categories'].'&style='.$_REQUEST['style'].'&submit_action=search'; ?>
+		<div class="search-outer-1">
+					<div class="list-search">
+						<form method="get" action="<?php echo $actionurl; ?>" class="catagory-list-form">
+							<ul class="catagory-list-ul">
+								<li>
+								<select id="categories" name="categories">
+								<option value="0">All Categories</option>
+								<?php foreach($attributeOptions1 as $attr1){?>
+								<option value="<?php echo $attr1['value'];  ?>" <?php if($_REQUEST['categories']== $attr1['value']){ ?>selected="selected"<?php } ?>><?php echo $attr1['label']; ?></option>
+								<?php } ?>
+								</select>
+								</li>
+								<li>
+								<select id="style" name="style">
+								<option value="0">All Styles/Mediums</option>
+								<?php foreach( $attributeOptions2  as $attr2){?>
+								<option value="<?php echo $attr2['value'];  ?>" <?php if($_REQUEST['style']== $attr2['value']){ ?>selected="selected"<?php } ?>><?php echo $attr2['label']; ?></option>
+								<?php } ?>
+								</select>
+								</li>
+							</ul>
+
+						<button class="form-button" name="submit_action" type="submit" id="filter-search" value="search"><span>SEARCH</span></button>
+
+						</form>
+					</div>
+
+	
+
+	<div class="key-search">
+	<form method="get" action="<?php echo $this->getUrl() ?>catalogsearch/result/" class="catagory-key-form">
+	<input type="hidden" name="cat" value="<?php  echo $catid; ?>">
+	<input type="text" name="q" value="" placeholder="Search By keyward or Name">
+	<button class="form-button"  type="submit" id="keywardlist-search" value=""><span>SEARCH</span></button>
+
+
+
+	</form>
+
+	</div>
+</div>
+<?php $loginuser = Mage::getSingleton('customer/session')->getCustomer(); ?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('Oops, nothing here. Please try a different selection.') ?></p>
+<?php else: ?>
+
+<div class="category-products">
+    <?php // echo $this->getToolbarHtml() ?>
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+		<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+		try {
+			$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_read')->query($sqlPaymentSystem1);
+			$result1= $chkSystem->fetchall();
+		}
+		catch (Exception $e){
+			echo $e->getMessage();
+		}
+		foreach($result1 as $res){
+			$artisid=$res['userid'];
+		}
+		$artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>	
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="javascript:void(0)<?php //echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(383,383); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+            <?php // Product description ?>
+			<div artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image hover getdata" _artistid=<?php echo $artisid; ?> _action="ViewedProductOnListing"><?php echo $artiscollection->getName(); ?></div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); ?>
+<<<<<<< HEAD
+    <ul class="products-grid">
+=======
+	 <ul class="products-grid">
+>>>>>>> 3012a8d... Point as per discuss 04-07-2019
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+		<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+		try {
+			$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_read')->query($sqlPaymentSystem1);
+			$result1= $chkSystem->fetchall();
+		}
+		catch (Exception $e){
+			echo $e->getMessage();
+		}
+		foreach($result1 as $res){
+			$artisid=$res['userid'];
+		}
+		$artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>	
+        <?php if ($i++%$_columnCount==0): ?>
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="javascript:void(0)<?php //echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(TRUE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(383,383); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+				<div artisid="<?php echo $artisid ?>" list="1" mageproductid="<?php echo $_product->getData("entity_id") ?>" class="product-image hover getdata" _artistid=<?php echo $artisid; ?> _action="ViewedProductOnListing"><?php echo $artiscollection->getName(); ?></div>
+			</li>
+<<<<<<< HEAD
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>    
+        <?php endif ?>
+        <?php endforeach ?>
+        </ul>
+=======
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+
+        <?php endif ?>
+        <?php endforeach ?>
+        </ul>		
+>>>>>>> 3012a8d... Point as per discuss 04-07-2019
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+	<!--div id="image-pop" class="image-pop-outer" style="display:none;">
+		<div class="image-pop-overlay"></div>
+		<div class="image-pop-contain-outer">
+			<div id="image-pop-contain" class="image-pop-contain lising-pop-contain"></div>
+		</div>
+	</div-->	
+	<div id="loader" class="cus-loader" style="display:none;">
+		<div class="over-lay"></div>
+		<div class="loader-body">
+<<<<<<< HEAD
+=======
+			<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/ripple.svg" ?>"/>
+>>>>>>> 3012a8d... Point as per discuss 04-07-2019
+		</div>
+	</div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" style="display:none">
+    <div class="modal-dialog modal-dialog-centered">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<?php endif; ?>
+<script>
+jQuery('body').on('click', '.product-image', function () {
+	jQuery('#loader').css('display','block');
+	var mageproductid = jQuery(this).attr('mageproductid');
+	var list = jQuery(this).attr('list');
+	var artisid = jQuery(this).attr('artisid');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxEnlargeProImage/",
+	data: "mageproductid="+mageproductid+"&list="+list+"&artisid="+artisid,
+	async: true,
+	dataType: "json",
+	success: function(data){
+			jQuery('.modal-body').html(data.html);
+			var orgwidth = data.width;
+			var orgheight = data.height;
+			var padding = 0;
+			if (window.matchMedia("(max-width: 700px)").matches) {
+				jQuery('.modal-body').css('padding',0);
+			}else{// desktop version
+			
+				jQuery('.modal-dialog').addClass('modal-lg');
+				jQuery('.modal-dialog').css('max-width',orgwidth+345);
+				
+				// fixed size pop image and details		
+				jQuery('.img-pop-left').css('width',orgwidth);
+				jQuery('.img-pop-right').css('width',300);
+				
+/* 				if(orgheight < 403){
+					padding = Math.round((403 - orgheight)/2);
+                }
+				// if image height lesser than pop details (for artist)
+				if(padding > 0){
+					jQuery('.img-pop-left').css('padding-left',20);
+					//jQuery('.img-pop-left').css('padding-top',padding);
+					//jQuery('.img-pop-left').css('padding-bottom',padding);
+					jQuery('.img-pop-left').css('width',orgwidth+21);
+				} */
+				
+                    
+			}
+			jQuery('#myModal').modal('show');
+			jQuery('#loader').css('display','none');
+		}
+    })		
+});
+<?php $customer=Mage::getSingleton('customer/session')->getCustomer(); ?>
+<?php if($customer->getGroupId() == 1){ ?>
+if (!window.matchMedia("(max-width: 700px)").matches) {
+	jQuery("#myModal").on('shown.bs.modal', function(){
+		var hei = jQuery('.modal-content').height();
+		var imghei = jQuery('.modal-content img').height();
+		var dialog = parseInt(jQuery('.modal-dialog').css('max-width'));
+		if(imghei < 520){
+			padding = Math.round((hei - imghei)/2);
+			jQuery('.modal-dialog').css('max-width',dialog+padding);
+			jQuery('.img-pop-left').width(jQuery('.img-pop-left').width()+padding);
+			jQuery('.img-pop-left').css('padding-left',padding);
+			jQuery('.img-pop-left').css('padding-top',padding);
+			jQuery('.img-pop-left').css('padding-bottom',padding);		
+		}	
+	});
+}
+<?php } else { ?>
+if (!window.matchMedia("(max-width: 700px)").matches) {
+	jQuery("#myModal").on('shown.bs.modal', function(){
+		var hei = jQuery('.modal-content').height();
+		var imghei = jQuery('.modal-content img').height();
+		var dialog = parseInt(jQuery('.modal-dialog').css('max-width'));
+		if(imghei <= 520){
+			padding = Math.round((hei - imghei)/2);
+			jQuery('.modal-dialog').css('max-width',dialog+padding);
+			jQuery('.img-pop-left').width(jQuery('.img-pop-left').width()+padding);
+			jQuery('.img-pop-left').css('padding-left',padding);
+			jQuery('.img-pop-left').css('padding-top',padding);
+			jQuery('.img-pop-left').css('padding-bottom',padding);		
+		}	
+	});
+}
+<?php } ?>
+jQuery('body').on('click', '.close', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+jQuery('body').on('click', '.image-pop-overlay', function () {
+	jQuery('#pop-outer').css('display','none');
+	jQuery('#image-pop').css('display','none');
+});
+
+jQuery('body').on('click', '.getdata', function () {
+	var action = jQuery(this).attr('_action');
+	var artistid = jQuery(this).attr('_artistid');
+	jQuery.ajax({
+	type: "get",
+	url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxAnalyticsInput/",
+	data: "artist_id="+artistid+"&action="+action,
+	dataType:"json",
+	async: true,
+	success: function(data){
+			console.log(data);
+		}
+	})		
+});
+
+</script>

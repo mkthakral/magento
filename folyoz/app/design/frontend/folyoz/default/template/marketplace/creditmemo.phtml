@@ -1,0 +1,460 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+
+if($isPartner==1){
+
+	$order_id = $this->getRequest()->getParam('order_id');
+
+	$creditmemo_id = $this->getRequest()->getParam('creditmemo_id');
+
+	$order=Mage::getModel('sales/order')->load($order_id);
+
+	$creditmemo = Mage::getModel('sales/order_creditmemo')->load($creditmemo_id);
+
+    if($order->getPayment()){
+		$paymentCode = $order->getPayment()->getMethod();
+		$payment_method = Mage::getStoreConfig('payment/'.$paymentCode.'/title',Mage::app()->getStore());
+	}
+	$creditmemo_status = '';
+	if($creditmemo->getState()==1){
+		$creditmemo_status = $helper->__('Pending');
+	}else if($creditmemo->getState()==2){
+		$creditmemo_status = $helper->__('Refunded');
+	}else if($creditmemo->getState()==3){
+		$creditmemo_status = $helper->__('Canceled');
+	}
+	$marketplace_orders = Mage::getModel('marketplace/order')->getCollection()
+		                		->addFieldToFilter('order_id',array('eq'=>$order_id))
+								->addFieldToFilter('seller_id',array('eq'=>Mage::getSingleton('customer/session')->getCustomerId()));
+	if(count($marketplace_orders)){ ?>
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('View Credit Memo Details') ?></h1>
+			
+			<a href="<?php echo Mage::getUrl('marketplace/order_creditmemo/email', array('order_id'=>$order_id,'creditmemo_id'=>$creditmemo_id))?>" onclick="return confirm('Are you sure you want to send credit memo email to customer?')">
+				<button class="button wk_mp_btn" title="<?php echo $helper->__('Send Email To Customer') ?>" type="button">
+					<span><span><?php echo $helper->__('Send Email') ?></span></span>
+				</button>
+			</a>
+			<a href="<?php echo Mage::getUrl('marketplace/order_creditmemo/print', array('order_id'=>$order_id,'creditmemo_id'=>$creditmemo_id));?>">
+				<button class="button wk_mp_btn wk_invoiceslip" title="<?php echo $helper->__('Print') ?>" style="float:right;">
+					<span><span><?php echo $helper->__('Print') ?></span></span>
+				</button>
+			</a>
+		</div>
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Credit Memo Information') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset" id="wk_mp_print_order">
+				<div class="page-title title-buttons">
+				    <h1><?php echo $helper->__('Credit Memo #%s - %s | %s', $creditmemo->getIncrementId(), $creditmemo_status, $creditmemo->getCreatedAtStoreDate()) ?></h1>
+				</div>
+				<!-- order info -->
+				<div class="wk_mp_order-info-box">
+				    <div>
+				        <div class="box">
+				            <div class="box-title">
+				                <h2><?php echo $helper->__('Order Information') ?></h2>
+				            </div>
+				            <div class="box-content">
+				                <div class="wk_row">
+									<span class="label">
+										<a href="<?php echo Mage::getUrl('marketplace/order/view', array('id'=>$order_id));?>">
+											<?php echo $helper->__('Order # %s',$order->getIncrementId()) ?>
+										</a>
+									</span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Order Status')?> : </span>
+									<span class="value"><?php echo ucfirst($order->getStatus()); ?></span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Order Date')?> : </span>
+									<span class="value"><?php echo $order->getCreatedAtStoreDate(); ?></span>
+								</div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<!-- buyer info -->
+				<div class="wk_mp_order-info-box">
+				    <div>
+				        <div class="box">
+				            <div class="box-title">
+				                <h2><?php echo $helper->__('Buyer Information') ?></h2>
+				            </div>
+				            <div class="box-content">
+				                <div class="wk_row">
+									<span class="label"><?php echo $helper->__('Customer Name')?> : </span>
+									<span class="value"><?php echo $order->getCustomerName(); ?></span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Email')?> : </span>
+									<span class="value"><?php echo $order->getCustomerEmail(); ?></span>
+								</div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<!-- shipping info -->
+				<?php if (!$order->getIsVirtual()): ?>
+					<div class="wk_mp_order-info-box">
+				        <div class="box">
+				            <div class="box-title">
+				                <h2><?php echo $helper->__('Shipping Address') ?></h2>
+				            </div>
+				            <div class="box-content">
+				                <address><?php echo $order->getShippingAddress()->format('html') ?></address>
+				            </div>
+				        </div>			        
+					</div>
+					<div class="wk_mp_order-info-box">
+						<div class="box">
+				            <div class="box-title">
+				                <h2><?php echo $helper->__('Shipping Information') ?></h2>
+				            </div>
+				            <div class="box-content">
+				                <?php if ($order->getShippingDescription()): ?>
+				                    <?php echo $this->escapeHtml($order->getShippingDescription()) ?>
+				                <?php else: ?>
+				                    <p><?php echo $this->helper('sales')->__('No shipping information available'); ?></p>
+				                <?php endif; ?>
+				            </div>
+				        </div>
+					</div>
+				<?php endif; ?>
+
+				<!-- Billing info -->
+
+				<div class="wk_mp_order-info-box">
+			        <div class="box">
+			            <div class="box-title">
+			                <h2><?php echo $helper->__('Billing Address') ?></h2>
+			            </div>
+			            <div class="box-content">
+			                <address><?php echo $order->getBillingAddress()->format('html') ?></address>
+			            </div>
+			        </div>
+				</div>
+
+				<!-- Payment Info -->
+
+				<div class="wk_mp_order-info-box">
+					<div class="box box-payment">
+			            <div class="box-title">
+			                <h2><?php echo $helper->__('Payment Method') ?></h2>
+			            </div>
+			            <div class="box-content">
+			                <?php echo $payment_method; ?>
+			            </div>
+			        </div>
+				</div>
+
+				<!-- Items Info -->
+
+				<div class="order-items order-details" style="overflow:auto;width:100%;">
+				    <h2 class="table-caption"><?php echo $helper->__('Items to Refund') ?>        
+				    </h2>
+				    <table class="data-table" id="my-orders-table" summary="<?php echo $helper->__('Items to Refund') ?>">
+					    <col />
+					    <col width="1" />
+					    <col width="1" />
+					    <col width="1" />
+					    <col width="1" />
+					    <thead>
+					        <tr>
+					            <th style="width: 100%;"><?php echo $helper->__('Product Name') ?></th>
+					             <th class="a-right"><?php echo $helper->__('Price') ?></th>
+					            <th><?php echo $helper->__('Qty') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Subtotal') ?></th>
+					            <?php
+					            if($paymentCode == 'mpcashondelivery'){?>
+					            	<th class="a-right"><?php echo $helper->__('COD Charges') ?></th>
+					            <?php
+					            } ?>
+					            <th class="a-right"><?php echo $helper->__('Tax Amount') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Discount Amount') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Row Total') ?></th>
+					        </tr>
+					    </thead>
+					    <?php 
+					    $_items = $order->getItemsCollection();
+					    $i = 0;
+					    $_count = $_items->count();				    
+					    $subtotal = 0;
+					    $vendor_subtotal =0;
+					    $totaltax = 0;
+					    $admin_subtotal =0;
+					    $shippingamount = 0;
+					    $codcharges_total = 0;
+
+					    foreach ($_items as $_item){
+					    	$row_total = 0;
+					    	$available_seller_item = 0;
+					    	$shippingcharges = 0;
+					    	$itemPrice = 0;			
+					    	$seller_item_cost = 0;			
+					    	$totaltax_peritem = 0;			
+					    	$codcharges_peritem = 0;
+					    	$seller_item_commission = 0;			
+							$orderid = $order_id;
+							$vendor_item_status=$this->getItemStatus($orderid,$_item->getProductId());				    	
+							$seller_orderslist=Mage::getModel('marketplace/saleslist')->getCollection()
+														 ->addFieldToFilter('mageproownerid',array('eq'=>$customerid))
+														 ->addFieldToFilter('mageorderid',array('eq'=>$orderid))
+														 ->addFieldToFilter('mageproid',array('eq'=>$_item->getProductId()))
+														 ->addFieldToFilter('order_item_id',array('eq'=>$_item->getItemId()))
+														 ->setOrder('mageorderid','DESC');
+							foreach($seller_orderslist as $seller_item){
+								$parentitem_falg = 0;
+								$available_seller_item = 1;
+								$totalamount = $seller_item->getTotalamount();
+								$seller_item_cost = $seller_item->getActualparterprocost();
+								$seller_item_commission = $seller_item->getTotalcommision();
+								$shippingcharges = $seller_item->getShippingCharges();
+								$itemPrice = $seller_item->getMageproprice();
+								$totaltax_peritem = $seller_item->getTotaltax();
+								$codcharges_peritem = $seller_item->getCodCharges();
+							}
+							if($available_seller_item == 1){
+								$i++;
+								$seller_item_qty = $_item->getQtyOrdered();
+								$row_total=$itemPrice*$seller_item_qty;
+								//$seller_item_cost = $row_total-$seller_item_commission;
+								$vendor_subtotal=$vendor_subtotal+$seller_item_cost;
+								$subtotal=$subtotal+$row_total;
+								$admin_subtotal = $admin_subtotal +$seller_item_commission;
+								$totaltax=$totaltax+$totaltax_peritem;
+								$codcharges_total=$codcharges_total+$codcharges_peritem;
+								$shippingamount = $shippingamount+$shippingcharges;
+
+								$result = array();
+						        if ($options = $_item->getProductOptions()) {
+						            if (isset($options['options'])) {
+						                $result = array_merge($result, $options['options']);
+						            }
+						            if (isset($options['additional_options'])) {
+						                $result = array_merge($result, $options['additional_options']);
+						            }
+						            if (isset($options['attributes_info'])) {
+						                $result = array_merge($result, $options['attributes_info']);
+						            }
+						        }
+						        // for bundle product
+						        $bundleitems = array_merge(array($_item), $_item->getChildrenItems());
+						        $_count = count ($bundleitems);
+						        $_index = 0;
+						        $_prevOptionId = '';					        
+						    	?>
+						        <?php if ($_item->getParentItem()) continue; ?>
+						        <tbody>
+						            <tbody class="<?php echo $class = ($i%2 != 0)? 'odd':'even'?>">
+						            <?php
+									if($_item->getProductType()!='bundle'){
+									?>
+										<?php $pname=$_item->getName(); ?>
+										<tr class="border" id="order-item-row-<?php echo $_item->getMageproid() ?>">
+											<td>
+												<h3 class="product-name"><?php echo $pname;?></h3>
+												<?php if($_options = $result): ?>
+											        <dl class="item-options">
+											        <?php foreach ($_options as $_option) : ?>
+											            <dt><?php echo $this->escapeHtml($_option['label']) ?></dt>
+											            <?php if (!$this->getPrintStatus()): ?>
+											                <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+											                <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>>
+											                    <?php echo $this->escapeHtml($_option['value']) ?>
+											                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
+											                    <div class="truncated_full_value">
+											                        <dl class="item-options">
+											                            <dt><?php echo $this->escapeHtml($_option['label']) ?></dt>
+											                            <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+											                        </dl>
+											                    </div>
+											                    <?php endif; ?>
+											                </dd>
+											            <?php else: ?>
+											                <dd>
+											                    <?php echo nl2br($this->escapeHtml( (isset($_option['print_value']) ? $_option['print_value'] : $_option['value']) )) ?>
+											                </dd>
+											            <?php endif; ?>
+											        <?php endforeach; ?>
+											        </dl>
+										        <?php endif; ?>
+											</td>
+											<td class="price" data-rwd-label="<?php echo $helper->__('Price') ?>"><?php echo Mage::helper('core')->currency($_item->getPrice(), true, false);?></td>
+											<td class="item_status" data-rwd-label="<?php echo $helper->__('Qty') ?>">
+												<span class="nobr">
+										            <?php echo intval($_item->getQtyRefunded()); ?>
+										        </span>
+											</td>
+											<td class="price" data-rwd-label="<?php echo $helper->__('Subtotal') ?>"><?php echo Mage::helper('core')->currency($row_total, true, false);?></td>
+											<?php
+								            if($paymentCode == 'mpcashondelivery'){?>
+								            	<td class="price" data-rwd-label="<?php echo $helper->__('COD Charges') ?>"><?php echo Mage::helper('core')->currency($codcharges_peritem, true, false);?></td>
+								            <?php
+								            } ?>
+											<td class="price" data-rwd-label="<?php echo $helper->__('Tax Total') ?>"><?php echo Mage::helper('core')->currency($totaltax_peritem, true, false);?></td>
+											<td class="row_total" data-rwd-label="<?php echo $helper->__('Discount Total') ?>"><?php echo Mage::helper('core')->currency(0, true, false);?></td>
+											<td class="row_total" data-rwd-label="<?php echo $helper->__('Subtotal') ?>"><?php echo Mage::helper('core')->currency($row_total+$totaltax_peritem+$codcharges_peritem, true, false);?></td>
+										</tr>
+									<?php
+									}else{
+									?>
+									<?php foreach ($bundleitems as $_bundleitem): ?>
+										<?php
+										$attributes_option = null;
+										if ($_bundleitem instanceof Mage_Sales_Model_Order_Item) {
+								            $options = $_bundleitem->getProductOptions();
+								        } else {
+								            $options = $_bundleitem->getOrderItem()->getProductOptions();
+								        }
+								        if (isset($options['bundle_selection_attributes'])) {
+								            $attributes_option =  unserialize($options['bundle_selection_attributes']);
+								        }
+										?>
+
+										<?php if ($_bundleitem->getParentItem()): ?>
+										    <?php $attributes = $attributes_option ?>
+										    <?php if ($_prevOptionId != $attributes['option_id']): ?>
+										    <tr class="bundle <?php if ($_bundleitem->getLastRow()){ echo 'last'; }?>">
+										        <td><div class="option-label"><?php echo $attributes['option_label'] ?></div></td>
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+								            	<td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										    </tr>
+										    <?php $_prevOptionId = $attributes['option_id'] ?>
+										    <?php endif; ?>
+										<?php endif; ?>
+										<tr<?php echo (++$_index==$_count)?' class="border bundle"':' class="bundle"' ?> id="order-item-row-<?php echo $_bundleitem->getId() ?>">
+										    <?php 
+										    if (!$_bundleitem->getParentItem()){?>
+										    	<td><h3 class="product-name"><?php echo $this->escapeHtml($_bundleitem->getName()) ?></h3></td>
+										    	<td class="price" data-rwd-label="<?php echo $helper->__('Price') ?>"><?php echo Mage::helper('core')->currency($_item->getPrice(), true, false);?></td>
+												<td class="lin-hide">&nbsp;</td>
+												
+												<td class="price" data-rwd-label="<?php echo $helper->__('Subtotal') ?>"><?php echo Mage::helper('core')->currency($row_total, true, false);?></td>
+												<?php
+									            if($paymentCode == 'mpcashondelivery'){?>
+									            	<td class="price" data-rwd-label="<?php echo $helper->__('COD Charges') ?>"><?php echo Mage::helper('core')->currency($codcharges_peritem, true, false);?></td>
+									            <?php
+									            } ?>
+												<td class="price" data-rwd-label="<?php echo $helper->__('Tax Total') ?>"><?php echo Mage::helper('core')->currency($totaltax_peritem, true, false);?></td>
+												<td class="row_total" data-rwd-label="<?php echo $helper->__('Discount Total') ?>"><?php echo Mage::helper('core')->currency(0, true, false);?></td>
+												<td class="row_total" data-rwd-label="<?php echo $helper->__('Subtotal') ?>"><?php echo Mage::helper('core')->currency($row_total+$totaltax_peritem+$codcharges_peritem, true, false);?></td>
+										    <?php
+										    } else{
+										    	$_bundleitem_child_name ='';
+										    	if ($attributes = $attributes_option){
+										            $_bundleitem_child_name =  sprintf('%d', $attributes['qty']) . ' x ' .$this->escapeHtml($_bundleitem->getName()) . " " . Mage::helper('core')->currency($attributes['price'], true, false);
+										        } else {
+										            $_bundleitem_child_name = $this->escapeHtml($_bundleitem->getName());
+										        }
+										    	?>
+										    	<td><div class="option-value"><?php echo $_bundleitem_child_name?></div></td>
+										    	<td class="lin-hide">&nbsp;</td>
+										        <td class="item_status" data-rwd-label="<?php echo $helper->__('Qty') ?>">
+													<span class="nobr">
+											            <?php echo intval($_bundleitem->getQtyRefunded()); ?>
+											        </span>
+												</td>
+										        <td class="lin-hide">&nbsp;</td>
+								            	<td class="lin-hide">&nbsp;</td>        
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										        <td class="lin-hide">&nbsp;</td>
+										    <?php
+										    }?>
+										</tr>
+									<?php endforeach; ?>
+									<?php
+									}?>
+						        </tbody>
+					        	<?php 
+					        }
+				        }?>
+				        <?php  
+					    foreach($marketplace_orders as $tracking){
+							$shippingamount=$tracking->getShippingCharges();
+						}
+				        if($paymentCode == 'mpcashondelivery'){
+				        	$count_td = 7;
+				       	}else{
+				       		$count_td = 6;
+				       	}
+				        ?>				        
+					</table>					
+				</div>
+
+				<div class="wk_mp_order-info-box">
+			        <div class="box">
+			        	<div class="box-right entry-edit">
+						    <div class="entry-edit-head"><h4><?php echo $helper->__('Credit Memo Totals') ?></h4></div>
+						    <div class="order-totals">
+						        <table cellspacing="0" width="100%" class="data-table">
+						            <tfoot>
+								    	<tr>
+								            <td class="a-right wk_refundtotal_td1">
+								                <?php echo $helper->__('Subtotal') ?>
+								           	</td>
+								           	<td class="a-right wk_refundtotal_td2">
+								           		<span class="price"><?php echo Mage::helper('core')->currency($creditmemo->getSubtotal(), true, false); ?></span>
+								           	</td>
+								        </tr>
+								        <tr>
+								            <td class="a-right wk_refundtotal_td1">
+								                <?php echo $helper->__('Total Tax') ?>
+								           	</td>
+								           	<td class="a-right wk_refundtotal_td2">
+								           		<span class="price"><?php echo Mage::helper('core')->currency($totaltax, true, false); ?></span>
+								           	</td>
+								        </tr>
+								        <tr>
+								        	<td class="a-right wk_refundtotal_td1"><?php echo $helper->__('Shipping & Handling') ?></td>
+								        	<td class="a-right wk_refundtotal_td2"><?php echo Mage::helper('core')->currency($creditmemo->getShippingAmount(), true, false); ?></td>
+								    	</tr>
+									    <tr>
+									        <td class="a-right wk_refundtotal_td1"><?php echo $helper->__('Adjustment Refund') ?></td>
+									        <td class="a-right wk_refundtotal_td2"><?php echo Mage::helper('core')->currency($creditmemo->getAdjustmentPositive(), true, false); ?></td>
+									    </tr>
+									    <tr>
+									        <td class="a-right wk_refundtotal_td1"><?php echo $helper->__('Adjustment Fee') ?></td>
+									        <td class="a-right wk_refundtotal_td2"><?php echo Mage::helper('core')->currency($creditmemo->getAdjustmentNegative(), true, false); ?></td>
+									    </tr>	       
+								        <tr>
+								            <td class="a-right wk_refundtotal_td1">
+								                <strong><?php echo $helper->__('Grand Total') ?></strong>
+								            </td>
+								            <td class="a-right wk_refundtotal_td2">
+								                <strong><span class="price"><?php echo Mage::helper('core')->currency($creditmemo->getGrandTotal(), true, false); ?></span></strong>
+								            </td>
+								        </tr>							    
+								    </tfoot>
+						    	</table>
+						    </div>
+						</div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="buttons-set">
+			<p class="back-link">
+				<a href="<?php echo $this->getUrl('marketplace/order/history');?>" class="left">&laquo; <?php echo $helper->__('Back To My Orders') ?></a>
+			</p>
+		</div>
+		<?php 
+	}
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

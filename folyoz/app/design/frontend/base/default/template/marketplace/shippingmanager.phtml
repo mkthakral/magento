@@ -1,0 +1,54 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$ordermanage=Mage::helper('marketplace')->getIsOrderManage();
+$helper = Mage::helper('marketplace');
+if($isPartner==1 && $ordermanage==1){?>
+	<div class="page-title"><h1><?php echo Mage::helper('marketplace')->__('Vendor Shipping Management')?></h3></div>
+	<form action="<?php echo $this->getUrl('marketplace/order/selleraddress') ?>" enctype="multipart/form-data" method="post" id="form-selleraddress-validate">	
+		<?php 
+		$formKey = Mage::getSingleton('core/session')->getFormKey(); 
+		$collection = Mage::getModel('marketplace/userprofile')->getCollection()
+	                            ->addFieldToFilter('mageuserid',array('eq'=>Mage::getSingleton('customer/session')->getCustomerId()));
+	    foreach ($collection as $row) {
+	        $others_info=$row->getOthersInfo();
+	    }
+		?>
+		<input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Invoice and Packing Slip Address/VAT/Tax Information') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<ul class="form-list">
+					<li class="fields">
+						<div class="field">
+							<div class="input-box">
+								<textarea class="input-text" name="others_info" title="Address/VAT/Tax Information" cols="1" rows="3" ><?php echo $others_info; ?></textarea>
+								
+							</div>
+						</div>
+					</li>
+					<li>
+						<button class="button wk_mp_btn" title="<?php echo $helper->__('Save Payment') ?>" type="submit" id="savepaym">
+							<span><span><?php echo $helper->__('Save Information') ?></span></span>
+						</button>
+					</li>
+				</ul>				
+			</div>	
+		</div>		
+	</form>
+	<div class="buttons-set">
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+	<script>
+		var dataForm = new VarienForm('form-profile-validate', true);
+	</script>
+<?php }else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("you are not authorized to view this page."); ?>
+	</h2>
+<?php } ?>

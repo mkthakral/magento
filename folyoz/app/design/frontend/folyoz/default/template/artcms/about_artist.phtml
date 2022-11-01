@@ -1,0 +1,18 @@
+<div class="about-content">
+	<div class="banner-section">
+	
+	<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('about-slider')->toHtml(); ?>
+
+
+
+	</div>
+	<div class="abt-video">
+				<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('about2')->toHtml(); ?>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about-us-2')->toHtml(); ?>
+			    <?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('about3')->toHtml(); ?>
+				<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('newsletter')->toHtml(); ?>
+
+
+	</div>
+</div>
+	

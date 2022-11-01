@@ -1,0 +1,30 @@
+<div class="home-content">
+	<div class="banner-section">
+	
+	<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('slider1')->toHtml(); ?>
+
+	</div>
+	<div class="home-page-block">
+			<?php // echo $this->getLayout()->createBlock('cms/block')->setBlockId('home-block')->toHtml(); ?>
+			<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('home2')->toHtml(); ?>
+			<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('home3')->toHtml(); ?>
+			<?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('home4')->toHtml(); ?>
+			
+     </div>
+</div>
+<div class="home-testimonial-block">
+<?php  echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('newsletter')->toHtml(); ?>
+</div>
+</div>
+</div>
+<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+<script type="text/javascript">
+	var x = "<?php echo $this->getUrl() ?>dashboard";
+	jQuery("#login-btn").href = x;
+	jQuery("#login-btn").html("Dashboard");
+	jQuery("#login-btn").parent().addClass("white-btn");
+jQuery("#login-btn").on("click", function(){
+  window.location = x;
+});
+</script>
+<?php } ?>

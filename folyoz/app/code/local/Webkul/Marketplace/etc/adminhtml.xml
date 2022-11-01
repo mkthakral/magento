@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<config>
+   <menu>
+		<marketplace module="marketplace" translate="title">
+			<title>Marketplace Management</title>  
+			<children>
+				<marketplace_products>
+					<title>Manage Products</title>
+					<sort_order>1</sort_order>
+					<action>marketplace/adminhtml_products</action>
+				</marketplace_products>
+			</children>
+			<children>
+				<marketplace_partners>
+					<title>Manage Sellers</title>
+					<sort_order>2</sort_order>
+					<action>marketplace/adminhtml_partners</action>
+				</marketplace_partners>
+			</children>
+			<children>
+				<marketplace_commision>
+					<title>Manage Commission</title>
+					<sort_order>3</sort_order>
+					<action>marketplace/adminhtml_commisions</action>
+				</marketplace_commision>
+			</children>
+			<children>
+				<marketplace_transaction>
+					<title>Sellers Transaction</title>
+					<sort_order>4</sort_order>
+					<action>marketplace/adminhtml_transaction</action>
+				</marketplace_transaction>
+			</children>
+			<children>
+				<marketplace_feedback>
+					<title>Manage Feedback</title>
+					<sort_order>5</sort_order>
+					<action>marketplace/adminhtml_feedback</action>
+				</marketplace_feedback>
+			</children>
+			<children>
+				<configuremarketplace>
+	                <title>Configuration</title>
+	                <sort_order>6</sort_order>
+	                <action>adminhtml/system_config/edit/section/marketplace</action>
+	            </configuremarketplace>
+	        </children>
+		</marketplace>
+	</menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <marketplace translate="title" module="marketplace">
+                                        <title>marketplace</title>
+                                    </marketplace>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                
+					<marketplace module="marketplace">
+						<title>Marketplace Management</title>  
+						<children>
+							<marketplace_products>
+								<title>Manage Products</title>
+								<sort_order>1</sort_order>
+								<action>marketplace/adminhtml_products</action>
+							</marketplace_products>
+						</children>
+						<children>
+							<marketplace_partners>
+								<title>Manage Seller</title>
+								<sort_order>2</sort_order>
+								<action>marketplace/adminhtml_partners</action>
+							</marketplace_partners>
+						</children>
+						<children>
+							<marketplace_commision>
+								<title>Manage Commission</title>
+								<sort_order>3</sort_order>
+								<action>marketplace/adminhtml_commisions</action>
+							</marketplace_commision>
+						</children>
+						<children>
+							<marketplace_transaction>
+								<title>Sellers Transaction</title>
+								<sort_order>4</sort_order>
+								<action>marketplace/adminhtml_transaction</action>
+							</marketplace_transaction>
+						</children>
+						 <children>
+							<marketplace_feedback>
+								<title>Manage Feedback</title>
+								<sort_order>5</sort_order>
+								<action>marketplace/adminhtml_feedback</action>
+							</marketplace_feedback>
+						</children>
+						<children>
+							<configuremarketplace>
+				                <title>Configuration</title>
+				                <sort_order>6</sort_order>
+				                <action>adminhtml/system_config/edit/section/marketplace</action>
+				            </configuremarketplace>
+				        </children>
+					</marketplace>	
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

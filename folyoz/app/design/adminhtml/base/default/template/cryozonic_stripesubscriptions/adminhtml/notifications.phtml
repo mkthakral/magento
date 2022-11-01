@@ -1,0 +1,15 @@
+<?php if ($this->isStripePaymentsMissing()): ?>
+
+<div class="notification-global">
+    <strong>Stripe Payments is not installed</strong> -
+    The Stripe Subscriptions add-on requires the core module <a href="<?php echo $this->getStripePaymentsLink(); ?>" target="_blank">Stripe Payments v<?php echo $this->getRequiredVersion(); ?></a> to be installed, but an installation of the module was not found.
+</div>
+
+<?php elseif (!$this->areDependenciesUpdated()): ?>
+
+<div class="notification-global">
+    <strong>Stripe Payments must be upgraded</strong> -
+    The Stripe Subscriptions add-on requires <a href="<?php echo $this->getStripePaymentsLink(); ?>" target="_blank">Stripe Payments v<?php echo $this->getRequiredVersion(); ?></a> or later to be installed, but an older version of the module was found instead. To upgrade, please refer to the <a href="<?php echo $this->getStripePaymentsUpgradeLink(); ?>" target="_blank">upgrade instructions</a>.
+</div>
+
+<?php endif; ?>

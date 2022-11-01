@@ -1,0 +1,141 @@
+<?php 
+$helper = Mage::helper('marketplace');
+$banner_display 	= 	$helper->getDisplayBanner();
+$banner_image 		= 	$helper->getBannerImage();
+$banner_content 	= 	$helper->getBannerContent();
+$marketplacebutton 	= 	$helper->getMarketplacebutton();
+$sellerlist_top_label 		= 	$helper->getSellerlisttopLabel();
+$sellerlist_bottom_label 	= 	$helper->getSellerlistbottomLabel();
+
+if (!isset($_GET['shop'])) {
+	$_GET['shop'] = '';
+}
+?>
+<?php
+$current_store = Mage::app()->getStore();
+if(Mage::getStoreConfig('design/package/name',$current_store) == 'default'){ ?>
+	<style type="text/css">
+		.wk_mp_landing_sellers_wraper{
+		    width: 212px!important;
+		}
+		.wk_mp_landing_sellers_img1 img{
+		    width: 94px!important;
+		}
+		.wk_mp_landing_sellers_img2{
+		    width: 190px!important;
+		}
+	</style>
+<?php 
+} ?>
+<style type="text/css">
+	.wk_mp_banner{
+		background-image: url('<?php echo $banner_image ?>');
+	}	
+</style>
+<div class="wk_mp_design wk_mp_landingpage">
+	<?php
+	if($banner_display){?>
+		<div class="wk_mp_banner_container">	
+			<div class="wk_mp_banner">
+				<div class="wk_mp_header">
+					<h1><?php echo $marketplacebutton; ?></h1>
+					<h2><?php echo Mage::helper('cms')->getBlockTemplateProcessor()->filter($banner_content);?></h2>
+					<p>
+						<a href="<?php echo $this->getUrl('customer/account/create/'); ?>">
+							<button class="button wk_mp_landing_button">
+								<span>
+									<span>
+										<strong><?php echo $marketplacebutton; ?></strong>
+									</span>
+								</span>
+							</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	<?php
+	} ?>
+	<h1 class="wk_marketplace_label"><?php echo $sellerlist_top_label ?></h1>
+	<style type="text/css">
+	</style>
+	<div clas="wk_srach_wrapper">
+		<form method="get" action="<?php echo $this->getUrl('marketplace/seller/list')?>" id="search_mini_form" class="wk_search" style="padding: 0px 20%;">
+			<div class="input-box">
+		        <input id="sellersearch" type="search" name="shop" value="<?php echo $_GET['shop']?>" class="input-text required-entry" maxlength="128" placeholder="<?php echo $helper->__('Search sellers by shop name from here')?>..." autocomplete="off" style="width:100%;border:1px solid #ccc;float:left;">
+		        <button type="submit" title="Search" class="button"><span class="span"><span><?php echo $this->__('Search') ?></span></span></button>
+		    </div>   
+		</form>  
+	</div>
+
+	<div class="wk_mp_sellerlist_container" style="display:inline-block;padding: 0;padding-top: 20px;width: 100%;">
+		<?php 
+		if(count($this->getCollection())==0){ ?>		
+			<div>
+				<p class="note-msg">
+					<?php echo $helper->__('No Shop Available') ?>
+				</p>
+			</div>
+			<?php 
+		} else{?>
+			<ul>
+				<?php
+				foreach($this->getCollection() as $seller_coll){
+					$seller_id = $seller_coll->getMageuserid();
+					$seller = Mage::getModel('customer/customer')->load($seller_id);
+					$seller_product_count = 0;
+					$profileurl = $seller_coll->getProfileurl();
+					$shoptitle = '';
+					$logo="noimage.png";
+					$seller_product_count = $helper->getSellerProCount($seller_id);
+					$shoptitle = $seller_coll->getShoptitle();
+					$logo=$seller_coll->getlogopic()==''?"noimage.png":$seller_coll->getlogopic();
+					if(!$shoptitle){
+						$shoptitle = $seller->getName();
+					}
+					$logo=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$logo;
+					?>
+			    	<li>
+				    	<div class="wk_mp_sellerlist_wrap">
+							<div class="wk_sellerlist_divide1">
+								<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$profileurl);?>" title="<?php echo $helper->__("View Seller's Shop") ?>"><img src="<?php echo $logo ?>"></a>
+							</div>
+							<div class="wk_sellerlist_divide2">
+								<div>
+									<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$profileurl);?>" title="<?php echo $helper->__("View Seller's Shop") ?>">
+										<strong><?php echo $shoptitle ?></strong>
+									</a>
+								</div>
+								<div><?php echo $helper->__('%s Total Products',$seller_product_count) ?></div>
+								<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/collection/'.$profileurl);?>">
+									<button class="button" title="<?php echo $helper->__("View Seller's Collection") ?>">
+										<span>
+											<span>
+												<?php echo $helper->__('View All'); ?>
+											</span>
+										</span>
+									</button>
+								</a>
+							</div>
+						</div>
+					</li>
+			    	<?php
+			    }?>
+		    </ul>
+		    <?php
+		}?>		
+	</div>	
+	<?php echo $this->getPagerHtml(); ?>
+
+	<h1 class="wk_marketplace_label"><?php echo $sellerlist_bottom_label ?></h1>
+
+	<a href="<?php echo $this->getUrl('customer/account/create/'); ?>">
+		<button class="button wk_mp_landing_button">
+			<span>
+				<span>
+					<strong><?php echo $marketplacebutton; ?></strong>
+				</span>
+			</span>
+		</button>
+	</a>
+</div>

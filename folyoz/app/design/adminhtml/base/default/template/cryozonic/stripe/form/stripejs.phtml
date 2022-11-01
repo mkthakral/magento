@@ -1,0 +1,10 @@
+<?php if ($this->stripe->getSecurityMethod()): ?>
+<script type="text/javascript">
+    <?php if ($this->hasBillingAddress()): ?>
+    cryozonic.billingInfo = <?php echo json_encode($this->billingInfo); ?>;
+    <?php endif; ?>
+    params3DSecure = <?php echo $this->stripe->get3DSecureParams(); ?>;
+    paramsApplePay = <?php echo $this->stripe->getApplePayParams(); ?>;
+    initStripe('<?php echo $this->getPublishableKey(); ?>', <?php echo $this->stripe->getSecurityMethod(); ?>);
+</script>
+<?php endif; ?>

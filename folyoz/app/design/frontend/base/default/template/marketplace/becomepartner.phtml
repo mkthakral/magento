@@ -1,0 +1,97 @@
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+		document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<?php $partnerId=Mage::getSingleton('customer/session')->getCustomerId(); 
+$helper=Mage::helper('marketplace');
+$collection=Mage::getModel('marketplace/userprofile')->getCollection(); 
+$collection->addFieldToFilter('mageuserid',array('eq'=>$partnerId)); ?>
+<div>
+	<?php if(count($collection)){ ?>
+		<div class="fieldset">
+			<h4 class="legend"><?php echo  $helper->__('Seller Request Panel') ?></h4>
+				<div class="wk_emptymsg"><?php echo  $helper->__('Waiting for approval from admin') ?></div>
+		</div>
+	<?php }
+	else { ?>
+		<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/becomepartner') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-partner">
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+			<div class="page-title">
+				<h1 style="float:left;"><?php echo  $helper->__('Seller Request Panel') ?></h1>
+				<button type="reset" class="button wk_mp_btn">
+					<span><span><?php echo $helper->__('Cancel') ?></span></span>
+				</button>
+				<button type="submit" title="Save" class="button pay wk_mp_btn">
+					<span>
+						<span><?php echo  $helper->__('Save') ?></span>
+					</span>
+				</button>
+			</div>
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+			<div class="wk_mp_design">
+				<div class="block block-account">	
+					<div class="block-title">	
+						<strong><span><h4><?php echo $helper->__('Seller Request Panel') ?></h4></span></strong>
+					</div>
+				</div>
+				<div class="fieldset wk_mp_fieldset">
+					<ul class="form-list">
+						<li>
+							<label><?php echo  $helper->__('Shop URL') ?></label>
+							<?php
+							if($helper->getProfileHintStatus() && Mage::getStoreConfig('marketplace/marketplace_profile/shopurl_seller',Mage::app()->getStore())){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/shopurl_seller',Mage::app()->getStore()) ?>"/>
+							<?php
+							} ?>
+							<div class="input-box shop">
+							<input type="text" class="required-entry wk_input_width" name="profileurl" id="profileurl" placeholder="<?php echo $helper->__("Please enter shop URL")?>"/>
+							<div id="wk_load" style="display: none;">
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/ajax-loader-tr.gif'); ?>" height="16px" width="16px"/>
+							</div>
+							</div>
+						</li>
+						<li class="control">
+							<input type="checkbox" class="required-entry" name="partnertype" id="partnertype" value="0"/>
+							<label><?php echo  $helper->__('Do you want to become seller / vendor ?') ?></label>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</form>
+	<?php } ?>
+</div>
+<script>
+var $wk_jq= jQuery.noConflict();
+var newCustomerProductForm = new VarienForm('form-customer-product-partner', true);
+(function($wk_jq){
+	$wk_jq(function(){
+		$wk_jq('#profileurl').keyup(function(){
+			$wk_jq(this).val($wk_jq(this).val().replace(/[^a-z^A-Z^0-9\.\-]/g,''));
+		});
+		$wk_jq('#profileurl').change(function(){
+			$wk_jq('.unavailable,.available').remove();		
+			var profileurl=$wk_jq(this).val();
+			if(profileurl!=''){
+				$wk_jq('#wk_load').show();
+				$wk_jq.ajax({
+					url:'<?php echo $this->getUrl('marketplace/seller/usernameverify')?>',
+					type:'POST',
+					data:{profileurl:profileurl},
+					dataType:'JSON',
+					success:function(data){
+						$wk_jq('#wk_load').hide();
+						if(data==0){
+							$wk_jq(".button").removeAttr("disabled");
+							$wk_jq('.shop').append($wk_jq('<div/>').addClass('available success-msg').text('<?php echo $helper->__("available")?>'));
+						}else{
+							$wk_jq(".button").attr("disabled","disabled");
+							$wk_jq('.shop').append($wk_jq('<div/>').addClass('unavailable error-msg').text('<?php echo $helper->__("unavailable")?>'));
+						}
+					}
+				});
+			}
+		});
+	});
+})($wk_jq);
+</script>

@@ -1,0 +1,605 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$partner=Mage::getModel('marketplace/userprofile')->getPartnerProfileById(Mage::getSingleton('customer/session')->getCustomerId());
+$helper = Mage::helper('marketplace');
+if($isPartner==1){
+	$profile_hint_status = $helper->getProfileHintStatus();
+	?>	
+	<?php $paymentDetail=Mage::getModel('marketplace/saleslist')->getPaymentDetailById(); ?>
+
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/editProfile') ?>" enctype="multipart/form-data" method="post" id="form-profile-validate">
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('Edit Profile Information') ?></h1>
+			<button class="button wk_mp_btn" title="<?php echo $helper->__('Save Profile') ?>" type="submit" id="save_butn">
+				<span><span><?php echo $helper->__('Save Profile') ?></span></span>
+			</button>
+		</div>
+		<?php $formKey = Mage::getSingleton('core/session')->getFormKey(); ?>
+		<input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Profile Information') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<ul class="form-list">
+					<li class="fields">
+					<?php 
+						if($partner['wantpartner']==1){?> 
+							<div class="profile">
+								<label for="twitterid"><?php echo $helper->__('Twitter ID') ?> </label>
+								<input type="checkbox" name="tw_active" value="1" title="<?php echo $helper->__('Allow to Display Twitter Icon in Profile Page') ?>" <?php if($partner['tw_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_tw',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_tw',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									<input type="text" id="twitterid" name="twitterid" value="<?php echo $partner['twitterid']; ?>" title="twitterid" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label for="facebookid"><?php echo $helper->__('Facebook ID') ?> </label>
+								<input type="checkbox" name="fb_active" value="1" title="<?php echo $helper->__('Allow to Display Facebook Icon in Profile Page') ?>" <?php if($partner['fb_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_fb',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_fb',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <input type="text" id="facebookid" name="facebookid" value="<?php echo $partner['facebookid']; ?>" title="facebookid" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Instagram ID') ?> </label>
+								<input type="checkbox" name="instagram_active" value="1" title="<?php echo $helper->__('Allow to Display Instagram Icon in Profile Page') ?>" <?php if($partner['instagram_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="instagram_id" name="instagram_id" value="<?php echo $partner['instagram_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Google Plus ID') ?> </label>
+								<input type="checkbox" name="gplus_active" value="1" title="<?php echo $helper->__('Allow to Display Google Plus Icon in Profile Page') ?>" <?php if($partner['gplus_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="gplus_id" name="gplus_id" value="<?php echo $partner['gplus_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Youtube ID') ?> </label>
+								<input type="checkbox" name="youtube_active" value="1" title="<?php echo $helper->__('Allow to Display Youtube Icon in Profile Page') ?>" <?php if($partner['youtube_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="youtube_id" name="youtube_id" value="<?php echo $partner['youtube_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Vimeo ID') ?> </label>
+								<input type="checkbox" name="vimeo_active" value="1" title="<?php echo $helper->__('Allow to Display Vimeo Icon in Profile Page') ?>" <?php if($partner['vimeo_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="vimeo_id" name="vimeo_id" value="<?php echo $partner['vimeo_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Pinterest ID') ?> </label>
+								<input type="checkbox" name="pinterest_active" value="1" title="<?php echo $helper->__('Allow to Display Pinterest Icon in Profile Page') ?>" <?php if($partner['pinterest_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="pinterest_id" name="pinterest_id" value="<?php echo $partner['pinterest_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Moleskine ID') ?> </label>
+								<input type="checkbox" name="moleskine_active" value="1" title="<?php echo $helper->__('Allow to Display Moleskine Icon in Profile Page') ?>" <?php if($partner['moleskine_active'] == 1){ echo "checked='checked'";} ?> style="margin: 5px;">
+								<div class="input-box">
+									 <input type="text" id="moleskine_id" name="moleskine_id" value="<?php echo $partner['moleskine_id']; ?>" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label><?php echo $helper->__('Contact Number') ?> </label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_cn',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_cn',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <input type="text" id="contactnumber" name="contactnumber" value="<?php echo $partner['contactnumber']; ?>" title="twitterid" class="input-text" placeholder="<?php echo $helper->__('Enter Mobile Number with country code ex: (123) 456-7890') ?>"/>
+								</div>
+							</div>
+							<?php
+							if(Mage::getStoreConfig('marketplace/seller_profile/activecolorpicker',Mage::app()->getStore())){?>
+								<div class="profile">
+									<label for="backgroundth"><?php echo $helper->__('Theme : Background Color') ?> </label>
+									<?php
+									if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_bc',Mage::app()->getStore())){?>
+										<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_bc',Mage::app()->getStore()) ?>"/>
+									<?php
+									} ?>
+									<div class="input-box">
+										 <input type="text" id="backgroundth" name="backgroundth" value="<?php echo $partner['backgroundth']; ?>" title="backgroundth" class="input-text" />
+										 <span class="color_pick" style="background-color:<?php echo $partner['backgroundth']; ?>"></span>
+									</div>
+								</div>
+							<?php
+							} ?>
+							<div class="profile">
+								<label for="shoptitle"><?php echo $helper->__('Shop Title') ?></label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_shop',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_shop',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <input type="text" id="shoptitle" name="shoptitle" value="<?php echo $partner['shoptitle']; ?>" title="shoptitle" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label for="bannerpic"> <?php echo $helper->__('Company Banner') ?> </label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_banner',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_banner',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<label class="input-box-notification input-box-notification1">(<?php echo $helper->__("Upload 700px X 100px for better look"); ?>)</label>
+								<div class="input-box">
+									<input type="file" id="bannerpic" name="bannerpic"  title="bannerpic" class="input-text banner" size="26" />
+									<div class="profileimage_set">
+									  	<div class="setimage">
+											<img class="wk_banner" alt=" <?php echo $helper->__('no image') ?>" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$partner['bannerpic']; ?>"/>
+											<?php
+											$collection = Mage::getModel('marketplace/userprofile')->getCollection();
+											$collection->addFieldToFilter('mageuserid',array('eq'=>Mage::getSingleton('customer/session')->getCustomerId()));
+											foreach($collection as  $value){ 
+												$bannerpic = $value->getBannerpic(); 
+												$logopic = $value->getLogopic(); 
+											}
+											if($bannerpic){
+											?>
+											<span class="wk_profileimagedelete" title="Delete">
+											  	<img src="<?php echo $this->getSkinUrl('marketplace/images/deleteIcon.png'); ?>" alt="<?php echo $helper->__('Delete Image')?>" title="<?php echo $helper->__('Delete Image')?>"/>
+											</span>
+											<?php
+											}?>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="profile">
+								<label for="logopic"> <?php echo $helper->__('Company Logo') ?> </label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_logo',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_logo',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									<input type="file" id="logopic" alt="no image" name="logopic"  title="logopic" class="input-text banner" size="26"/>
+									<div class="logoimage_set">
+									  	<div class="setimage">
+											<img class="prev_img" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$partner['logopic']; ?>"/>
+											<?php
+											if($logopic){
+											?>
+											<span class="wk_logoimagedelete" title="Delete">
+											  	<img src="<?php echo $this->getSkinUrl('marketplace/images/deleteIcon.png'); ?>" alt="<?php echo $helper->__('Delete Image')?>" title="<?php echo $helper->__('Delete Image')?>"/>
+											</span>
+											<?php
+											}?>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="profile">
+								<label for="complocality"><?php echo $helper->__('Company Locality') ?></label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_loc',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_loc',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <input type="text" id="complocality" name="complocality" value="<?php echo $partner['complocality']; ?>" title="complocality" class="input-text" />
+								</div>
+							</div>
+							<div class="profile">
+								<label for="compdesi"><?php echo $helper->__('Company Description') ?></label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_desciption',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_desciption',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <textarea type="text" id="shippingpolicy" name="compdesi" title="compdesi" class="input-text compdesi" ><?php echo $partner['compdesi']; ?> </textarea>
+								</div>
+							</div>
+							<?php
+							if(Mage::getStoreConfig('marketplace/seller_profile/partner_policy_approval',Mage::app()->getStore())){?>
+								<div class="profile">
+									<label><?php echo $helper->__('Return Policy') ?></label>
+									<?php
+									if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/returnpolicy',Mage::app()->getStore())){?>
+										<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/returnpolicy',Mage::app()->getStore()) ?>"/>
+									<?php
+									} ?>
+									<div class="input-box">
+										 <textarea type="text" id="shippingpolicy1" name="returnpolicy" title="returnpolicy" class="input-text compdesi" ><?php echo $partner['returnpolicy']; ?> </textarea>
+									</div>
+								</div>
+								<div class="profile">
+									<label><?php echo $helper->__('Shipping Policy') ?></label>
+									<?php
+									if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/shippingpolicy',Mage::app()->getStore())){?>
+										<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/shippingpolicy',Mage::app()->getStore()) ?>"/>
+									<?php
+									} ?>
+									<div class="input-box">
+										 <textarea type="text" id="shippingpolicy2" name="shippingpolicy" title="shippingpolicy" class="input-text compdesi" ><?php echo $partner['shippingpolicy']; ?> </textarea>
+									</div>
+								</div>
+							<?php
+							} ?>
+							<div class="profile">
+								<label for="countrypic"> <?php echo $helper->__('Country') ?> </label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_country',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_country',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									 <select name="countrypic" id="countrypic">
+										<option value="" selected="selected" disabled="disabled"><?php echo $helper->__('Select Country')?></option>
+									<?php foreach(Mage::getModel('directory/country')->getResourceCollection()->loadByStore()->toOptionArray(true) as $country){?>
+										<option <?php 
+										if($country['value']!=''){
+										echo ($partner['countrypic']==$country['value']?"selected='selected'":""); ?>value="<?php echo $country['value']; ?>"><?php echo $country['label'];?></option>
+									<?php 
+								      }
+									} ?>
+									</select>
+									<img class="country_img_prev" alt="no image" src="<?php echo $this->getSkinUrl('marketplace/images/country/countryflags/').strtoupper($partner['countrypic']==""?"xx":$partner['countrypic']).".png"; ?>"/>
+								</div>
+							</div>
+							<div class="profile">	
+								<label for="meta_keywords"><?php echo $helper->__('Meta Keywords') ?></label>
+								<label class="input-box-notification">(<?php echo $helper->__("Enter Meta Keywords Comma(',') Separated.."); ?>)</label>
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_meta',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_meta',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">			
+									<textarea type="text" id="meta_keywords" name="meta_keyword" title="Meta Keyword" class="input-text compdesi" ><?php echo $partner['meta_keyword']; ?> </textarea>
+								</div>	
+							</div>	
+							<div class="profile">	
+								<label for="meta_description"><?php echo $helper->__('Meta Description') ?></label>	
+								<?php
+								if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_mdesc',Mage::app()->getStore())){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_mdesc',Mage::app()->getStore()) ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">	
+									<textarea type="text" id="meta_description" name="meta_description" title="Meta Description" class="input-text compdesi" ><?php echo $partner['meta_description']; ?> </textarea>	
+								</div>	
+							</div>							
+						<?php } ?>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</form>
+	<?php
+	if(Mage::getStoreConfig('marketplace/seller_profile/url_rewrite',Mage::app()->getStore())){ ?>
+		<br/><br/>
+		<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/rewriteurl') ?>" enctype="multipart/form-data" method="post" id="form-urlrewrite-validate">
+			<div class="page-title">
+				<h1 style="float:left;"><?php echo $helper->__('Edit Your Shop Url') ?></h1>
+				<button class="button wk_mp_btn" title="<?php echo $helper->__('Set Your New Shop Url') ?>" type="submit">
+					<span><span><?php echo $helper->__('Save Url') ?></span></span>
+				</button>
+			</div>
+			<?php $formKey = Mage::getSingleton('core/session')->getFormKey(); ?>
+			<input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+			<div class="wk_mp_design">
+				<div class="block block-account">	
+					<div class="block-title">	
+						<strong><span><h4><?php echo $helper->__('Edit Your Shop Url') ?></h4></span></strong>
+					</div>
+				</div>
+				<div class="fieldset wk_mp_fieldset">
+					<ul class="form-list">
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Profile Page Target Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" value="<?php echo 'marketplace/seller/profile/'.$partner['profileurl'] ?>" readonly/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Profile Page Request Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" name="profile_request_url" id="profile_request_url" value="<?php echo $helper->getRewriteUrlPath('marketplace/seller/profile/'.$partner['profileurl']) ?>"/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Collection Page Target Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" value="<?php echo 'marketplace/seller/collection/'.$partner['profileurl'] ?>" readonly/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Collection Page Request Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" name="collection_request_url" id="collection_request_url" value="<?php echo $helper->getRewriteUrlPath('marketplace/seller/collection/'.$partner['profileurl']) ?>"/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Review Page Target Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" value="<?php echo 'marketplace/seller/feedback/'.$partner['profileurl']; ?>" readonly/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Review Page Request Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" name="review_request_url" id="review_request_url" value="<?php echo $helper->getRewriteUrlPath('marketplace/seller/feedback/'.$partner['profileurl']) ?>"/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Location Page Target Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" value="<?php echo 'marketplace/seller/location/'.$partner['profileurl']; ?>" readonly/>
+								</div>
+							</div>
+						</li>
+						<li class="fields">
+							<div class="field">
+								<label><?php echo $helper->__('Location Page Request Url Path') ?></label>
+								<div class="input-box">
+									<input type="text" class="input-text" name="location_request_url" id="location_request_url" value="<?php echo $helper->getRewriteUrlPath('marketplace/seller/location/'.$partner['profileurl']) ?>"/>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>		
+			</div>		
+		</form>
+	<?php
+	}
+	?>
+	<br/><br/>
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/payment') ?>" enctype="multipart/form-data" method="post" id="form-payment-validate">
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('Edit Payment Information') ?></h1>
+			<button class="button wk_mp_btn" title="<?php echo $helper->__('Save Payment') ?>" type="submit">
+				<span><span><?php echo $helper->__('Save Payment') ?></span></span>
+			</button>
+		</div>
+		<?php $formKey = Mage::getSingleton('core/session')->getFormKey(); ?>
+		<input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Payment Information') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<ul class="form-list">
+					<li class="fields">
+						<div class="field">
+							<label><?php echo $helper->__('Payment Details') ?></label>
+							<?php
+							if($profile_hint_status && Mage::getStoreConfig('marketplace/marketplace_profile/profile_bank',Mage::app()->getStore())){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::getStoreConfig('marketplace/marketplace_profile/profile_bank',Mage::app()->getStore()) ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<textarea class="input-text" name="paymentsource" id="paymentsource" title="payment source" cols="1" rows="3" ><?php echo $paymentDetail; ?></textarea>
+								
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>		
+		</div>		
+	</form>
+	<br/><br/>
+	<div class="profile">
+		<div class="wk_profile_links">
+			<a class="btn_primary" id="cprofile" href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$partner['profileurl']); ?>" target="_blank"><?php echo $helper->__('View Profile') ?></a>
+		</div>
+		<div class="wk_profile_links">
+			<a class="btn_primary" id="ccollection" href="<?php echo $helper->getRewriteUrl('marketplace/seller/collection/'.$partner['profileurl']); ?>" target="_blank"><?php echo $helper->__('View Collection') ?></a>
+		</div>
+	</div>
+	<?php echo $this->getChildHtml(); ?>
+	<div class="buttons-set">
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+	<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+	</script>	
+	<?php
+	$descriptions = "shippingpolicy";
+	if(Mage::getStoreConfig('marketplace/seller_profile/partner_policy_approval',Mage::app()->getStore())){
+		$descriptions .= ",shippingpolicy1,shippingpolicy2";
+	}?>
+	<script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS).'tiny_mce/tiny_mce.js' ?>"></script>
+	<script type="text/javascript">
+	window.onload=function()
+	{
+	   	tinyMCE.init({
+		    mode : "exact",
+		    elements: "<?php echo $descriptions ?>",
+		    theme : "advanced",
+		    plugins : "inlinepopups,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
+		    theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+		    theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		    theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		    theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,|,visualchars,nonbreaking",
+		    theme_advanced_toolbar_location : "top",
+		    theme_advanced_toolbar_align : "left",
+		    theme_advanced_path_location : "bottom",
+		    extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		    theme_advanced_resize_horizontal : 'true',
+		    theme_advanced_resizing : 'true',
+		    apply_source_formatting : 'true',
+		    convert_urls : 'false',
+		    force_br_newlines : 'true',
+		    doctype : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
+		});
+	};
+	</script>
+	<?php
+	if(Mage::getStoreConfig('marketplace/seller_profile/activecolorpicker',Mage::app()->getStore())){?>
+		<script src="<?php echo $this->getSkinUrl('marketplace/colorpicker/js/colorpicker.js'); ?>"></script>
+	<?php
+	} ?>
+	<script>
+		$wk_jq=jQuery.noConflict();
+		(function($wk_jq){
+			$wk_jq(function(){
+				var form_payment_alidate = new VarienForm('form-payment-validate', true);
+				var dataForm = new VarienForm('form-profile-validate', true);
+				var form_urlrewrite_validate = new VarienForm('form-urlrewrite-validate', true);		
+				<?php
+				if(Mage::getStoreConfig('marketplace/seller_profile/activecolorpicker',Mage::app()->getStore())){?>
+					$wk_jq('.color_pick').ColorPicker({
+						color: '<?php echo $partner['backgroundth']; ?>',
+						onShow: function (colpkr) {
+							$wk_jq(colpkr).fadeIn(500);
+							return false;
+						},
+						onHide: function (colpkr) {
+							$wk_jq(colpkr).fadeOut(500);
+							return false;
+						},
+						onChange: function (hsb, hex, rgb) {
+							$wk_jq('#backgroundth').val('#' + hex);
+							$wk_jq('.color_pick').css('background-color','#'+hex);
+						}
+					});	
+					<?php
+				} ?>
+
+				$wk_jq('#countrypic').change(function(){
+					$wk_jq('#countrylist').val($wk_jq(this).val());
+					$wk_jq('.country_img_prev').attr('src','<?php echo $this->getSkinUrl("marketplace/images/country/countryflags/")?>'+$wk_jq(this).val()+'.png')
+					var address=$wk_jq(this).find('option[value="'+$wk_jq(this).val()+'"]').text();//address which you want Longitude and Latitude
+					$wk_jq.ajax({
+						type: "GET",
+						dataType: "json",
+						url: "http://maps.googleapis.com/maps/api/geocode/json",
+						data: {'address': address,'sensor':false},
+						success: function(data){
+							if(data.results.length){
+								$wk_jq('#country-latitude').val(data.results[0].geometry.location.lat);
+								$wk_jq('#country-longitude').val(data.results[0].geometry.location.lng);
+							}else{
+								$wk_jq('#country-latitude').val('invalid address');
+								$wk_jq('#country-longitude').val('invalid address');
+						   }
+						}
+					});
+				});
+				$wk_jq('#logopic,#bannerpic').change(function(){
+					var imagename=$wk_jq(this).val();
+					var image=imagename.split("."); 
+					image=image[1];
+					if(image!='jpg'){
+						if(image!='jpeg'){
+							if(image!='png'){
+								if(image!='gif'){
+									alert('Invalid Image Extension. Allowed extension is jpg,jpef,png,gif');
+									$wk_jq(this).val('');
+								}
+							}
+						}
+					}
+				});
+				$wk_jq('.left').insertAfter('.buttons-set:last');
+			    
+			    jQuery('#savepaym').click(function(e){
+				   var pay = jQuery('#paymentsource').val();
+				   var regex = /(<([^>]+)>)/ig;
+				    var result = descrip.replace(regex,"");
+				    jQuery('#paymentsource').val(result); 
+				});
+				
+				$wk_jq('.input-text').change(function(){
+				    var validt = $wk_jq(this).val();
+				    var regex = /(<([^>]+)>)/ig;
+			        var mainvald = validt .replace(regex, "");
+			        $wk_jq(this).val(mainvald);	
+		       	});
+		     	
+		     	$wk_jq('.profileimage_set span').click(function(event){
+					var dicisionapp=confirm('<?php echo $helper->__(" Are you sure you want to delete this banner ? ")?>');
+					if(dicisionapp==true){		
+						var thisthis = $wk_jq(this);
+						$wk_jq('.wk_banner').css('opacity','.7');			
+						$wk_jq.ajax({
+							url: "<?php echo $this->getUrl('marketplace/marketplaceaccount/deleteprofileimage');?>",
+							type: "POST",
+							data: {file:'banner'},
+							dataType: 'html',
+							success:function(content){
+								thisthis.parent('.setimage').remove();
+							}
+						});							
+					}		
+				});
+
+				$wk_jq('.wk_profileimagedelete img').mouseover(function(event){
+					$wk_jq(event.target).css('width','22px');
+				});
+				$wk_jq('.wk_profileimagedelete img').mouseout(function(event){
+					$wk_jq(event.target).css('width','20px');
+				});	
+
+				$wk_jq('.logoimage_set span').click(function(event){
+					var dicisionapp=confirm('<?php echo $helper->__(" Are you sure you want to delete this Logo ? ")?>');
+					if(dicisionapp==true){		
+						var thisthis = $wk_jq(this);
+						$wk_jq('.wk_logo').css('opacity','.7');			
+						$wk_jq.ajax({
+							url: "<?php echo $this->getUrl('marketplace/marketplaceaccount/deletelogoimage');?>",
+							type: "POST",
+							data: {file:'logo'},
+							dataType: 'html',
+							success:function(content){
+								thisthis.parent('.setimage').remove();
+							}
+						});							
+					}		
+				});
+
+				$wk_jq('.wk_logoimagedelete img').mouseover(function(event){
+					$wk_jq(event.target).css('width','22px');
+				});
+				$wk_jq('.wk_logoimagedelete img').mouseout(function(event){
+					$wk_jq(event.target).css('width','20px');
+				});				
+			});
+		})(jQuery);
+	</script>
+<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

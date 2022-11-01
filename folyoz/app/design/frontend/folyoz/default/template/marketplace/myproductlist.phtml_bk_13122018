@@ -1,0 +1,208 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+if($isPartner==1){
+	$filter = '';
+	$filter_prostatus = '';
+	$filter_data_frm = '';
+	$filter_data_to = '';
+	if(isset($_GET['s'])){
+        $filter = $_GET['s'] != ""?$_GET['s']:"";
+	}
+	if(isset($_GET['prostatus'])){
+        $filter_prostatus = $_GET['prostatus'] != ""?$_GET['prostatus']:"";
+	}
+	if(isset($_GET['from_date'])){
+        $filter_data_frm = $_GET['from_date'] != ""?$_GET['from_date']:"";
+	}
+	if(isset($_GET['to_date'])){
+        $filter_data_to = $_GET['to_date'] != ""?$_GET['to_date']:"";
+	}
+	$userId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+	$piccount = "";
+	if(count($result) <= 0) {
+		$piccount = 9 ;
+	}
+	?>
+	<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+	</script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<div class="page-title">
+		<?php if($piccount == "") { ?>
+		<h1 style="float:left;"><?php echo $helper->__('My Portfolio') ?></h1>
+		<?php } else { ?>
+		<h1 style="float:left;"><?php echo $helper->__('My Portfolio - Add up to '.$piccount.' Pieces') ?></h1>
+		<?php } ?>
+	</div>	
+	<div class="wk_mp_design">
+		<div class="fieldset wk_mp_fieldset">
+			<div class="grid">
+				<div class="hor-scroll">
+					<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/new/'); ?>" method="post" id="frmaddproduct" name="frmaddproduct">
+						<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+						<input type="hidden" name="set" value="4"/>
+						<input type="hidden" name="type" value="simple"/>
+						<button class="button blue-big-button" title="Add a New Portfolio Piece" type="submit" id="blue-big-button">
+							<span><span><?php echo $helper->__('Add a New Portfolio Piece') ?></span></span>
+						</button>							
+					</form>				
+					<?php 
+					if(count($this->getCollection())==0){ ?>		
+						<div class="fieldset wk_mp_fieldset">
+							<div class="wk_emptymsg">
+								<?php echo $helper->__('Get started by clicking, “Add a New Portfolio Piece,” from above. When you’re finished it will appear here. You will be able to Edit or Delete the piece later.') ?>
+							</div>
+						</div>
+						<?php 
+					} else{ ?>
+						<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/massdeletesellerpro') ?>" method="post" id="formmassdelete" name="formmassdelete">
+							<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />							
+							<table cellspacing="0" class="border wk_mp_list_table wk_mp_list_container_table">
+							    <thead>
+							        <tr class="wk_content">
+							    		<th class="wk_first_td">
+							    			<span class="label name">
+												<?php echo $helper->__('Portfolio Pieces')?>
+											</span>
+							    		</th>
+							    		<th>
+							    			<span class="label">
+												<?php echo $helper->__('Action')?>
+											</span>
+							    		</th>			    		
+							    	</tr>
+							    </thead>
+							    <tbody>
+							    	<?php 
+							    	$i = 0;
+									foreach($this->getCollection() as $products){
+										$i++;
+										$productMediaConfig = Mage::getModel('catalog/product_media_config');
+										$salesdetail=Mage::getModel('marketplace/saleslist')->getSalesdetail($products->getEntityId());
+										$_product=Mage::getModel('catalog/product')->load($products->getEntityId());
+										?>
+								    	<tr class="wk_row_view <?php echo $class = ($i == count($this->getCollection()))? 'wk_last_tr':''?>">
+								    		<td class="wk_first_td">
+												<input type="hidden" class="hidden_id" value="<?php echo $products->getEntityId(); ?>" />
+												<div class="label name" title="<?php echo $products->getName(); ?>">
+													<div class="wk_pro_divide1">
+														<img src="<?php echo Mage::helper('catalog/image')->init($products, 'thumbnail')->resize(55,55) ?>" class="image" />
+													</div>
+													<!--div class="wk_pro_divide2">
+														<div style="width:100%;">
+															<a href="<?php echo $_product->getProductUrl()?>" target="blank">
+																<?php echo $products->getName();?>
+															</a>
+														</div>
+														<div style="width:100%;float:left;">
+															<?php echo Mage::helper('core')->currency($products->getPrice(), true, false);?>
+														</div>
+													</div-->
+												</div>
+								    		</td>
+								    		<td>
+								    			<span class="label wk_action">
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/icon-edit.png'); ?>" data-type="<?php echo $products->getTypeId(); ?>" alt="<?php echo $helper->__('Edit')?>" title="<?php echo $helper->__('Edit')?>" class="mp_edit"/>
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/icon-trash.png'); ?>" alt="<?php echo $helper->__('Delete')?>" title="<?php echo $helper->__('Delete')?>" class="mp_delete"/>
+												</span>	
+								    		</td>			    		
+								    	</tr>
+								    	<?php
+								    }?>
+							    </tbody>
+							</table>
+						</form>
+						<?php
+					}?>
+				</div>
+			</div>
+			<?php echo $this->getPagerHtml(); ?>		
+		</div>	
+		<div class="buttons-set">
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+			</p>
+		</div>
+	</div>
+	<script> 
+	var $wk_jq=jQuery.noConflict();
+	var newCustomerProductForm1 = new VarienForm('formmassdelete', true);
+	(function($wk_jq){
+		$wk_jq( "#special_from_date" ).datepicker({dateFormat: "yy-mm-dd"});
+		$wk_jq( "#special_to_date" ).datepicker({dateFormat: "yy-mm-dd"});
+		$wk_jq('body').delegate('.mp_edit','click',function(){
+			var id=$wk_jq(this).parents('.wk_row_view').find('.hidden_id').val();	
+			var dicision=confirm('<?php echo $helper->__(" Are you sure you want to edit this product ? ")?>');
+			if(dicision==true){			
+				var $type_id=$wk_jq(this).attr('data-type');				
+				if($type_id=='simple')
+					window.location = "<?php echo $this->getUrl('marketplace/marketplaceaccount/editapprovedsimple/') ?>".concat("id/",id);	
+				if($type_id=='downloadable')
+					window.location = "<?php echo $this->getUrl('marketplace/marketplaceaccount/editapproveddownloadable/') ?>".concat("id/",id);			
+				if($type_id=='virtual')
+					window.location = "<?php echo $this->getUrl('marketplace/marketplaceaccount/editapprovedvirtual/') ?>".concat("id/",id);		
+				if($type_id=='configurable')
+					window.location = "<?php echo $this->getUrl('marketplace/marketplaceaccount/editapprovedconfigurable/') ?>".concat("id/",id);
+					<?php
+					 echo $this->getChildHtml('mpgrouped_productslist');
+					echo $this->getChildHtml('mpbundle_productslist');
+					?>
+			}
+		});
+		$wk_jq('#mass_delete_butn').click(function(e){
+			var flag =0;
+			$wk_jq('.mpcheckbox').each(function(){
+				if (this.checked == true){
+					flag =1;
+				}
+			});
+			if (flag == 0){
+				alert("<?php echo $helper->__(' No Checkbox is checked ') ?>");
+				return false;
+			}
+			else{
+				var dicisionapp=confirm('<?php echo $helper->__(" Are you sure you want to delete these product ? ")?>');
+				if(dicisionapp==true){
+					$wk_jq('#form-customer-product-new').submit();
+				}else{
+					return false;
+				}
+			}
+		});
+
+	    $wk_jq('#mpselecctall').click(function(event) {
+	        if(this.checked) {
+	            $wk_jq('.mpcheckbox').each(function() {
+	                this.checked = true;      
+	            });
+	        }else{
+	            $wk_jq('.mpcheckbox').each(function() {
+	                this.checked = false;           
+	            });         
+	        }
+	    });
+
+		$wk_jq('.mp_delete').click(function(){
+			var id=$wk_jq(this).parents('.wk_row_view').find('.hidden_id').val();
+			var dicisionapp=confirm('<?php echo $helper->__(" Are you sure you want to delete this product ? ")?>');
+			if(dicisionapp==true)
+				window.location = "<?php echo $this->getUrl('marketplace/marketplaceaccount/delete/') ?>".concat("id/",id);
+		});
+	})($wk_jq);
+	</script>
+	<?php 
+}else{?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact Admin"); ?>
+	</h2>
+	<?php
+} ?>

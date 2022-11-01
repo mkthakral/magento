@@ -1,0 +1,81 @@
+<?php
+$helper =Mage::helper('marketplace');
+$partner=$this->getProfileDetail();
+?>
+<div class="wk_mp_design">
+	<div class="wk_mp_design_inner wk_mp_design_inner_last">
+		<div class="wk_mp_profile_container storename">
+			<div class="store-name">
+				<?php echo $helper->__("Recently Added Products") ?>
+			</div>
+		</div>
+		<ul style="display:inline-block;">
+			<?php
+			$products=$this->getBestsellProducts();
+			foreach($products as $productid ){
+				$_product=Mage::getModel('catalog/product')->load($productid);
+				$stockItem = Mage::getModel('cataloginventory/stock_item');
+				$stockItem->loadByProduct($productid);
+				if($stockItem->getData('is_in_stock') == 1 && $_product->getStatus()==1){ ?>
+					<li class="wk_profile_pro_css">
+						<div class="wk_profile_image_box">
+							<a href="<?php echo $_product->getProductUrl()?>" class="product-image">
+								<div class="image">
+									<img  style="width:100%;" src=<?php echo Mage::helper('catalog/image')->init($_product, 'image')->resize(265);?> />
+								</div>
+							</a>
+						</div>
+	                    <h2 class="product-name">
+							<a href="<?php echo $_product->getProductUrl()?>" title="<?php echo $_product->getName() ?>">
+								<?php echo substr($_product->getName(),0,25) ?>
+							</a>
+						</h2>
+						<a href="<?php echo $_product->getProductUrl()?>" title="<?php echo $helper->__('View Details'); ?>">
+							<button class="button">
+								<span>
+									<span>
+										<?php echo $helper->__('View Details'); ?>
+									</span>
+								</span>
+							</button>
+						</a>
+					</li>
+				<?php 
+				}
+			} ?>
+		</ul>
+	</div>
+	<?php
+	if(Mage::getStoreConfig('marketplace/seller_profile/partner_policy_approval',Mage::app()->getStore())){?>
+		
+		<div class="wk_mp_design_inner wk_mp_design_inner_last">
+			<div class="wk_mp_profile_container storename" id="return-policy">
+				<div class="store-name">
+					<?php echo $helper->__("Return Policies") ?>
+				</div>
+			</div>
+			<div>
+				<div class="wk_mp_detail">		
+					<div class="row">
+						<span class="data"><?php echo $partner->getReturnpolicy();?></span>		
+					</div>
+				</div>
+				<a href="#" class="wk_top_page"><?php echo $helper->__("Top of Page")?></a>
+			</div>
+			<div class="wk_mp_profile_container storename" id="shipping-policy">
+				<div class="store-name">
+					<?php echo $helper->__("Shipping Policies") ?>
+				</div>
+			</div>
+			<div>
+				<div class="wk_mp_detail">		
+					<div class="row">
+						<span class="data"><?php echo $partner->getShippingpolicy();?></span>		
+					</div>
+				</div>
+				<a href="#" class="wk_top_page"><?php echo $helper->__("Top of Page")?></a>
+			</div>
+		</div>
+	<?php
+	}?>
+</div>

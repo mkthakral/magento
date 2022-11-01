@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Mate_Catalog>
+      <version>1.0</version>
+    </Mate_Catalog>
+  </modules>
+   
+  <global>
+    <models>
+      <catalog>
+        <rewrite>
+          <category>Mate_Catalog_Model_Category</category>
+        </rewrite>
+      </catalog>
+    </models>
+	<blocks>
+      <catalog>
+        <rewrite>
+          <product_list>Mate_Catalog_Block_Product_List</product_list>
+        </rewrite>
+      </catalog>
+    </blocks>
+  </global>
+</config>

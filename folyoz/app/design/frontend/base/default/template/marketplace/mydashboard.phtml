@@ -1,0 +1,402 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+if($isPartner==1){
+	$readresult=Mage::getModel('marketplace/saleslist')->getOrderdetails();
+	$getDateDetail = Mage::getModel('marketplace/saleslist')->getDateDetail();
+	$cur_symbol=Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+	$userid=Mage::getSingleton('customer/session')->getCustomerId();
+	$total_sale_coll = Mage::getModel('marketplace/saleperpartner')->getCollection()
+							->addFieldToFilter('mageuserid',array('eq'=>$userid));
+	$total_sale = 0;
+	foreach($total_sale_coll as $value) {
+		$total_sale = $value->getAmountrecived();
+		$total_remain_sale = $value->getAmountremain();
+	}
+
+	$filter_orderid = '';
+    $filter_orderstatus = '';
+    $filter_data_to = '';
+    $filter_data_frm = '';
+
+    if(isset($_GET['s'])){
+        $filter_orderid = $_GET['s'] != ""?$_GET['s']:"";
+    }
+    if(isset($_GET['orderstatus'])){
+        $filter_orderstatus = $_GET['orderstatus'] != ""?$_GET['orderstatus']:"";
+    }
+    if(isset($_GET['from_date'])){
+        $filter_data_frm = $_GET['from_date'] != ""?$_GET['from_date']:"";
+    }
+    if(isset($_GET['to_date'])){
+        $filter_data_to = $_GET['to_date'] != ""?$_GET['to_date']:"";
+    } ?>
+	<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+	</script>
+	<link href="<?php echo $this->getSkinUrl('marketplace/css/shThemejqPlot.min.css');?>" rel="stylesheet" type="text/css" />
+	<script src="<?php echo $this->getSkinUrl('marketplace/js/chart.js'); ?>" type="text/javascript"></script>
+
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<div class="page-title">
+		<h1 style="float:left;"><?php echo $helper->__('My Dashboard') ?></h1>
+		<button class="askque button"><span><?php echo $helper->__('Ask Question to Admin') ?></span></button>
+	</div>
+	<div class="wk_mp_design">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4><?php echo $helper->__('Your Income') ?></h4></span></strong>
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">
+			<div class="wk_sales">
+				<div class="wk_todaysale wk_sale_css">
+					<span class="wk_todaysale_bg"></span>
+					<span class="wk_sale_color"><label class="wk_sale_label"><?php echo $helper->__(' Today ') ?></label><br/><?php echo  Mage::helper('core')->currency($getDateDetail['day'], true, false)?></span>
+				</div>
+				<div class="wk_weeksale wk_sale_css">					
+					<span class="wk_weeksale_bg"></span>
+		 			<span class="wk_sale_color"><label class="wk_sale_label"><?php echo $helper->__(' Week ') ?></label><br/><?php echo Mage::helper('core')->currency($getDateDetail['week'], true, false); ?></span>
+				</div>
+				<div class="wk_monthsale wk_sale_css">
+					<span class="wk_monthsale_bg"></span>
+					<span class="wk_sale_color"><label class="wk_sale_label"><?php echo $helper->__(' Month ') ?></label></br><?php echo Mage::helper('core')->currency($getDateDetail['month'], true, false); ?></span>
+				</div>
+			</div>
+			<div class="wk_sales" style="margin-top: 10px;">
+				<div class="wk_totalsale wk_total_sale_css">
+				 	<span><?php echo $helper->__(' Total Payout ') ?> - <?php echo Mage::helper('core')->currency($total_sale, true, false); ?></span>
+				</div>
+				<div class="wk_remainsale wk_total_sale_css">
+					<span><?php echo $helper->__(' Remaining Amount ') ?> - <?php echo Mage::helper('core')->currency($total_remain_sale, true, false); ?></span>
+				</div>
+			</div>
+			<div class="grid">
+				<div class="hor-scroll">
+					<div class="wk_dash_chart">
+						<canvas class="example-plot" id="chart2" height="400" width="593"></canvas>
+					</div>					
+				</div>
+
+			</div>
+		</div>
+	</div>	
+
+	<div class="wk_mp_design" style="margin-top: 20px;">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4><?php echo $helper->__('Latest Order') ?></h4></span></strong>
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">			
+			<div class="grid">
+				<div class="hor-scroll">
+					<form action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" method="get">
+						<table cellspacing="0" class="border wk_mp_list_table">
+						    <thead>
+						        <tr id="wk_mp_tr_heading">
+						            <th><span><?php echo $helper->__('Order Id') ?></span></th>
+						            <th><span><?php echo $helper->__('Date') ?></span></th>
+						            <th><span><?php echo $helper->__('Order Status') ?></span></th>
+						            <th><span>&nbsp;</span></th>
+						        </tr>
+						    </thead>
+						    <tbody class="wk_mp_body">
+						    	<tr>
+						    		<td>
+						    			<input type="text" class="input-text" name="s" placeholder='<?php echo $helper->__('Search by Order Id') ?>' value="<?php echo $filter_orderid?>" style="width:99%;"/>
+						    		</td>
+						    		<td>
+						    			<span class="wk_mp_td_span">
+						    				<?php echo $helper->__('From: ') ?>
+						    				<input name="from_date" id="special_from_date" class="input-text" value="<?php echo $filter_data_frm?>" />
+						    			</span>				    			
+						    			<span class="wk_mp_td_span">
+						    				<?php echo $helper->__('To: ') ?>
+						    				<input name="to_date" id="special_to_date" class="input-text" value="<?php echo $filter_data_to?>" />
+						    			</span>
+						    		</td>
+						    		<td>
+					    				<select name="orderstatus" class="input-text">
+					    					<option value=""><?php echo $helper->__('All') ?></option>
+					    					<?php 
+					    					$orderstatus_coll = Mage::getModel('sales/order_status')->getResourceCollection()->getData();
+					    					foreach ($orderstatus_coll as $orderstatus) {
+					    						?>
+					    						<option value="<?php echo $orderstatus['status']?>" <?php if($filter_orderstatus == $orderstatus['status']) echo 'selected="selected"'?>>
+							    					<?php echo $helper->__($orderstatus['label']) ?>
+							    				</option>
+					    						<?php
+					    					}
+					    					?>
+						    			</select>
+						    		</td>
+						    		<td>
+						    			<button class="button" title="Save" id="save_butn" type="submit">
+											<span><span><span><?php echo $helper->__('Submit') ?></span></span></span>
+										</button>
+						    		</td>
+						    	</tr>
+						    </tbody>
+						</table>
+					</form>
+					<?php 
+					if(count($this->getCollection())==0){ ?>		
+						<div class="fieldset wk_mp_fieldset">
+							<div class="wk_emptymsg">
+								<?php echo $helper->__('No Order Available') ?>
+							</div>
+						</div>
+						<?php 
+					} else{ ?>
+						<?php $i=0;
+						foreach($this->getCollection() as $res){
+							$order = Mage::getModel('sales/order')->load($res['mageorderid']);
+							$state=$order->getState();
+							$status=$order->getStatus();
+							$order_status = Mage::getModel('sales/order_status')->getResourceCollection()
+											->addFieldToFilter('status',array('eq'=>$status));
+							foreach ($order_status as $order_status_data) {
+								$status = $order_status_data->getLabel();
+							}
+							$name=$order->getCustomerName();
+							if($res['mageorderid']>0 && $i<6){
+								$i++;?>
+								<div class="wk_orderbox <?php if($i==1) echo "wk_first_order"?>">
+									<div style="padding:7px 7px 0px 7px;">
+										<div class="wk_orderbox_content1">
+											<div class="wk_orderbox_details">
+												<div class="color">
+													<span class="wk_ordertitle_label"><?php echo $helper->__('Order') ?></span> <strong>#<?php echo $res['magerealorderid']; ?></strong>
+												</div>
+												<div class="name">
+													<?php echo Mage::getModel('marketplace/saleslist')->getpronamebyorder($res['mageorderid']); ?>
+												</div>
+												<a href="<?php echo $this->getUrl('marketplace/order/view',array('id'=>$res['mageorderid']))?>">
+														<button class="button" title="<?php echo $helper->__('View Order') ?>" type="button">
+															<span><span><span><?php echo $helper->__('View Order') ?></span></span></span>
+														</button>
+													</a>
+											</div>
+											<div class="wk_dash_orderstatus">
+												<label for="name" class="wk_dash_label">
+														<div class="status <?php echo strtolower($state); ?>"><?php echo strtoupper($status); ?> </div>
+												</label> 
+											</div>
+										</div>
+										<div class="wk_orderbox_content2">
+											<div class="wk_orderbox_details">
+												<span class="wk_title_label"><?php echo $helper->__('Customer: ');?></span>
+												<span class="wk_label"><?php echo $name;?></span>&nbsp;&nbsp;
+												<span class="wk_title_label"><?php echo $helper->__('Date: ');?></span>
+												<span class="wk_label"><?php echo Mage::helper('core')->formatDate($res['cleared_at'], 'medium', true)?></span>
+											</div>
+											<div class="wk_orderbox_total">
+												<span class="wk_title_label"><?php echo $helper->__('Order Total- ');?></span>
+												<span class="wk_label"><strong><?php echo Mage::helper('core')->currency(Mage::getModel('marketplace/saleslist')->getPricebyorder($res['mageorderid']));?></strong>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="wk_clear"></div>
+							<?php }
+						} 	?>
+						<?php
+					}?>
+				</div>
+			</div>		
+		</div>		
+	</div>
+
+	<div class="wk_mp_design" style="margin-top: 20px;">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4><?php echo $helper->__('Latest Comments & Reviews') ?></h4></span></strong>
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">			
+			<div class="grid">
+				<div class="hor-scroll">
+					<?php 
+					$ratings=array();
+					$products=array();
+					$rate=array();					
+					$reviewcollection=Mage::getModel('marketplace/feedback')->getCollection();
+					$reviewcollection=$reviewcollection
+										->addFieldToFilter('proownerid',array('eq'=>$userid));
+					$reviewcollection=$reviewcollection
+											->addFieldToFilter('status',1)
+											->setOrder('createdat','DESC')
+											->setPageSize(5)
+											->setCurPage(1);
+					if(count($reviewcollection)==0){ ?>
+						<div class="wk_emptymsg">
+							<?php echo $helper->__('no comment & review available'); ?>
+						</div>
+						<?php
+					} else{ ?>
+						<?php $i=0;
+						foreach($reviewcollection as $keyed){
+							$i++;?>
+							<div class="wk_orderbox <?php if($i==1) echo "wk_first_order"?>">
+								<div style="padding:7px 7px 0px 7px;">
+									<div class="wk_orderbox_content1">
+										<div class="wk_feedback_details">
+											<div class="mpfeedback">
+												<div class="price">
+													<span class="wk_ordertitle_label wk_span"><?php echo $helper->__('Price') ?> </span><span class="wk_ordertitle_label">:</span>
+													<div class="ratingslider-box">
+														<div class="rating" style="width:<?php echo ceil($keyed['feedprice']);?>%;"></div>
+													</div>
+													<div class="clear"></div>
+												</div>
+												<div class="value">
+													<span class="wk_ordertitle_label wk_span"><?php echo $helper->__('Value') ?> </span><span class="wk_ordertitle_label">:</span>
+													<div class="ratingslider-box" >
+														<div class="rating" style="width:<?php echo ceil($keyed['feedvalue']);?>%;"></div>
+													</div>
+													<div class="clear"></div>
+												</div>
+												<div class="quality">
+													<span class="wk_ordertitle_label wk_span"><?php echo $helper->__('Quality') ?> </span><span class="wk_ordertitle_label">:</span>
+													<div class="ratingslider-box">
+														<div class="rating" style="width:<?php echo ceil($keyed['feedquality']);?>%;"></div>
+													</div>
+													<div class="wk_clear"></div>
+												</div>
+											</div>
+										</div>
+										<div class="wk_feedback_desc">
+											<div class="comment"><?php echo $keyed['feedreview']; ?> </div>
+										</div>
+									</div>
+									<div class="wk_orderbox_content2">
+										<div class="wk_orderbox_details">
+											<?php 
+												$feedcustomer = Mage::getModel('customer/customer')->load($keyed['userid']); 
+												$name = $feedcustomer['firstname'].' '.$feedcustomer['lastname'];  
+											?>
+											<span class="wk_title_label"><?php echo $helper->__('Customer: ');?></span>
+											<span class="wk_label"><?php echo $name;?></span>&nbsp;&nbsp;
+											<span class="wk_title_label"><?php echo $helper->__('Date: ');?></span>
+											<span class="wk_label"><?php echo Mage::helper('core')->formatDate($keyed['createdat'], 'medium', true)?></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="wk_clear"></div>
+							<?php
+						} 	?>
+						<?php
+					}?>
+				</div>
+			</div>		
+		</div>
+	</div>
+	<div id="ask_data"> 
+		<div class="modal_header">
+			<h4 class="modal-title"><?php echo $helper->__('Ask Question to Admin') ?></h4>
+			<span  class="wk_close" >x</span>
+			<span  class="clear" ></span>
+		</div>
+		<form id="ask_form" method="post" action="#">
+			<div class="modal-body form-list">
+				<label for="name" class="required"><em>*</em><?php echo $helper->__('Subject') ?> :</label>
+				<input type="text" name="subject" class="wk_contact_input_fields required-entry"/>
+				<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Query') ?> :</label>
+				<textarea  name="ask" class="queryquestion wk_contact_input_fields required-entry" style="width:100%;"></textarea>
+				<input type="hidden" name="seller-id" value="<?php echo Mage::getSingleton('customer/session')->getCustomerId();?>"/>
+			</div>
+			<div class="modal_footer">
+				<span class="error"></span>
+				<input type="reset" value="<?php echo $helper->__('Reset') ?>" id="resetbtn" class="wk_btn wk_btn_default"/>
+				<input type="submit" value="<?php echo $helper->__('Ask') ?>" id="askbtn" class="wk_btn wk_btn_primary"/>
+				<span class="clear"></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="buttons-set">
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+
+	<script> 
+	var $wk_jq=jQuery.noConflict();
+	var ask_form = new VarienForm('ask_form', true);
+	(function($wk_jq){
+		$wk_jq( "#special_from_date" ).datepicker({dateFormat: "yy-mm-dd"});
+		$wk_jq( "#special_to_date" ).datepicker({dateFormat: "yy-mm-dd"});
+		$wk_jq(function(){ 		    
+			var data=JSON.parse('<?php echo Mage::getModel("marketplace/saleslist")->getMonthlysale() ?>');
+			var lineChartData = {
+			labels : ["<?php echo $helper->__('January') ?>","<?php echo $helper->__('February') ?>","<?php echo $helper->__('March') ?>","<?php echo $helper->__('April') ?>","<?php echo $helper->__('May') ?>","<?php echo $helper->__('June') ?>","<?php echo $helper->__('July') ?>","<?php echo $helper->__('August') ?>","<?php echo $helper->__('September') ?>","<?php echo $helper->__('October') ?>","<?php echo $helper->__('November') ?>","<?php echo $helper->__('December') ?>"],
+			datasets :  [{	fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						pointColor : "rgba(220,220,220,1)",
+						pointStrokeColor : "#fff",
+						data : [parseInt(data[1]),parseInt(data[2]),parseInt(data[3]),parseInt(data[4]),parseInt(data[5]),parseInt(data[6]),parseInt(data[7]),parseInt(data[8]),parseInt(data[9]),parseInt(data[10]),parseInt(data[11]),parseInt(data[12])]
+					}]				
+			}
+			var width = $wk_jq(window).width(); 
+			if (width < 654 && width > 500) {
+				$wk_jq('#chart2').attr('height',300).attr('width',450);
+			}
+			else if (width < 500 && width > 400) {
+				$wk_jq('#chart2').attr('height',200).attr('width',300);
+			}
+			var myLine = new Chart(document.getElementById("chart2").getContext("2d")).Line(lineChartData);
+
+			$wk_jq('.wrapper').append($wk_jq('#ask_data'));
+			$wk_jq('.askque').click(function(){
+				$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+				$wk_jq('.page').css('opacity','0.4');
+				$wk_jq('#ask_data').show();
+			});
+			$wk_jq('.wk_close').click(function(){
+				$wk_jq('.page').css('opacity','1');
+				$wk_jq('#resetbtn').trigger('click');
+				$wk_jq('#ask_data').hide();
+				$wk_jq('#ask_form .validation-failed').each(function(){
+					$wk_jq(this).removeClass('validation-failed');
+				});
+				$wk_jq('#ask_form .validation-advice').each(function(){
+					$wk_jq(this).remove();
+				});
+			});
+			$wk_jq('#askbtn').click(function(){
+				if(ask_form.validator.validate()!=false){
+					$wk_jq('#ask_data').addClass('mail_procss');
+					$wk_jq.ajax({
+						url:'<?php echo Mage::getBaseUrl();?>marketplace/marketplaceaccount/askquestion',
+						data:$wk_jq('#ask_form').serialize(),
+						type:'post',
+						dataType:'json',
+						success:function(d){
+							$wk_jq('#ask_data').removeClass('mail_procss')
+							alert("<?php echo $helper->__(' Mail Send ') ?>");
+							$wk_jq('.wk_close,#resetbtn').trigger('click'); 
+						},error:function(aaa){
+							$wk_jq('#ask_data').removeClass('mail_procss')
+							alert("<?php echo $helper->__(' Mail Send ') ?>");
+							$wk_jq('.wk_close,#resetbtn').trigger('click'); 
+						}
+					});
+					return false;
+				}
+			});	
+		});	
+	})($wk_jq);
+	</script>
+	<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

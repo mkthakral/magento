@@ -1,0 +1,216 @@
+<?php
+$helper=Mage::helper('marketplace');
+//$currsymbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+$currsymbol = Mage::app()->getLocale()->currency(Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE))->getSymbol();
+?>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<style type="text/css">
+	div#seller_pay_block {
+		display: inline-block;
+		width: 98.5%;
+		padding: 10px;
+		margin-bottom: 5px;
+	}
+	.form-list td.value textarea {
+	height: 5em;
+	}
+	#wk_total_sellerprice{
+		font-size: 16px;
+	}
+	.customnote:focus{
+		border-color: #66afe9;
+		outline: 0;	
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+	}
+</style>
+<div id="seller_pay_block">
+	<form action="<?php echo Mage::helper('adminhtml')->getUrl('marketplace/adminhtml_order/masspay') ?>" enctype="multipart/form-data" method="post" id="form-seller-order-pay">
+		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		<input type="hidden" name="wksellerorderids" id="wksellerorderids" value="" />
+		<input type="hidden" name="sellerid" value="<?php echo $this->getRequest()->getParam('id')?>" />
+		<div class="box-left" style="width: 100%;">
+		    <div class="entry-edit">
+		                <div class="entry-edit-head">
+		                    <h4 class="icon-head head-account"><?php echo $helper->__('Seller Payment Information ') ?></h4>
+		                </div>
+		        <div class="fieldset">
+		            <table cellspacing="0" class="form-list" style="width: 100%;">
+			            <tbody>
+				            <tr>
+				                <td class="label"><label><?php echo $helper->__('Seller Name ') ?></label></td>
+				                <td class="value"><strong><?php echo Mage::getModel('customer/customer')->load($this->getRequest()->getParam('id'))->getName()?></strong></td>
+				            </tr>
+				                        <tr>
+				                <td class="label"><label><?php echo $helper->__('Seller Email ') ?></label></td>
+				                <td class="value"><strong><?php echo Mage::getModel('customer/customer')->load($this->getRequest()->getParam('id'))->getEmail()?></strong></td>
+				            </tr>
+				            <tr>
+				                <td class="label"><label><?php echo $helper->__('Total Amount To Be Pay ')?></label></td>
+				                <td class="value"><strong><span id="wk_total_sellerprice"></span></td>
+				            </tr>
+			            	<tr>
+				                <td class="label"><label><?php echo $helper->__('Add Comment') ?></label></td>
+				                <td class="value"><strong><textarea name="customnote" class="customnote" id="customnote" style="width:80%;heigth:5em;"></textarea></strong></td>
+				            </tr>
+			            </tbody>
+		            </table>
+		        </div>
+		    </div>
+		</div>
+		<button title="<?php echo $helper->__('Pay') ?>" type="submit" id="save_butn"><span><span><span><?php echo $helper->__('Pay') ?></span></span></span></button>
+	</form>
+</div>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('marketplace/css/style.css');?>">
+<div id="ask_data"> 
+	<div class="modal_header">
+		<h4 class="modal-title"><?php echo $helper->__('Add a Comment') ?></h4>
+		<span  class="wk_close" >x</span>
+		<span  class="clear" ></span>
+	</div>
+	
+	<form id="ask_form" method="get" enctype="multipart/form-data" action="<?php echo Mage::helper('adminhtml')->getUrl('marketplace/adminhtml_order/payseller/')?>">
+		<div class="modal-body">
+			<div class="bootbox-body">
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+				<textarea class="bootbox-input bootbox-input-text form-control required-entry" name="seller_pay_reason"></textarea>
+				<input type="hidden" name="sellerid" id="sellerid" value="<?php echo $this->getRequest()->getParam('id')?>"/>			
+				<input type="hidden" name="autoorderid" id="autoorderid" value=""/>			
+			</div>
+		</div>
+		<div class="modal_footer">
+			<span class="error"></span>
+			<input type="reset" value="<?php echo $helper->__('Reset') ?>" id="" class="wk_btn wk_btn_default"/>
+			<input type="submit" value="<?php echo $helper->__('Pay') ?>" id="" class="wk_btn wk_btn_primary"/>
+			<span class="clear"></span>
+		</div>
+	</form>
+</div>
+
+<script>
+var wk=jQuery.noConflict();
+(function($wk_jq){
+	$wk_jq(function(){
+		$wk_jq('#marketplaceGrid').before($wk_jq('#seller_pay_block'));
+
+		$wk_jq('#marketplaceGrid_massaction-form').remove();
+
+		marketplaceGrid_massactionJsObject.selectVisible();
+
+		var totalprice = 0;		
+		$wk_jq('.wkactualparterprocost').each(function(){			
+			if($wk_jq.trim($wk_jq(this).parents('tr').find('.wk_paidstatus').text())=='Pending' && $wk_jq.trim($wk_jq(this).parents('tr').find('.wk_sellerorderstatus').attr('wk_cpprostatus'))==1){
+				var rowprice = $wk_jq(this).text().split('<?php echo $currsymbol?>');
+				var actualrowprice = digits(rowprice[1]);
+				totalprice = totalprice+parseFloat(actualrowprice);
+			}
+		});
+		$wk_jq('.customnote').focus();
+		$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+
+		$wk_jq('#marketplaceGrid').delegate('td','click',function(){
+			if($wk_jq(this).children().attr('name') == 'sellerorderids'){
+				$wk_jq('input[name="sellerorderids"]').attr('disabled','disabled');
+				if($wk_jq.trim($wk_jq(this).parents('tr').find('.wk_paidstatus').text())=='Pending' && $wk_jq.trim($wk_jq(this).parents('tr').find('.wk_sellerorderstatus').attr('wk_cpprostatus'))==1){
+					var currrowprice = $wk_jq(this).parents('tr').find('.wkactualparterprocost').text().split('<?php echo $currsymbol?>');
+					var actualprice = digits(currrowprice[1]);
+					if($wk_jq(this).find('input[name="sellerorderids"]').is(':checked')){				
+						totalprice = totalprice+parseFloat(actualprice);
+					}else{
+						if(totalprice>=parseFloat(actualprice)){
+							totalprice = totalprice-parseFloat(actualprice);
+						}else{
+							totalprice = 0;
+						}
+					}
+					$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+				}
+				$wk_jq('input[name="sellerorderids"]').removeAttr('disabled');
+			}
+		});
+
+		function digits(textprice){ 
+		    return textprice.replace(',', "");
+		}
+
+		$wk_jq('#marketplaceGrid').delegate('#marketplaceGrid_massaction a','click',function(){
+			$wk_jq('#marketplaceGrid_massaction-form').remove();
+			if($wk_jq(this).attr('onclick')=='return marketplaceGrid_massactionJsObject.selectAll()'||$wk_jq(this).attr('onclick')=='return marketplaceGrid_massactionJsObject.selectVisible()'){
+				totalprice = 0;
+				$wk_jq('.wkactualparterprocost').each(function(){
+					if($wk_jq.trim($wk_jq(this).parents('tr').find('.wk_paidstatus').text())=='Pending' && $wk_jq.trim($wk_jq(this).parents('tr').find('.wk_sellerorderstatus').attr('wk_cpprostatus'))==1){
+						var rowprice = $wk_jq(this).text().split('<?php echo $currsymbol?>');
+						var actualrowprice = digits(rowprice[1]);
+						totalprice = totalprice+parseFloat(actualrowprice);
+					}
+				});
+			}else if($wk_jq(this).attr('onclick')=='return marketplaceGrid_massactionJsObject.unselectAll()'||$wk_jq(this).attr('onclick')=='return marketplaceGrid_massactionJsObject.unselectVisible()'){
+				totalprice = 0;
+			}
+			$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+		});	
+		
+		$wk_jq('#marketplaceGrid').delegate('select[name="limit"]','change',function(){
+			$wk_jq('#marketplaceGrid_massaction-form').remove();
+			totalprice = 0;
+			marketplaceGrid_massactionJsObject.unselectAll();
+			$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+		});
+
+		$wk_jq('#marketplaceGrid').delegate('button','click',function(){
+			$wk_jq('#marketplaceGrid_massaction-form').remove();
+			if($wk_jq(this).attr('onclick')!='marketplaceGrid_massactionJsObject.apply()'){
+				totalprice = 0;
+				marketplaceGrid_massactionJsObject.unselectAll();
+				$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+			}
+		});
+
+		$wk_jq('#marketplaceGrid').on('keypress',function(){
+			$wk_jq('#marketplaceGrid_massaction-form').remove();
+			totalprice = 0;
+			marketplaceGrid_massactionJsObject.unselectAll();
+			$wk_jq('#wk_total_sellerprice').text('<?php echo $currsymbol?>'+totalprice.toFixed(2));
+		});
+
+		$wk_jq('#save_butn').click(function(e){
+			var ids = '';
+			$wk_jq('input[name="sellerorderids"]').each(function(){
+				if($wk_jq(this).is(':checked')){
+					if(ids){
+						ids = ids+','+$wk_jq(this).val();
+					}else{
+						ids = $wk_jq(this).val();
+					}
+				}
+			});
+		    $wk_jq('#wksellerorderids').val(ids);
+			$wk_jq('.button').css('cursor','default');
+			$wk_jq('.button').attr('disabled','disabled');
+			$wk_jq('#form-seller-order-pay').submit();
+		});
+
+		$wk_jq('body').append($wk_jq('#ask_data'));		
+		$wk_jq('#html-body').delegate('.wk_payseller','click',function(){
+			$wk_jq('#autoorderid').val($wk_jq(this).attr('auto-id'));
+			$wk_jq('.wrapper').css('pointer-events','none');
+			$wk_jq('.wrapper').css('opacity','0.4');
+			$wk_jq('#ask_data').show();
+			$wk_jq('.form-control').focus();
+		});
+		
+		$wk_jq('#html-body').delegate('.wk_close','click',function(){
+			$wk_jq('.wrapper').css('pointer-events','auto');
+			$wk_jq('.wrapper').css('opacity','1');
+			$wk_jq('.wk_btn_default').trigger('click');
+			$wk_jq('#ask_data').hide();			
+		});
+
+	});
+})(wk);
+</script>

@@ -1,0 +1,128 @@
+<?php 
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$baseurl = Mage::getBaseUrl();
+	$userId = $customer->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId and status='active' order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+	$datetime1 = new DateTime(date("Y-m-d"));
+	$datetime2 = new DateTime($result[0]["end_date"]);
+	$interval = $datetime1->diff($datetime2);
+	$interval = $interval->format('%R%a');
+
+?>
+<?php $customergroup = Mage::getSingleton('customer/session')->getCustomer()->getGroupId(); ?>
+<?php $collection = Mage::getModel('customer/customer')->getCollection()->addAttributeToSelect('*')->addFieldToFilter('group_id', 2);?>
+<div class="submit-portfolio">
+    <div class="page-title">
+        <h1><?php echo $this->__('Submit Portfolio') ?></h1>
+    </div>
+	<div class="account-message">
+		<?php if($customer->getData('approval') == 65) { ?>
+		<h2>Complete your <a href="<?php echo $baseurl."customer/account/edit/"; ?>">profile</a> and submit for approval.</h2>
+		<?php } elseif($customer->getData('approval') == 64) { ?>
+		<h2>Your account is not yet approved.</h2>
+		<?php } else {?>
+			<?php if($interval <= 0) {?>
+				<h2>You do not have active subscription. Click here to subscribe to unlock submission to Art Directors</h2>
+			<?php } ?>
+		<?php } ?>
+	</div>	
+	<div class="page-body">	
+		<div class="row">
+			<div class="col-lg-12">
+				<table id="myTable" class="display"> 
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Illust</th>
+							<th>Photo</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($collection as $cus) { if($cus->getData('approval') == 63) {
+						$cusid = $cus->getId();
+						$readAdapter= $resource->getConnection('core_read');
+						$query = "SELECT * FROM `submitted_portfolio` WHERE `submitted_user_id` = $userId and `user_id` = $cusid";
+						$res = $readAdapter->fetchAll($query);
+						?>	
+						<tr>
+							<td><?php echo $cus->getName()?></td>
+							<td><?php echo $cus->getData('hire_illustrators')?></td>
+							<td><?php echo $cus->getData('hire_photographers')?></td>
+							<td>
+								<div class="icon-outer">
+									<div class="<?php if($res[0]['viewed'] == 1){echo "viewed";}else{echo "notviewed";}?>"></div>
+									<div class="noaction <?php if($res[0]['following'] == 1){echo "following";}?>"></div>
+									<div class="noaction <?php if($res[0]['blocked'] == 1){echo "blocked";}?>"></div>	
+									<div class="details-control cus-more" customerid = "<?php echo $cus->getId()?>"></div>
+								</div>
+							</td>
+						</tr>
+						<?php }} ?>
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+	<div id="loader" class="cus-loader" style="display:none;">
+		<div class="over-lay"></div>
+		<div class="loader-body">
+			<img id="loading-image" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."images/ripple.svg" ?>"/>
+		</div>
+	</div>
+</div>
+<script>
+jQuery(document).ready( function () {
+
+} );
+window.onload = function(){
+	
+	jQuery('#myTable').DataTable({
+		"aoColumnDefs": [
+		  { "bSortable": false, "aTargets": [ 3 ] }
+		] ,			
+		"bLengthChange" : false,
+		"bInfo" : false,
+		language: { search: "" },
+	});
+	jQuery("div.dataTables_filter input").attr("placeholder","Search by Name");
+}
+
+// Add event listener for opening and closing details
+jQuery('#myTable tbody').on('click', 'td div.details-control', function () {
+	
+	var table = jQuery('#myTable').DataTable();
+	var tr = jQuery(this).closest('tr');
+	var row = table.row( tr );
+	var customerid = jQuery(this).attr('customerid');
+	if ( row.child.isShown() ) {
+		// This row is already open - close it
+		row.child.hide();
+		tr.removeClass('shown');
+		jQuery(this).removeClass('cus-less');
+		jQuery(this).addClass('cus-more');
+	}
+	else {
+		// Open this row
+		jQuery(this).removeClass('cus-more');
+		jQuery(this).addClass('cus-less');
+		jQuery('#loader').css('display','block');
+		jQuery.ajax({
+		type: "get",
+		url: "<?php echo Mage::getBaseUrl(); ?>customer/account/ajaxDirectorDetails/",
+		data: "id="+customerid,
+		async: true,
+		success: function(data){
+			row.child(data).show();
+			tr.addClass('shown');
+			tr.next().children().attr('colspan',4);
+			jQuery('#loader').css('display','none');
+		}
+	})	
+	}
+} );
+</script>

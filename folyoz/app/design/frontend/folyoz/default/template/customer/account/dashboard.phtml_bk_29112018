@@ -1,0 +1,108 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="dashboard">
+
+    <div class="page-title">
+        <h1><?php echo $this->__('My Dashboard') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <?php echo $this->getChildHtml('hello') ?>
+    <?php echo $this->getChildHtml('top') ?>
+    <div class="box-account box-info">
+        <div class="box-head">
+            <h2><?php echo $this->__('Account Information') ?></h2>
+        </div>
+        <?php /* Extensions placeholder */ ?>
+        <?php echo $this->getChildHtml('customer.account.dashboard.extra') ?>
+        <?php echo $this->getChildHtml('info') ?>
+        <?php echo $this->getChildHtml('address') ?>
+    </div>
+    <?php echo $this->getChildHtml('info1') ?>
+    <?php echo $this->getChildHtml('info2') ?>
+</div>
+<?php 
+$collectionVirtual = Mage::getResourceModel('catalog/product_collection')->addAttributeToFilter('type_id', array('eq' => 'virtual'));
+
+foreach($collectionVirtual as $key)
+{
+	//echo "<pre>".print_r($key,1)."</pre>";
+	$product = Mage::getModel('catalog/product')->load($key->getId());
+	$url = Mage::getBaseUrl()."customer/account/redirect/?id=".$product->getId();
+	echo "<a href='$url'>".$product->getName()."</a></br>";
+}
+	$userId = Mage::getSingleton('customer/session')->getCustomer()->getId();
+	$resource = Mage::getSingleton('core/resource');
+	$readAdapter= $resource->getConnection('core_read');			
+	$table = $resource->getTableName('user_subscription');
+	$query = "SELECT * FROM $table WHERE user_id = $userId order by id DESC";
+	$result = $readAdapter->fetchAll($query);
+
+	$datetime1 = new DateTime(date("Y-m-d H:i:s"));
+	$datetime2 = new DateTime($result[0]["end_date"]);
+	$interval = $datetime1->diff($datetime2);
+	$interval = $interval->format('%R%a');
+	if($result[0]["status"]=="active" and $interval < 7 and $interval > 0)
+	{
+?>
+		<h2>Your Subscription Will expire soon please renew package</h2>
+<?php 
+	}
+	elseif($interval < 0)
+	{
+		$writeAdapter = $resource->getConnection('core_write');
+		$query = "UPDATE `user_subscription` SET `status` = 'inactive' WHERE `user_subscription`.`id` = ".$result[0]['id'];
+		$writeAdapter->query($query);	
+?>
+		<h2>Your Subscription was Expired</h2>
+<?php 
+	}
+?>
+<h2>Your Subscription history</h2>
+<table border="1">
+	<tr>
+		<th>Package Name</th>
+		<th>Start date</th>
+		<th>End date</th>
+		<th>Actived on</th>
+	</tr>
+<?php	
+	foreach($result as $key)
+	{
+		$product = Mage::getModel('catalog/product')->load($key["product_id"]);
+		$startdate = new DateTime($key['start_date']);
+		$enddate = new DateTime($key['end_date']);
+?>
+	<tr>
+		<td><?php echo $product->getName(); ?></td>
+		<td><?php echo $startdate->format('Y-m-d H:i:s'); ?></td>
+		<td><?php if($key["status"] == "active"){ echo $enddate->format('Y-m-d H:i:s'); } ?></td>
+		<td><?php echo $key["status"]; ?></td>
+	</tr>
+<?php		
+	}
+?>
+</table>

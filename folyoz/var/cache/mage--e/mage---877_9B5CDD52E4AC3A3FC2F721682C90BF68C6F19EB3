@@ -1,0 +1,348 @@
+<script type="text/javascript">var setREVStartSize;
+                (function(jQuery) {
+                    setREVStartSize = function(e){
+                        try{ e.c=jQuery(e.c);var i=jQuery(window).width(),t=9999,r=0,n=0,l=0,f=0,s=0,h=0;
+                            if(e.responsiveLevels&&(jQuery.each(e.responsiveLevels,function(e,f){f>i&&(t=r=f,l=e),i>f&&f>r&&(r=f,n=e)}),t>r&&(l=n)),f=e.gridheight[l]||e.gridheight[0]||e.gridheight,s=e.gridwidth[l]||e.gridwidth[0]||e.gridwidth,h=i/s,h=h>1?1:h,f=Math.round(h*f),"fullscreen"==e.sliderLayout){var u=(e.c.width(),jQuery(window).height());if(void 0!=e.fullScreenOffsetContainer){var c=e.fullScreenOffsetContainer.split(",");if (c) jQuery.each(c,function(e,i){u=jQuery(i).length>0?u-jQuery(i).outerHeight(!0):u}),e.fullScreenOffset.split("%").length>1&&void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0?u-=jQuery(window).height()*parseInt(e.fullScreenOffset,0)/100:void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0&&(u-=parseInt(e.fullScreenOffset,0))}f=u}else void 0!=e.minHeight&&f<e.minHeight&&(f=e.minHeight);e.c.closest(".rev_slider_wrapper").css({height:f})                    
+                        }catch(d){console.log("Failure at Presize of Slider:"+d)}                        
+					};
+                })($nwd_jQuery);</script>
+<link href="http://fonts.googleapis.com/css?family=Syncopate:700%7CMontserrat:800%2C700%2C500%2C400%7COpen+Sans:400" rel="stylesheet" property="stylesheet" type="text/css" media="all">
+<div id="rev_slider_8_4_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-source="gallery" style="margin:0px auto;background:#ffffff;padding:0px;margin-top:0px;margin-bottom:0px;">
+<!-- START REVOLUTION SLIDER 5.4.8.2 fullwidth mode -->
+	<div id="rev_slider_8_4" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.4.8.2">
+<ul>	<!-- SLIDE  -->
+    <li data-index="rs-14" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="300"  data-delay="7000"  data-rotate="0"  data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+		<!-- MAIN IMAGE -->
+        <img src="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/dummy.png" data-bgcolor='#ffffff' style='background:#ffffff' alt="" title=""  data-lazyload="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/transparent.png" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="off" class="rev-slidebg" data-no-retina>
+		<!-- LAYERS -->
+
+		<!-- LAYER NR. 1 -->
+		<div class="tp-caption tp-shape tp-shapewrapper  tp-resizeme" 
+			 id="slide-14-layer-54" 
+			 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']" 
+			 data-y="['middle','middle','middle','middle']" data-voffset="['201','194','168','253']" 
+						data-width="['1001','959','688','429']"
+			data-height="['165','151','155','180']"
+			data-whitespace="nowrap"
+ 
+            data-type="shape" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":10,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['inherit','inherit','inherit','inherit']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 5;background-color:rgb(244,250,255);border-radius:7px 7px 7px 7px;"> </div>
+
+		<!-- LAYER NR. 2 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-45" 
+			 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']" 
+			 data-y="['top','top','top','top']" data-voffset="['84','66','47','31']" 
+						data-fontsize="['24','24','20','14']"
+			data-lineheight="['34','34','30','24']"
+			data-fontweight="['400','400','400','500']"
+			data-width="['815','826','630','380']"
+			data-height="['none','none','61','none']"
+			data-whitespace="normal"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":20,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 6; min-width: 815px; max-width: 815px; white-space: normal; font-size: 24px; line-height: 34px; font-weight: 400; color: rgba(255,109,53,1);font-family:Montserrat;">From Compatibility Matching to at-a-glance Dashboard views, Reviewing Submissions is a breeze. </div>
+
+		<!-- LAYER NR. 3 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-55" 
+			 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']" 
+			 data-y="['top','top','top','top']" data-voffset="['552','516','431','571']" 
+						data-fontsize="['14','14','14','13']"
+			data-lineheight="['30','30','24','24']"
+			data-color="['rgb(102,123,153)','rgb(49,70,91)','rgb(49,70,91)','rgb(49,70,91)']"
+			data-width="['800','800','535','335']"
+			data-height="['none','none','75','none']"
+			data-whitespace="normal"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":10,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 7; min-width: 800px; max-width: 800px; white-space: normal; font-size: 14px; line-height: 30px; font-weight: 400; color: #667b99;font-family:Montserrat;">Skeptical about receiving submission? No problem. Art Directors can hide their profile from submissions and still search all images or Artists. - When they're ready to accept submissions, they can simply un-hide their Profile. </div>
+
+		<!-- LAYER NR. 4 -->
+		<div class="tp-caption rev-btn " 
+			 id="slide-14-layer-58" 
+			 data-x="['center','center','center','center']" data-hoffset="['102','106','100','105']" 
+			 data-y="['top','top','top','top']" data-voffset="['380','355','302','434']" 
+						data-fontsize="['18','18','14','14']"
+			data-lineheight="['18','18','14','14']"
+			data-width="['190','190','170','160']"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="button" 
+			data-actions='[{"event":"click","action":"simplelink","target":"_self","url":"https:\/\/www.folyoz.com\/about","delay":""}]'
+			data-responsive_offset="on" 
+			data-responsive="off"
+            data-frames='[{"delay":10,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"0.5","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(255,255,255,1);bg:rgb(102,123,153);"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[15,15,15,15]"
+            data-paddingright="[40,40,40,40]"
+            data-paddingbottom="[15,15,15,15]"
+            data-paddingleft="[40,40,40,40]"
+
+            style="z-index: 8; min-width: 190px; max-width: 190px; white-space: nowrap; font-size: 18px; line-height: 18px; font-weight: 700; color: rgba(255,255,255,1);font-family:Montserrat;background-color:rgb(255,109,53);border-color:rgba(255,255,255,1);border-style:solid;border-width:1px 1px 1px 1px;border-radius:7px 7px 7px 7px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">About Us </div>
+
+		<!-- LAYER NR. 5 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-60" 
+			 data-x="['center','center','center','center']" data-hoffset="['-331','-316','-219','0']" 
+			 data-y="['top','top','top','top']" data-voffset="['298','280','242','214']" 
+						data-fontsize="['20','18','14','14']"
+			data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 9; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: #667b99; letter-spacing: 0px;font-family:Montserrat;">Artists Submit to You Once </div>
+
+		<!-- LAYER NR. 6 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-61" 
+			 data-x="['center','center','center','center']" data-hoffset="['0','0','0','-110']" 
+			 data-y="['top','top','top','top']" data-voffset="['298','280','242','368']" 
+						data-fontsize="['20','18','14','14']"
+			data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 10; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: #667b99; letter-spacing: 0px;font-family:Montserrat;">Follow the Ones You Like </div>
+
+		<!-- LAYER NR. 7 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-62" 
+			 data-x="['center','center','center','center']" data-hoffset="['337','322','213','109']" 
+			 data-y="['top','top','top','top']" data-voffset="['298','280','242','368']" 
+						data-fontsize="['20','18','14','14']"
+			data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 11; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: #667b99; letter-spacing: 0px;font-family:Montserrat;">Block the Ones You Don't </div>
+
+		<!-- LAYER NR. 8 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-64" 
+			 data-x="['center','center','center','center']" data-hoffset="['-331','-316','-219','0']" 
+			 data-y="['top','top','top','top']" data-voffset="['198','180','142','114']" 
+						data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="image" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['inherit','inherit','inherit','inherit']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 12;"><img src="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/dummy.png" alt="" data-ww="['80px','80px','80px','80px']" data-hh="['80px','80px','80px','80px']" data-lazyload="http://127.0.0.1/folyoz/media/revslider/submit_icon.png" data-no-retina> </div>
+
+		<!-- LAYER NR. 9 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-65" 
+			 data-x="['center','center','center','center']" data-hoffset="['0','0','0','-110']" 
+			 data-y="['top','top','top','top']" data-voffset="['198','180','142','268']" 
+						data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="image" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['inherit','inherit','inherit','inherit']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 13;"><img src="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/dummy.png" alt="" data-ww="['80px','80px','80px','80px']" data-hh="['80px','80px','80px','80px']" data-lazyload="http://127.0.0.1/folyoz/media/revslider/follow_icon.png" data-no-retina> </div>
+
+		<!-- LAYER NR. 10 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-14-layer-66" 
+			 data-x="['center','center','center','center']" data-hoffset="['337','322','213','109']" 
+			 data-y="['top','top','top','top']" data-voffset="['198','180','142','268']" 
+						data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="image" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['inherit','inherit','inherit','inherit']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 14;"><img src="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/dummy.png" alt="" data-ww="['80px','80px','80px','80px']" data-hh="['80px','80px','80px','80px']" data-lazyload="http://127.0.0.1/folyoz/media/revslider/block_icon.png" data-no-retina> </div>
+
+		<!-- LAYER NR. 11 -->
+		<div class="tp-caption rev-btn " 
+			 id="slide-14-layer-68" 
+			 data-x="['center','center','center','center']" data-hoffset="['-102','-106','-100','-105']" 
+			 data-y="['top','top','top','top']" data-voffset="['380','355','302','434']" 
+						data-fontsize="['18','18','14','14']"
+			data-lineheight="['18','18','14','14']"
+			data-width="['190','190','170','160']"
+			data-height="['none','51','none','none']"
+			data-whitespace="nowrap"
+ 
+            data-type="button" 
+			data-actions='[{"event":"click","action":"simplelink","target":"_self","url":"https:\/\/www.folyoz.com\/customer\/account\/create","delay":""}]'
+			data-responsive_offset="on" 
+			data-responsive="off"
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"0","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgb(255,255,255);bg:rgb(102,123,153);"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[15,15,15,15]"
+            data-paddingright="[40,40,40,40]"
+            data-paddingbottom="[15,15,15,15]"
+            data-paddingleft="[40,40,40,40]"
+
+            style="z-index: 15; min-width: 190px; max-width: 190px; white-space: nowrap; font-size: 18px; line-height: 18px; font-weight: 700; color: rgba(255,255,255,1);font-family:Montserrat;background-color:rgb(49,70,91);border-color:rgb(255,255,255);border-style:solid;border-width:1px 1px 1px 1px;border-radius:7px 7px 7px 7px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">Sign Up </div>
+	</li>
+</ul>
+<div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>	</div>
+<script>var htmlDiv = document.getElementById("rs-plugin-settings-inline-css"); var htmlDivCss="";
+				if(htmlDiv) {
+					htmlDiv.innerHTML = htmlDiv.innerHTML + htmlDivCss;
+                }else{
+					var htmlDiv = document.createElement("div");
+					htmlDiv.innerHTML = "<style>" + htmlDivCss + "</style>";
+					document.getElementsByTagName("head")[0].appendChild(htmlDiv.childNodes[0]);
+				}
+            </script>
+		<script type="text/javascript">
+
+            var _RSdisableOnMobile = false,
+                _RSagents = ['android', 'webos', 'iphone', 'ipad', 'blackberry','Android', 'webos', 'iPod', 'iPhone', 'iPad', 'Blackberry', 'BlackBerry'],
+                _RSisMobile = false;
+            for (var _i in _RSagents) {
+                if (navigator.userAgent.split(_RSagents[_i]).length>1) {
+                   _RSisMobile = true;
+                   continue;
+                }
+            }
+            if (_RSdisableOnMobile && _RSisMobile) {
+                var _RSelement = document.getElementById('rev_slider_8_4');
+                _RSelement.outerHTML = "";
+                delete _RSelement;
+            } else {
+
+                (function(jQuery) {
+
+                					if (setREVStartSize!==undefined) setREVStartSize(
+		    {c: '#rev_slider_8_4', responsiveLevels: [1240,1024,778,480], gridwidth: [1240,1024,778,480], gridheight: [760,700,600,750], sliderLayout: 'fullwidth'});
+
+                              var revapi8,
+			   tpj;
+(function() {
+    if (!/loaded|interactive|complete/.test(document.readyState)) document.addEventListener("DOMContentLoaded",onLoad); else onLoad();
+	function onLoad() {
+		if (tpj===undefined) { tpj = jQuery; }
+				if(tpj("#rev_slider_8_4").revolution == undefined){
+					revslider_showDoubleJqueryError("#rev_slider_8_4");
+				}else{
+					revapi8 = tpj("#rev_slider_8_4").show().revolution({
+						sliderType:"hero",
+jsFileLocation:"http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/js/",
+						sliderLayout:"fullwidth",
+						dottedOverlay:"none",
+						delay:5000,
+						responsiveLevels:[1240,1024,778,480],
+						visibilityLevels:[1240,1024,778,480],
+						gridwidth:[1240,1024,778,480],
+						gridheight:[760,700,600,750],
+						lazyType:"smart",
+						parallax: {
+							type:"scroll",
+							origo:"enterpoint",
+							speed:400,
+                          speedbg:0,
+                          speedls:0,
+							levels:[5,10,15,20,25,30,35,40,45,50,47,48,49,50,51,55],
+						},
+						shadow:0,
+						spinner:"off",
+						autoHeight:"off",
+						disableProgressBar:"on",
+						hideThumbsOnMobile:"off",
+						hideSliderAtLimit:0,
+						hideCaptionAtLimit:0,
+						hideAllCaptionAtLilmit:0,
+						debugMode:false,
+						fallbacks: {
+							simplifyAll:"off",
+							disableFocusListener:false,
+						}
+					});
+    }; /* END OF revapi call */
+    
+			
+			}; /* END OF ON LOAD FUNCTION */
+		}()); /* END OF WRAPPING FUNCTION */
+	})($nwd_jQuery);
+}
+		</script>
+		</div><!-- END REVOLUTION SLIDER -->

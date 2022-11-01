@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Mate_Catalog>
+      <active>true</active>
+      <codePool>local</codePool>
+    </Mate_Catalog>
+  </modules>
+</config>

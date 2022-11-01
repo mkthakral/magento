@@ -1,0 +1,180 @@
+<script type="text/javascript">var setREVStartSize;
+                (function(jQuery) {
+                    setREVStartSize = function(e){
+                        try{ e.c=jQuery(e.c);var i=jQuery(window).width(),t=9999,r=0,n=0,l=0,f=0,s=0,h=0;
+                            if(e.responsiveLevels&&(jQuery.each(e.responsiveLevels,function(e,f){f>i&&(t=r=f,l=e),i>f&&f>r&&(r=f,n=e)}),t>r&&(l=n)),f=e.gridheight[l]||e.gridheight[0]||e.gridheight,s=e.gridwidth[l]||e.gridwidth[0]||e.gridwidth,h=i/s,h=h>1?1:h,f=Math.round(h*f),"fullscreen"==e.sliderLayout){var u=(e.c.width(),jQuery(window).height());if(void 0!=e.fullScreenOffsetContainer){var c=e.fullScreenOffsetContainer.split(",");if (c) jQuery.each(c,function(e,i){u=jQuery(i).length>0?u-jQuery(i).outerHeight(!0):u}),e.fullScreenOffset.split("%").length>1&&void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0?u-=jQuery(window).height()*parseInt(e.fullScreenOffset,0)/100:void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0&&(u-=parseInt(e.fullScreenOffset,0))}f=u}else void 0!=e.minHeight&&f<e.minHeight&&(f=e.minHeight);e.c.closest(".rev_slider_wrapper").css({height:f})                    
+                        }catch(d){console.log("Failure at Presize of Slider:"+d)}                        
+					};
+                })($nwd_jQuery);</script>
+<link href="http://fonts.googleapis.com/css?family=Syncopate:700%7CMontserrat:800%2C700%2C500%2C400%2C600%7COpen+Sans:400" rel="stylesheet" property="stylesheet" type="text/css" media="all">
+<div id="rev_slider_10_6_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-source="gallery" style="margin:0px auto;background:#ffffff;padding:0px;margin-top:0px;margin-bottom:0px;">
+<!-- START REVOLUTION SLIDER 5.4.8.2 fullwidth mode -->
+	<div id="rev_slider_10_6" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.4.8.2">
+<ul>	<!-- SLIDE  -->
+    <li data-index="rs-18" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="300"  data-delay="7000"  data-rotate="0"  data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+		<!-- MAIN IMAGE -->
+        <img src="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/dummy.png" data-bgcolor='#ffffff' style='background:#ffffff' alt="" title=""  data-lazyload="http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/images/transparent.png" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="off" class="rev-slidebg" data-no-retina>
+		<!-- LAYERS -->
+
+		<!-- LAYER NR. 1 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-18-layer-52" 
+			 data-x="['center','center','center','center']" data-hoffset="['-240','-297','-246','0']" 
+			 data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','-47']" 
+						data-fontsize="['26','26','24','24']"
+			data-lineheight="['36','36','34','30']"
+			data-color="['rgba(255,109,53,1)','rgb(255,109,53)','rgb(255,109,53)','rgb(255,109,53)']"
+			data-width="none"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":10,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['right','right','right','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 5; white-space: nowrap; font-size: 26px; line-height: 36px; font-weight: 500; color: rgba(255,109,53,1);font-family:Montserrat;">Join our Newsletter </div>
+
+		<!-- LAYER NR. 2 -->
+		<div class="tp-caption   tp-resizeme" 
+			 id="slide-18-layer-84" 
+			 data-x="['left','left','left','center']" data-hoffset="['529','375','274','0']" 
+			 data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','18']" 
+						data-width="['none','none','400','300']"
+			data-height="none"
+			data-whitespace="nowrap"
+ 
+            data-type="text" 
+			data-responsive_offset="on" 
+
+            data-frames='[{"delay":0,"speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+            data-textAlign="['center','center','center','center']"
+            data-paddingtop="[0,0,0,0]"
+            data-paddingright="[0,0,0,0]"
+            data-paddingbottom="[0,0,0,0]"
+            data-paddingleft="[0,0,0,0]"
+
+            style="z-index: 6; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: #ffffff; letter-spacing: 0px;font-family:Open Sans;"><!-- Begin Mailchimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:clear; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+
+	#mc_embed_signup .button
+{ 
+color: #ffffff;
+border: 1px solid #ff6d35;
+background-color: #ff6d35
+!important
+}
+
+#mc_embed_signup .button:hover
+{
+color: #ff6d35;
+border: 1px solid #ff6d35;
+background-color: #ffffff
+!important
+}
+</style>
+<div id="mc_embed_signup">
+<form action="https://emergart.us4.list-manage.com/subscribe/post?u=0b71763bc6107adba12d86f9c&amp;id=3b7135883e" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	
+	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email" required>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0b71763bc6107adba12d86f9c_3b7135883e" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+
+<!--End mc_embed_signup--> </div>
+	</li>
+</ul>
+<div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>	</div>
+<script>var htmlDiv = document.getElementById("rs-plugin-settings-inline-css"); var htmlDivCss="";
+				if(htmlDiv) {
+					htmlDiv.innerHTML = htmlDiv.innerHTML + htmlDivCss;
+                }else{
+					var htmlDiv = document.createElement("div");
+					htmlDiv.innerHTML = "<style>" + htmlDivCss + "</style>";
+					document.getElementsByTagName("head")[0].appendChild(htmlDiv.childNodes[0]);
+				}
+            </script>
+		<script type="text/javascript">
+
+            var _RSdisableOnMobile = false,
+                _RSagents = ['android', 'webos', 'iphone', 'ipad', 'blackberry','Android', 'webos', 'iPod', 'iPhone', 'iPad', 'Blackberry', 'BlackBerry'],
+                _RSisMobile = false;
+            for (var _i in _RSagents) {
+                if (navigator.userAgent.split(_RSagents[_i]).length>1) {
+                   _RSisMobile = true;
+                   continue;
+                }
+            }
+            if (_RSdisableOnMobile && _RSisMobile) {
+                var _RSelement = document.getElementById('rev_slider_10_6');
+                _RSelement.outerHTML = "";
+                delete _RSelement;
+            } else {
+
+                (function(jQuery) {
+
+                					if (setREVStartSize!==undefined) setREVStartSize(
+		    {c: '#rev_slider_10_6', responsiveLevels: [1240,1024,778,480], gridwidth: [1240,1024,778,480], gridheight: [180,160,120,180], sliderLayout: 'fullwidth'});
+
+                              var revapi10,
+			   tpj;
+(function() {
+    if (!/loaded|interactive|complete/.test(document.readyState)) document.addEventListener("DOMContentLoaded",onLoad); else onLoad();
+	function onLoad() {
+		if (tpj===undefined) { tpj = jQuery; }
+				if(tpj("#rev_slider_10_6").revolution == undefined){
+					revslider_showDoubleJqueryError("#rev_slider_10_6");
+				}else{
+					revapi10 = tpj("#rev_slider_10_6").show().revolution({
+						sliderType:"hero",
+jsFileLocation:"http://127.0.0.1/folyoz/skin/frontend/base/default/nwdthemes/revslider/public/assets/js/",
+						sliderLayout:"fullwidth",
+						dottedOverlay:"none",
+						delay:5000,
+						responsiveLevels:[1240,1024,778,480],
+						visibilityLevels:[1240,1024,778,480],
+						gridwidth:[1240,1024,778,480],
+						gridheight:[180,160,120,180],
+						lazyType:"smart",
+						parallax: {
+							type:"scroll",
+							origo:"enterpoint",
+							speed:400,
+                          speedbg:0,
+                          speedls:0,
+							levels:[5,10,15,20,25,30,35,40,45,50,47,48,49,50,51,55],
+						},
+						shadow:0,
+						spinner:"off",
+						autoHeight:"off",
+						disableProgressBar:"on",
+						hideThumbsOnMobile:"off",
+						hideSliderAtLimit:0,
+						hideCaptionAtLimit:0,
+						hideAllCaptionAtLilmit:0,
+						debugMode:false,
+						fallbacks: {
+							simplifyAll:"off",
+							disableFocusListener:false,
+						}
+					});
+    }; /* END OF revapi call */
+    
+			
+			}; /* END OF ON LOAD FUNCTION */
+		}()); /* END OF WRAPPING FUNCTION */
+	})($nwd_jQuery);
+}
+		</script>
+		</div><!-- END REVOLUTION SLIDER -->

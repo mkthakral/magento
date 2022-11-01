@@ -1,0 +1,55 @@
+<?php
+/**
+ * Cryozonic
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Single Domain License
+ * that is available through the world-wide-web at this URL:
+ * http://cryozonic.com/licenses/stripe.html
+ * If you are unable to obtain it through the world-wide-web,
+ * please send an email to info@cryozonic.com so we can send
+ * you a copy immediately.
+ *
+ * @category   Cryozonic
+ * @package    Cryozonic_Stripe
+ * @copyright  Copyright (c) Cryozonic Ltd (http://cryozonic.com)
+ */
+
+$sources = $this->getCustomerCards();
+
+if (!empty($sources)): ?>
+<li>
+  <ul class="saved-cards" id="saved-cards">
+    <?php foreach ($sources as $key => $source): ?>
+      <?php /* if ($source->object == 'card'): */ ?>
+        <li>
+          <input type="radio" name="payment[cc_saved]" value="<?php echo $source->id . ':' . $source->brand . ':' . $source->last4; ?>" id="<?php echo $source->id; ?>" class="select" onclick="useCard.call(this)">
+          <label for="<?php echo $source->id; ?>">
+            <span class="type <?php echo $source->brand ?>">
+              <?php echo (empty($source->brand) ? $this->__('Card') : $this->__($source->brand)); ?>
+            </span>
+            <span class="last4 cryozonic-stripe-fade"><?php echo $this->__('ending in'); ?> <?php echo $source->last4; ?></span>
+            <span class="exp cryozonic-stripe-fade"><?php echo $this->__('expires'); ?>
+              <?php echo str_pad($source->exp_month,2,'0',STR_PAD_LEFT); ?>/<?php echo $source->exp_year; ?>
+            </span>
+          </label>
+        </li>
+      <?php /* elseif ($this->isReusableSource($source)): ?>
+        <li>
+          <input type="radio" name="payment[cc_saved]" value="<?php echo $source->id . ':' . $source->type . ':' . $source->sepa_debit->last4; ?>" id="<?php echo $source->id; ?>" class="select">
+          <label for="<?php echo $source->id; ?>">
+            <?php echo $this->formatSourceName($source); ?>
+          </label>
+        </li>
+      <?php endif;  */ ?>
+    <?php endforeach; ?>
+    <li>
+      <input type="radio" name="payment[cc_saved]" value="new_card" class="select" id="new_card" checked="checked" onclick="useCard.call(this)">
+      <label for="new_card">
+        <span class="type"><?php echo $this->__('Use a new card'); ?></span>
+      </label>
+    </li>
+  </ul>
+</li>
+<?php endif; ?>

@@ -1,0 +1,65 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="block block-account">
+    <div class="block-content">
+        <ul>
+			<?php $baseurl = Mage::getBaseUrl(); ?>
+			<?php $str = explode("/",Mage::helper('core/url')->getCurrentUrl()); ?>
+			<?php $active = $str[count($str)-2]; ?>
+			<?php $customer = $loginuser = Mage::getSingleton('customer/session')->getCustomer(); ?>
+			<?php if($customer->getAvatar()==""){ ?>
+			<?php if($loginuser->getGroupId() == 2){ ?>
+			<span class="customer-img"><img id="preview" src="<?php echo $this->getskinUrl() ?>images/nopropimg.png" height="125px"; width="125px"/></span>
+			<?php } else { ?>
+			<span class="customer-img"><img id="preview" src="<?php echo $this->getskinUrl() ?>images/nopropimgart.png" height="125px"; width="125px"/></span>
+            <?php } ?>
+			<?php } else { ?>
+			<span class="customer-img"><img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+			<?php } ?>
+			<div class="left-menu-name"><?php echo $customer->getName(); ?></div>
+			<?php if($loginuser->getGroupId() == 2){ ?>		
+			<li class="<?php if($active == "index" or $active == "account")echo "active"; ?>"><a href="<?php echo $baseurl; ?>dashboard">Dashboard</a></li>
+			<li class=" <?php if($active == "edit")echo "active"; ?>"><a href="<?php echo $baseurl; ?>profile">Profile Settings</a></li>
+			<li class=" <?php if($active == "managesubmission")echo "active"; ?>"><a href="<?php echo $baseurl; ?>submissions">Manage Submissions</a></li>
+			<li class=" <?php if($active == "helpwiki")echo "active"; ?>"><a href="<?php echo $baseurl; ?>help">Help Wiki</a></li>
+			<li class="last"><a href="<?php echo $baseurl; ?>customer/account/logout/">Logout</a></li>
+			<?php } ?>
+			<?php if($loginuser->getGroupId() == 1){ ?>		
+			<li class=" <?php if($active == "index" or $active == "account")echo "active"; ?>"><a href="<?php echo $baseurl; ?>dashboard">Dashboard</a></li>
+			<li class=" <?php if($active == "edit")echo "active"; ?>"><a href="<?php echo $baseurl; ?>profile">Profile Settings</a></li>
+			<li class=" <?php if($active == "myproductslist")echo "active"; ?>"><a href="<?php echo $baseurl; ?>portfolio">My Portfolio</a></li>
+			<li class=" <?php if($active == "submitportfolio")echo "active"; ?>"><a href="<?php echo $baseurl; ?>submit-portfolio">Submit Portfolio</a></li>
+			<li class=" <?php if($active == "membership")echo "active"; ?>"><a href="<?php echo $baseurl; ?>membership">Membership</a></li>
+			<li class=" <?php if($active == "recurring_profile")echo "active"; ?>"><a href="<?php echo $baseurl; ?>receipts">Receipts</a></li>
+			<li class=" <?php if($active == "analytics")echo "active"; ?>"><a href="<?php echo $baseurl; ?>analytics">Analytics</a></li>
+			<li><a href="<?php echo $baseurl; ?>art_details?id=<?php echo $customer->getId(); ?>" target="_blank">View Portfolio Page</a></li>
+            <li class="last <?php if($active == "helpwiki")echo "active"; ?>"><a href="<?php echo $baseurl; ?>help">Help Wiki</a></li>
+			<li class="last"><a href="<?php echo $baseurl; ?>customer/account/logout/">Logout</a></li>
+			<?php } ?>
+        </ul>
+    </div>
+</div>
