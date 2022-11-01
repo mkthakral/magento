@@ -1,0 +1,126 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+
+
+
+<header id="header" class="page-header">
+				<div class="page-header-container">
+					<div class="head-top container">
+							<a class="logo" href="<?php echo $this->getUrl('') ?>">
+							<img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="large" />
+							</a>
+
+						
+						<div class="head-top-right">
+							<div class="content"><p>Where the Art is selected by multiple Art World Experts</p></div>
+							<div class="search">
+                              <?php echo $this->getChildHtml('topSearch') ?>
+                            </div>
+								
+							</div>
+						</div>
+					</div>
+					<div class="head-bottom">
+					<div class="container">
+						<div id="header-nav" class="skip-content menu">
+							<div class="mob-menu"><a href="#">menu</a></div>
+							<?php echo $this->getChildHtml('topMenu') ?>
+						</div>
+						<div class="head-bottom-right">
+							<ul>
+							<?php if(Mage::getSingleton('customer/session')->isLoggedIn()) { ?>
+							<li><a href="<?php echo $this->getUrl() ?>customer/account/">Account</a></li>
+							<li><a href="<?php echo $this->getUrl() ?>customer/account/logout">Logout</a></li>
+							<?php }else { ?>
+								<li><a id="registernow">Register</a></li>
+								<li><a href="<?php echo $this->getUrl() ?>customer/account/login" class="ajaxlogin-login">Sign In</a></li>
+							<?php } ?>
+								
+								<li><a href="#">Saved<span>(0)</span></a></li>
+								<li><a href="#">Cart<span>(0)</span></a></li>
+							</ul>
+						</div>
+						</div>
+					</div>
+				</div>
+			</header>
+
+			<div class="custom-registration" style="display:none">
+			<ul>
+			<li id="colector">I am a Collector</li>
+			<li id="artist">I am an artist</li>
+			<li id="owner">I am gallery Owner</li>
+			</ul>
+			<span id="colectorac" style="display:none;"><a href="<?php echo $this->getUrl() ?>customer/account/create/?type=colector">Create Account</a></span>
+			<span id="artistac" style="display:none;"><a href="<?php echo $this->getUrl() ?>customer/account/create/?type=artist">Create Account</a></span>
+			<span id="ownerac" style="display:none;"><a href="<?php echo $this->getUrl() ?>customer/account/create/?type=owner">Create Account</a></span>
+			</div>
+
+<?php echo $this->getChildHtml('topContainer'); ?>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery("#registernow").click(function(){
+		jQuery(".custom-registration").show();
+		
+	});
+	
+	jQuery("#colector").click(function(){
+		jQuery("#colectorac").show();
+		jQuery("#ownerac").hide();
+		jQuery("#artistac").hide();
+		jQuery("#colector").addClass("active");
+		jQuery("#artist").removeClass("active");
+		jQuery("#owner").removeClass("active");
+		
+		
+	});
+	jQuery("#artist").click(function(){
+		jQuery("#artistac").show();
+		jQuery("#colectorac").hide();
+		jQuery("#ownerac").hide();
+		jQuery("#colector").removeClass("active");
+		jQuery("#artist").addClass("active");
+		jQuery("#owner").removeClass("active");
+		
+	});
+	jQuery("#owner").click(function(){
+		jQuery("#ownerac").show();
+		jQuery("#artistac").hide();
+		jQuery("#colectorac").hide();
+		jQuery("#colector").removeClass("active");
+		jQuery("#artist").removeClass("active");
+		jQuery("#owner").addClass("active");
+		
+	});
+
+});
+
+</script>

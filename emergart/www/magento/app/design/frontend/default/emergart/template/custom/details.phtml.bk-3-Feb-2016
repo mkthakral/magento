@@ -1,0 +1,84 @@
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+        
+        
+         ->load($id);
+       // echo '<pre>';print_r($collection->getData());
+   //echo $collection->getEmail();die;?>
+<div class="" id="base">
+	<div class="gallery-details-top">
+	<div class="top-gal">Meet Gallery Owner, <?php echo $collection->getName();  ?>, <?php echo $collection->getGaleryname();?> </div>
+      <!-- Unnamed (Image) -->
+      <div class="ax_image" id="u0">
+	    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+        <?php if ($collection->getSstechProfileimage()): ?> 
+            
+         <img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$collection->getSstechProfileimage();?>" class="img " id="u0_img"/>
+          
+        <?php endif ?>
+        <!-- Unnamed () -->
+        <div class="text" id="u1" style="top: 100px; transform-origin: 98px 0px 0px;">
+          <p><span></span></p>
+        </div>
+      </div>
+	  <div class="artis-view-right">
+		<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/home?status=vvvvvvvvv+http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html&amp;p[images][0]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2Fp%2Fa%2Fpaint-img-4.png&amp;p[title]=vvvvvvvvv&amp;p[summary]=%3Cp%3Etest%3C%2Fp%3E" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="http://digitalmate.in/magento/emergart/index.php/sendfriend/product/send/id/13/cat_id/4/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">share this page</a></li>
+					</ul>
+
+		</div>
+	  </div>
+	 
+     </div>
+	<div class="gallery-details-bottom">
+	<div class="gla-title">About the Gallery</div>
+	  
+	<div class="description"><?php echo $collection->getGalerydescription(); ?></div>
+	  
+<div class="gla-title"><span>Q & A</span></div>
+    <?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE galeryid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			
+			?>
+      
+<?php foreach($resultnew as $res){ ?>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u18">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u18_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u19">
+          <p class="qes"><span><?php echo $res['question']; ?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u20">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u20_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u21">
+          <p><span><?php echo $res['answer'];  ?></span></p>
+        </div>
+      </div>
+<?php } ?>
+      <!-- Unnamed (Image) -->
+      
+    </div>
+	</div>

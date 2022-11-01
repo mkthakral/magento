@@ -1,0 +1,114 @@
+<?php 
+$helper= Mage::helper('marketplace');
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$order_id = $this->getRequest()->getParam('order_id');
+if($isPartner==1){?>
+	<div class="page-title">
+		<h1 style="float:left;">
+			<?php echo Mage::helper('marketplace')->__('View All Credit Memos');?>
+		</h1>
+	</div>	
+	<div class="wk_mp_design">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4><?php echo $helper->__('Credit Memos List') ?></h4></span></strong>
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">
+			<table cellspacing="0" class="border wk_mp_list_table wk_mp_list_container_table">
+			    <thead>
+			        <tr class="wk_content">
+			    		<th>
+			    			<span class="label name">
+								<?php echo $helper->__('Credit Memos #')?>
+							</span>
+			    		</th>
+			    		<th>
+			    			<span class="label pro_status">
+								<?php echo $helper->__('Bill To Name')?>
+							</span>
+			    		</th>
+			    		<th>
+			    			<span class="label qty">
+								<?php echo $helper->__('Created At')?>
+							</span>
+			    		</th>
+			    		<th>
+			    			<span class="label qty">
+								<?php echo $helper->__('Status')?>
+							</span>
+			    		</th>	
+			    		<th>
+			    			<span class="label qty">
+								<?php echo $helper->__('Status')?>
+							</span>
+			    		</th>
+			    		<th>
+			    			<span class="label">
+								<?php echo $helper->__('Action')?>
+							</span>
+			    		</th>		    		
+			    	</tr>
+			    </thead>
+			    <tbody>
+			    	<?php 
+			    	$i = 0;
+					foreach($this->getCollection() as $creditmemo){
+						$i++;
+						$order = Mage::getModel('sales/order')->load($creditmemo['order_id']);
+						$creditmemo_id = $creditmemo['entity_id'];
+						?>
+				    	<tr class="wk_row_view <?php echo $class = ($i == count($this->getCollection()))? 'wk_last_tr':''?>">
+				    		<td>
+								<span class="label name">
+									<?php echo $creditmemo['increment_id'];?>
+								</span>
+				    		</td>
+			    			<td>		
+								<span class="label pro_status">
+									<?php echo $order->getCustomerName();?>
+								</span>
+							</td>
+							<td>
+								<span class="label qty">
+									<?php echo Mage::helper('core')->formatDate($creditmemo->getCreatedAt(), 'medium', true);?>
+								</span>
+							</td>
+							<td>
+								<span class="label qty">
+									<?php echo $helper->__('Refunded');?>
+								</span>	
+							</td>
+							<td>
+								<span class="label qty">
+									<?php echo Mage::helper('core')->currency($creditmemo->getGrandTotal(), true, false);?>
+								</span>	
+							</td>
+							<td>
+								<span class="label qty">
+									<a href="<?php echo Mage::getUrl('marketplace/order_creditmemo/view', array('order_id'=>$order_id,'creditmemo_id'=>$creditmemo_id)); ?>">
+										<?php echo Mage::helper('marketplace')->__('View'); ?>
+									</a>
+								</span>	
+							</td>   		
+				    	</tr>
+				    	<?php
+				    }?>
+			    </tbody>
+			</table>
+		</div>
+		<?php echo $this->getPagerHtml();?>
+		<div class="buttons-set">
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+			</p>
+		</div>
+	</div>
+	</style>
+	<?php	
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

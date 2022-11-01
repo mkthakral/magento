@@ -1,0 +1,422 @@
+<?php
+$wholedata=$this->getRequest()->getParams();
+$configproducts = $this->getConfigurableProduct();
+$helper=Mage::helper('marketplace');
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$product_hint_status = Mage::helper('marketplace')->getProductHintStatus();
+$allow_pro_type=Mage::helper('marketplace')->getAllowedProductType();
+if($isPartner==1 && strpos($allow_pro_type,'configurable') !== false){ ?>
+	<style type="text/css">
+		.wk_mp_list_table th,td{
+			text-align: center;
+		}
+	</style>
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/quickcreate') ?>" method="post" id="form-quickcreate">
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $configproducts->getName(); ?></h1>
+			<button type="reset" class="button wk_mp_btn">
+				<span><span><?php echo $helper->__('Reset') ?></span></span>
+			</button>
+			<button class="button wk_mp_btn quickcreate" title="<?php echo $helper->__('Quick Create') ?>" onclick="return false();" type="submit" id="save_butn">
+				<span><span><?php echo $helper->__('Quick Create') ?></span></span>
+			</button>
+		</div>
+		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Quick create') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<input type="hidden" name="mainid" id="productid" value="<?php echo $wholedata['id']; ?>"/>
+				<ul  class="form-list" id="wk_bodymain">
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Name') ?>:</label>
+						<div class="input-box"><input type="text" name="name" class="input-text required-entry"></div>
+					</li>
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('SKU') ?>:</label>
+						<div class="input-box">
+							<input type="text" name="sku" id="sku" class="input-text required-entry">
+							<div id="skuavail" >
+								<span class="success-msg skuavailable"><?php echo $helper->__('SKU Available') ?></span>
+							</div>
+							<div id="skunotavail" >
+								<span class="error-msg skunotavailable"><?php echo $helper->__('SKU Already Exist') ?></span>
+							</div>
+						</div>
+					</li>
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Weight') ?>:</label>
+						<div class="input-box"><input type="text" name="weight" class="input-text required-entry validate-digits"></div>
+					</li>
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Visibility') ?>:</label>
+						<div class="input-box">
+							<select id="simple_product_visibility" class="input-text required-entry" name="visibility">
+								<option selected="selected" value=""><?php echo $helper->__('Please Select') ?></option>
+								<option value="1"><?php echo $helper->__('Not Visible Individually') ?></option>
+								<option value="2"><?php echo $helper->__('Catalog') ?></option>
+								<option value="3"><?php echo $helper->__('Search') ?></option>
+								<option value="4"><?php echo $helper->__('Catalog, Search') ?></option>
+							</select>
+						</div>
+					</li>
+					<li>
+						<label class="required"><em>*</em><?php echo $helper->__('Qty') ?>:</label>
+						<div class="input-box"><input type="text" name="qty" class="input-text required-entry validate-digits"/></div>
+					</li>
+					<?php					
+					$configattr = Mage::getModel('catalog/product_type_configurable')->getConfigurableAttributesAsArray($configproducts);
+					foreach($configattr as $attribute) { ?>
+					<li>
+						<label class="required"><em>*</em><?php echo $attribute['frontend_label']; ?>:</label>
+						<div class="input-box supperattr">
+							<select class="input-text required-entry custattr" id="<?php echo $attribute['id']; ?>"  name="<?php echo $attribute['attribute_code'];?>">
+							<?php  
+								$attributeOptions = $this->getAttributeOptions($attribute['attribute_code']);
+								foreach($attributeOptions as $each){  ?>
+									<option value="<?php echo $each["value"]; ?>" ><?php echo $each["label"]; ?></option>
+							<?php } ?>
+							</select>
+							<div style="display:none;">
+								<label class="required"><?php echo $helper->__('Price') ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b>:</label>
+								<?php 
+									foreach($attributeOptions as $each){ 
+										foreach ($attribute['values'] as $value) {
+											if($each['value']==$value['value_index'] && $value['pricing_value']!=''){ ?>
+												<span class="<?php echo $value['value_index'] ?>" style="display:none;" id="<?php echo $value['value_index'] ?>" type="text" dataprice="<?php echo $value['pricing_value']; ?>"><b>+<?php echo Mage::helper('core')->currency($value['pricing_value'], true, false); ?></b></span><?php
+											} 
+										} 
+									}?>
+							</div>
+						</div>
+					</li>
+					<?php 
+					} ?>
+				</ul>
+			</div>
+		</div>	
+	</form>	
+	<br/>
+	<br/>
+	
+	<div class="page-title">
+		<h1 style="float:left;"><?php echo $helper->__('Associated Products') ?></h1>
+	</div>
+	<div class="wk_mp_design">
+		<div class="block block-account">	
+			<div class="block-title">	
+				<strong><span><h4><?php echo $helper->__('Associated Products') ?></h4></span></strong>
+			</div>
+		</div>
+		<div class="fieldset wk_mp_fieldset">			
+			<form action="<?php echo Mage::helper('core/url')->getCurrentUrl();?>" method="get">
+				<table cellspacing="0" class="border wk_mp_list_table">
+				    <thead>
+				        <tr id="wk_mp_tr_heading">
+				            <th><span><?php echo $helper->__('Id') ?></span></th>
+				            <th><span><?php echo $helper->__('Product Name') ?></span></th>
+				            <th><span><?php echo $helper->__('Attribute Set Name') ?></span></th>
+				            <th><span>&nbsp;</span></th>
+				        </tr>
+				    </thead>
+				    <tbody class="wk_mp_body">
+				    	<tr>
+				    		<td>
+				    			<input type="text" class="input-text" name="searchid" placeholder='<?php echo $helper->__('Search by id') ?>' value="<?php echo $this->getRequest()->getParam('searchid')?>"/>
+				    		</td>
+				    		<td>
+				    			<input type="text" class="input-text" name="s" placeholder='<?php echo $helper->__('Search by product name') ?>' value="<?php echo $this->getRequest()->getParam('s')?>"/>
+				    		</td>
+				    		<td>
+			    				<select name="proattrset" class="input-text">
+			    					<option value=""><?php echo $helper->__('Select Attribute Set') ?></option>
+				    				<?php foreach($this->getAllowedSets() as $set) {?>
+										<option value="<?php echo $set['value'] ?>" <?php if($this->getRequest()->getParam('proattrset') == $set['value']) echo 'selected="selected"'?>><?php echo $set['label']?></option>
+									<?php } ?>
+				    			</select>
+				    		</td>
+				    		<td>
+				    			<button class="button" title="Save" id="save_butn" type="submit">
+									<span><span><span><?php echo $helper->__('Submit') ?></span></span></span>
+								</button>
+				    		</td>
+				    	</tr>
+				    </tbody>
+				</table>
+			</form>
+			<?php 
+			if(count($this->getCollection())==0){ ?>		
+				<div class="fieldset wk_mp_fieldset">
+					<div class="wk_emptymsg">
+						<?php echo $helper->__('No Product Available') ?>
+					</div>
+				</div>
+				<?php 
+			} else{ ?>
+				<style type="text/css">
+				.mp_edit_associate_ul input[type=text] {
+					width: 35%!important;
+				}
+				</style>
+				<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/assignassociate') ?>" method="post" id="form-associate" style="display: inline-block;width: 100%;">
+					<input type="hidden" class="len" name="mainid" id="productid" value="<?php echo $wholedata['id']; ?>" title="id" class="" />
+					<ul class="mp_edit_associate_ul">
+						<?php
+						$product = Mage::getModel('catalog/product')->load($wholedata['id']);
+						$productAttributeOptions = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
+						$attributeOptions = array();
+						$pricesByAttributeValues = array();
+						$basePrice = $product->getFinalPrice();
+						foreach ($productAttributeOptions as $productAttribute) {
+							$attr_code =  $productAttribute['attribute_code'];
+							?>
+							<li>
+								<label class="required"><em>*</em><?php echo $productAttribute['label']; ?>:</label>
+								<?php
+							    foreach ($productAttribute['values'] as $attribute) {
+							        if ($attribute['is_percent']){
+							            $attr_price = (float)$attribute['pricing_value'] * $basePrice / 100;
+							        }
+							        else {
+							            $attr_price = (float)$attribute['pricing_value'];
+							        }
+							        ?>						        
+						        	<div class="mp_edit_associate_div1">
+			               				<div class="mp_edit_associate_div2">
+				               				<label><?php echo $helper->__('Option')?> : <?php echo $attribute['store_label']; ?></label>
+											<input type="hidden" value="<?php echo $attribute['value_index']?>" name="assopro[<?php echo $attr_code?>][<?php echo $attribute['value_index']?>]"/>
+										</div>
+										<div>
+											<label><?php echo $helper->__('Price')?> <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b>: </label>
+											<input type="text" name="assopro[<?php echo $attr_code?>][<?php echo $attribute['value_index']?>][price]" value="<?php echo $attr_price; ?>"/>
+										</div>
+					                </div>
+							        <?php
+							    }?>
+			                </li>
+						    <?php
+						}?>
+					</ul>
+					<div class="order-details">
+					<table cellspacing="0" class="border wk_mp_list_table wk_mp_list_container_table ">
+					    <thead>
+					        <tr class="wk_content">
+					        	<th style="border-left:none;">
+					    			<span class="label">
+									</span>
+					    		</th>
+					        	<th>
+					    			<span class="label qty">
+										<?php echo $helper->__('Id')?>
+									</span>
+					    		</th>
+					    		<th>
+					    			<span class="label name">
+										<?php echo $helper->__('Product Name')?>
+									</span>
+					    		</th>
+					    		<th class="wk_list_th_display">
+					    			<span class="label pro_status">
+										<?php echo $helper->__('Attribute Set Name')?>
+									</span>
+					    		</th>
+					    		<th>
+					    			<span class="label qty">
+										<?php echo $helper->__('Qty')?>
+									</span>
+					    		</th>
+					    		<th class="wk_list_th_display">
+					    			<span class="label qty">
+										<?php echo $helper->__('SKU')?>
+									</span>
+					    		</th>
+					    		<th>
+					    			<span class="label qty">
+										<?php echo $helper->__('Price')?>
+									</span>
+					    		</th>
+					    		<?php
+						        foreach($configattr as $attribute) { ?>
+						           <?php 
+						           if(isset($attribute['attribute_code'] ) == 1){ ?>
+								        <th>
+								        	<span class="label qty">
+												<?php echo $attribute['frontend_label']?>
+											</span>
+								        </th>
+							        <?php
+							        }
+						        } ?>
+						        <th>
+					    			<span></span>
+					    		</th>    		
+					    	</tr>
+					    </thead>
+					    <tbody>
+						    <?php 
+					    	$i = 0;							
+							foreach($this->getCollection() as $products){
+								$i++; ?>
+						    	<tr class="wk_row_view <?php echo $class = ($i == count($this->getCollection()))? 'wk_last_tr':''?>">
+						    		<td style="border-left:none;">
+										<input type="checkbox"  checked class="assopro" name="asso_pro[<?php echo $products->getId(); ?>]" />
+						    		</td>					    		
+									<td data-rwd-label="<?php echo $helper->__('Id')?>">
+										<span class="label pro_status">
+											<?php echo $products->getId(); ?>
+										</span>
+									</td>
+									<td data-rwd-label="<?php echo $helper->__('Product Name')?>">
+										<span class="label pro_status">
+											<?php echo $products->getName(); ?>
+										</span>
+									</td>
+									<td class="wk_list_th_display" data-rwd-label="<?php echo $helper->__('Attribute Set Name')?>">
+										<span class="label pro_status">
+											<?php echo Mage::getModel('eav/entity_attribute_set')->load($products->getAttributeSetId())->getAttributeSetName(); ?>
+										</span>
+									</td>
+									<td data-rwd-label="<?php echo $helper->__('Qty')?>">
+										<span class="label pro_status">
+											<?php 
+											$stock_item_details = Mage::getModel('cataloginventory/stock_item')->loadByProduct($products->getId());
+											?>
+											<?php echo intval($stock_item_details->getQty()); ?>
+										</span>
+									</td>
+									<td class="wk_list_th_display" data-rwd-label="<?php echo $helper->__('SKU')?>">
+										<span class="label pro_status">
+											<?php echo $products->getSku(); ?>
+										</span>
+									</td>
+									<td data-rwd-label="<?php echo $helper->__('Price')?>">
+										<span class="label pro_status">
+											<?php echo Mage::helper('core')->currency($products->getPrice(), true, false); ?>
+										</span>
+									</td>									
+									<?php
+						            foreach($configattr as $attribute) { 
+						               if(isset($attribute['attribute_code'] ) == 1){ ?>
+							                <td class="tdpadfirst" data-rwd-label="<?php echo $attribute['frontend_label']?>">
+							                  <span class="label pro_status" attrcode="<?php echo $products->getData($attribute['frontend_label']);?>">
+													<?php 
+													$pro= Mage::getModel('catalog/product');
+													$attr = $pro->getResource()->getAttribute($attribute['attribute_code']);
+													echo $val_id = $attr->getSource()->getOptionText($products->getData($attribute['attribute_code']));
+													?>
+							                  </span>
+							                </td>
+						             		<?php 
+						          		}
+						            } ?>
+						            <td data-rwd-label="<?php echo $helper->__('View')?>">
+										<span class="label pro_status">
+											<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/editapprovedsimple',array('id'=>$products->getId())) ?>" title="<?php echo $helper->__('Edit Associated Product')?>"><?php echo $helper->__('View')?></a>
+										</span>
+									</td>
+						    	</tr>
+						    	<?php
+						    }?>
+					    </tbody>
+					</table>
+					</div>
+					<button class="button wk_mp_btn quickcreate" onclick="return false();" title="<?php echo $helper->__('Save Associates Products') ?>" type="submit" id="save_butn">
+						<span><span><?php echo $helper->__('Save Associated Product') ?></span></span>
+					</button>
+				</form>
+				<?php
+			}?>
+		</div>
+	</div>
+	<?php echo $this->getChildHtml() ?>
+	<div class="buttons-set">
+		<p class="required">* <?php echo $helper->__('Required Fields') ?></p>
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+	<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+	</script>
+	<script> 
+		var $wk_jq=jQuery.noConflict();
+		var newCustomerProductForm1 = new VarienForm('form-quickcreate', true);
+		(function($wk_jq){
+			$wk_jq('input#sku').change(function(){
+				var len=$wk_jq('input#sku').val();
+				var len2=len.length;
+				if(len2==0){
+					alert('<?php echo $helper->__("SKU can\'t be left empty")?>');
+					$wk_jq('div#skuavail').css('display','none');
+					$wk_jq('div#skunotavail').css('display','none');
+				}
+				else{
+					$wk_jq.ajax({
+						url: "<?php echo Mage::getUrl('marketplace/marketplaceaccount/verifysku');?>",
+						type: "POST",
+						data: {sku:$wk_jq('input#sku').val()},
+						dataType: 'html',
+						success:function($data){
+							$data=JSON.parse($data);
+							if($data.avl==1){
+								$wk_jq('div#skuavail').css('display','block');
+								$wk_jq('div#skunotavail').css('display','none');
+							}
+							else{
+								$wk_jq('div#skunotavail').css('display','block');
+								$wk_jq('div#skuavail').css('display','none');
+								$wk_jq("input#sku").attr('value','');
+							}
+						}
+					});
+				}
+			});
+
+			$wk_jq('.input-text').change(function(){
+				var validt = $wk_jq(this).val();
+				var regex = /(<([^>]+)>)/ig;
+				var mainvald = validt .replace(regex, "");
+				$wk_jq(this).val(mainvald);	
+		    });
+
+		    $wk_jq(".custattr").change(function(){
+				var selectedval = $wk_jq(this).val();
+				$wk_jq(this).next().show();
+				$wk_jq(this).next().find('span').hide()
+				$wk_jq(this).next().find('input').remove()
+				$wk_jq(this).next().find('#'+selectedval).show();
+				if($wk_jq(this).next().find('#'+selectedval).length == 0) {
+					$wk_jq(this).next().append($wk_jq("<input class='"+selectedval+"' name='"+$wk_jq(this).attr('name')+"|price|"+$wk_jq(this).attr('id')+"|"+selectedval+"' type='text'>"));
+				}
+			});
+			
+			$wk_jq("#save_butn").click(function(event){
+				var price=0;
+				$wk_jq(".supperattr").each(function(){
+					if($wk_jq(this).find("."+$wk_jq(this).find('select').val()).val()==""){
+						price = price + parseFloat($wk_jq(this).find("."+$wk_jq(this).find('select').val()).attr('dataprice'));
+					} else{
+						price = price + parseFloat($wk_jq(this).find("."+$wk_jq(this).find('select').val()).val());
+					}
+				});
+				$wk_jq("#form-quickcreate").find(".fieldset").find(".finalprice").remove();
+				$wk_jq("#form-quickcreate").find(".fieldset").prepend("<input class='finalprice' name='price' value='"+price+"' type='hidden'>")
+				if($wk_jq(".supperattr").find("input").length==0){
+					alert('<?php echo $helper->__(" This Combination of attributes already exists ")?>');
+					event.preventDefault();
+				}
+			});
+		})($wk_jq);
+	</script>
+<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

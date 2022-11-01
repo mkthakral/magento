@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+
+	<nwdrevslider_default>
+		<reference name="head">
+			<action method="addItem"><type>js</type><name>nwdthemes/jquery-1.11.0.min.js</name></action>
+			<action method="addItem"><type>js</type><name>nwdthemes/jquery-migrate-1.2.1.min.js</name></action>
+			<action method="addItem"><type>js</type><name>nwdthemes/jquery.noconflict.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/jquery.themepunch.tools.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/jquery.themepunch.revolution.min.js</name></action>
+			<action method="addItem"><type>skin_css</type><name>nwdthemes/revslider/public/assets/css/settings.css</name></action>
+		</reference>
+	</nwdrevslider_default>
+
+	<nwdrevslider_load_all_javascript>
+		<reference name="head">
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.actions.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.carousel.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.kenburn.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.layeranimation.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.migration.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.navigation.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.parallax.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.slideanims.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>nwdthemes/revslider/public/assets/js/extensions/revolution.extension.video.min.js</name></action>
+		</reference>
+	</nwdrevslider_load_all_javascript>
+
+</layout>

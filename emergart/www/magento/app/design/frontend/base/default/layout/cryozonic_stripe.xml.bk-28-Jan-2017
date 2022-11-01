@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Cryozonic
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Single Domain License
+ * that is available through the world-wide-web at this URL:
+ * http://cryozonic.com/licenses/stripe.html
+ * If you are unable to obtain it through the world-wide-web,
+ * please send an email to info@cryozonic.com so we can send
+ * you a copy immediately.
+ *
+ * @category   Cryozonic
+ * @package    Cryozonic_Stripe
+ * @copyright  Copyright (c) Cryozonic Ltd (http://cryozonic.com)
+ */
+-->
+<layout version="0.1.0">
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="customer">
+                <name>saved_cards</name>
+                <path>customer/savedcards</path>
+                <label>Saved Cards</label>
+            </action>
+        </reference>
+    </customer_account>
+    <default>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>cryozonic_stripe/js/cryozonic_stripe.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>cryozonic_stripe/js/cctype.js</name></action>
+            <action method="addCss"><stylesheet>cryozonic_stripe/css/cctype.css</stylesheet></action>
+            <action method="addCss"><stylesheet>cryozonic_stripe/css/savedcards.css</stylesheet></action>
+            <!-- 3D Secure -->
+            <action method="addItem"><type>skin_js</type><script>cryozonic_stripe/js/prototype/window.js</script></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+        </reference>
+    </default>
+</layout>

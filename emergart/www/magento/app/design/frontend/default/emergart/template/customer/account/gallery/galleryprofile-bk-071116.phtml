@@ -1,0 +1,17 @@
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+echo $customeremail=$customerData->getEmail();
+ ?>
+<h1>Promoter's Profile</h1>
+<form action="<?php echo Mage::getBaseUrl() ?>customer/account/gallerprofilesave" method="post" autocomplete="off"  enctype="multipart/form-data">
+<input type="hidden" value="<?php echo $customerId;?>" name="customerid">
+<input type="hidden" value="<?php echo $customeremail;?>" name="customeremail">
+
+<input type="text" name="galeryname" value=""/>
+<input type="text" name="galleryphone" value=""/>
+<input type="text" name="galleryemail" value=""/>
+
+<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+
+</form>

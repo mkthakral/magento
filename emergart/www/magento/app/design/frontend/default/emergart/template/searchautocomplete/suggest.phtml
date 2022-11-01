@@ -1,0 +1,50 @@
+<?php
+$results=$this->getSuggestProducts();
+$suggests=Mage::helper('catalogsearch')->getSuggestCollection();
+?>
+<ul class="ajaxsearch" ><li style="display:none"></li>
+<?php
+if($this->enabledSuggest())
+foreach($suggests as $_suggest)
+{
+ // echo "<li class=\"suggest\" >{$_suggest->getQueryText()}</li>";
+}
+
+if($results->count()&&$this->enabledPreview())
+  foreach($results as $pro)
+  {
+    //$pro=Mage::getModel('catalog/product')->load($pro->getId());
+    echo "<li class=\"preview\" ><a href=\"{$pro->getProductUrl()}\" >";
+    if($this->isShowImage())
+    {
+    echo "<img src=\"{$this->helper('catalog/image')->init($pro, 'small_image')->resize($this->getImageWidth(),$this->getImageHeight())}\" />";
+    }
+	echo "<div class='custsearch'>";
+   // if($this->isShowName()) echo "{$pro->getName()} ";
+
+
+    if($this->isShowDescription())
+    {
+		$product = Mage::getModel('catalog/product')->load($pro->getId());
+         $cats = $product->getCategoryIds();
+		// print_r($cats);
+        $description=substr($pro->getDescription(),10,$this->getNumDescriptionChar());
+        $description=strip_tags(substr($description,0,strrpos($description,' ')));
+		foreach ($cats as $category_id) {
+        $_cat = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($category_id);
+        echo"<span>".$_cat->getName()."</span>";
+		  
+ //echo "<div class=\"description\"></div>";		
+    }
+      echo "</div>"; 
+    }
+    echo "</a></li>";
+  }
+  else
+  {
+	  echo "Not Found";
+  }
+
+?>
+</ul>
+

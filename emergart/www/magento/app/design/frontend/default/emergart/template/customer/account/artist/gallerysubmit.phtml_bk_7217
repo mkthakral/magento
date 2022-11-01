@@ -1,0 +1,196 @@
+
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$artisId = $customerData->getId();
+//echo "<pre>"; print_r($customerData);  echo "</pre>";
+$isapproved=$customerData['isapproved'];
+
+ $collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+		?>
+        <?php
+if($isapproved==0){
+	
+	$class="disapered";
+}
+
+		?>
+		
+		
+ <input type="hidden" class="artisvl" name="customerid" value="<?php echo $artisId; ?>"/>   
+<input type="hidden" class="dateclick" name="date" value="<?php echo  date("Y-m-d"); ?>"> 
+
+
+
+<div class="submit-gllery-outer">
+	<h3>Submit your portfolio to Galleries</h3>
+	<?php if($isapproved==0){ ?>
+	<span class="errorr-warn">You will not be able to submit while your portfolio profile is under review. </span>
+	<?php } ?>
+	<div class="sbmit-allcatgry-outer">
+		<div class="all-catgry">
+			<span id="all-catgry-selected" class="gla-select">All Categories</span>
+			<select onchange="javascript:document.getElementById('all-catgry-selected').innerHTML=this.options[this.selectedIndex].text;">
+				<option>All Categories</option>
+				<option>All Categories 1</option>
+				<option>All Categories 2</option>
+				<option>All Categories 3</option>
+			</select>
+		</div>
+		
+		<div class="all-location">
+			<span id="all-location-selected" class="gla-select">All Categories</span>
+			<select onchange="javascript:document.getElementById('all-location-selected').innerHTML=this.options[this.selectedIndex].text;">
+				<option>All Location</option>
+				<option>All Location 1</option>
+				<option>All Location 2</option>
+				<option>All Location 3</option>
+			</select>
+		</div>
+		<div class="srch-button">
+			<button>
+			<span>
+				<span>Search</span>
+			</span>
+		</button>
+		</div>
+	</div>
+	<?php foreach($collection as $_collection):?>
+	<?php $approve=$_collection->getData('isapproved'); ?>
+	<?php if($approve==1){ ?>
+	<div class="sbmit-catgry-contant">
+	
+		<div class="cntnt-top">
+	<div class="sbmit-img"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$_collection->getSstechProfileimage();?>" alt=""/></div>
+			<div class="sbmit-cntnt-right">
+			
+		
+				<div class="promotr-name">
+					<span class="name"><a href="<?php echo $this->getUrl() ?>custom/index/details/id/<?php echo $_collection->getId();  ?>" target="_blank"><?php echo $_collection->getGaleryname(); ?></a></span>
+					<span class="city"> 
+						<?php if ($_collection->getData('gallerycity')): ?>
+						<?php echo nl2br($_collection->getResource()->getAttribute('gallerycity')->getFrontend()->getValue($_collection)) ?>
+						<?php endif;?>,
+                    </span>
+					<span class="state">
+						<?php if ($_collection->getData('gallerycountry')): ?>
+						<?php echo nl2br($_collection->getResource()->getAttribute('gallerycountry')->getFrontend()->getValue($_collection)) ?>
+						<?php endif;?>
+                   </span>
+				</div>
+				<div class="cnt"><?php echo nl2br($_collection->getGalerydescription()); ?></div>
+				<div class="reprsnt-outer">
+					<div class="reprsnt-cnt">
+						<p class="title">Represents</p>
+						<p><span><?php if ($_collection->getData('galprorepresent')): ?>
+<?php echo nl2br($_collection->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($_collection)) ?>
+<?php endif;?></p>
+					</div>
+					
+					<div class="reprsnt-sbmit <?php echo $class; ?>" id="div_<?php echo $_collection->getId();?>">
+					<?php
+                                            $artistSubmitTableName = Mage::getSingleton('core/resource')->getTableName('artis_submit');
+                                            $artistSubmitQuery = "SELECT * FROM ".$artistSubmitTableName." WHERE gallery_id='".$_collection->getId()."' AND artist_id='". $artisId."'";
+                                            try {
+                                                 $artistSubmitGallerySystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($artistSubmitQuery);
+                                                 $artistSubmitQueryResult = $artistSubmitGallerySystem->fetchall();
+                                                 }
+                                            catch (Exception $e){
+                                                 echo $e->getMessage();
+                                            }
+                                            if (count($artistSubmitQueryResult) == 0){
+                                        	$requestAlreadySubmitted = False;                             
+					    }else{
+					        $requestAlreadySubmitted = True;
+					    }
+                                       ?>
+					<?php 
+					   if($requestAlreadySubmitted == False){
+                                        ?>
+						<button class="clickport submit-port" id="<?php echo $_collection->getId();  ?>">
+							<span>
+							     <span>Submit Portfolio</span>
+							</span>
+						</button>
+                                        <?php } else { ?>
+					     <button class="clickport disabled-btn submit-port" id="<?php echo $_collection->getId();  ?>" disabled>
+                                                        <span>
+                                                             <span>Submitted</span>
+                                                        </span>
+                                                </button>
+					<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cntnt-bottom">
+			<ul>
+				<li>
+					Following :<span>No</span>
+				</li>
+				<li>
+					Message :<span>0</span>
+				</li>
+				<li>
+					Likes:<span>0</span>
+				</li>
+				<li>
+					Endorsed :<span>0</span>
+				</li>
+				<li>
+					Sales :<span>0</span>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	<?php } ?>
+	<?php endforeach; ?>
+	
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+	//alert("hello");
+	jQuery(".clickport").click(function(){
+		
+		var galid=jQuery(this).attr("id");
+		var artisid=jQuery(".artisvl").val();
+		var crdate=jQuery(".dateclick").val();
+		var div_id = 'div_' + galid;
+	        //Disable button	
+		jQuery('#' + galid).text('Submitting...');
+                jQuery('#'+ galid).css('opacity','0.7');
+                jQuery('#' + galid).css('cursor','default');
+                jQuery('#' + galid).attr('disabled','disabled');
+		jQuery('#' + galid).css("background-color","#34494F");
+		
+		jQuery.ajax({
+		   url: BaseUrl+'ajax/submitgal.php',
+		   type:        'post',
+		   data:{'galid':galid,'artid':artisid,'curdate':crdate},
+		   success: function(msg)
+		    {
+			 if (msg) {
+			  jQuery(this).addClass('disabled-btn');
+			  jQuery('#'+div_id).load(location.href + ' #' + div_id + ' > *', '');
+			  alert(msg); 
+			 } 
+		    },
+		   error: function (jqXHR, exception) {
+			jQuery('#' + galid).text('Submit Portfolio');
+	                jQuery('#'+ galid).css('opacity','1');
+        	        jQuery('#' + galid).css('cursor','auto');
+		       	jQuery('#' + galid).prop("disabled", false);
+			jQuery('#' + galid).css("background-color","#3991d7");
+		   }
+		 });
+		
+		
+	});
+	
+});
+
+</script>

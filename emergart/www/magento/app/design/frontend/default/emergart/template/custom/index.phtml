@@ -1,0 +1,64 @@
+<div class="page-title">
+		<h1>Meet the Artists</h1>
+</div>
+<div class="gallery-pro">
+<div class="met-gallery">
+
+<ul>
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+		->addAttributeToFilter('isapproved',1)
+        ->addFieldToFilter('group_id', 3);
+$collection->getSelect()->order(new Zend_Db_Expr('RAND()'));
+        //$i=0;
+	//	echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+		
+			?>
+			
+			<li>
+                
+				<?php $artistProfileURL = Mage::getModel('core/url_rewrite')->loadByIdPath('artist-profile-id-'.$customer->getentityId())->getRequestPath() ?>
+				<?php if(strlen($artistProfileURL) > 0){?>
+					<a href="<?php echo $this->getUrl().$artistProfileURL; ?>">
+				<?php } else { ?>
+					<a href="<?php echo $this->getUrl('custom/index/artist/id/'.$customer->getentityId()); ?>">
+				<?php } ?>
+				
+				
+                <div class="artist-profile">
+                  <div class="part1">
+                        <span class="gla-profile-img"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+                  </div>
+                  <div class="part2">
+                        <?php   
+						    $artist = Mage::getModel('customer/customer')->load($customer->getentityId());
+                            $address = $customer->getDefaultShippingAddress();
+							if($address){
+									$artistZIP = $address->getPostcode();
+									$artistCity = $address->getCity();
+									$artistState = $address->getRegion();
+									$artistCountry = "". Mage::app()->getLocale()->getCountryTranslation($address->getCountry());
+							}
+							//Mage::log("CustomerId: ".$customer->getentityId(), null, 'add_logfile.log');
+							//Mage::log(print_r($address, 1), null, 'add_logfile.log');
+							
+                        ?>
+                            <p class="name" style="margin-top:4%;font-weight: bold;"><?php echo $customer->getFirstname(); ?>  <?php echo $customer->getLastname(); ?></p>
+                            <p style="margin-top: 5%;"><?php echo $artistCity; ?></p>
+                            <p style="margin-top: 5%;"><?php echo $artistCountry; ?></p>
+			
+                  </div>
+                </div>			
+			</a>
+			</li>
+		
+		<?php } ?>
+
+<ul>
+
+</div>
+</div>

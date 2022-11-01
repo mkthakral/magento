@@ -1,0 +1,113 @@
+<?php $currentUrl=$this->helper('core/url')->getCurrentUrl(); ?>
+<div class="home-content">
+<div class="about-banner-section <?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>logedvideo<?php } ?>">
+	<div class="container">
+		<div class="abt-ban-left">
+			<div class="abt-vedio"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('aboutustopvedio')->toHtml(); ?></div>
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/share?text=About us&url="" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?u=<?php echo $currentUrl; ?>&p[title]=Where the Art is selected by multiple Art World Experts" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="mailto:?subject=Check out this Video&amp;body=What a great concept: <?php echo  $currentUrl;  ?>"
+   title="Share by Email" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a>SHARE VIDEO</a></li>
+					</ul>
+			</div>
+		</div>
+		<?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+		<div class="abt-ban-right">
+			<div class="abt-signin">
+				<div class="sign-title">Sign In or <a href="<?php echo $this->getUrl() ?>customer/account/create"class="rigstr">Register</a></div>
+				<div class="outer-signin">
+					<?php echo $this->getLayout()->createBlock('customer/form_login')->setTemplate('persistent/customer/form/aboutlogin.phtml')->toHtml(); ?>
+				</div>
+				 
+
+				<div class="abt-join-outer">
+					<div class="join-title">
+						<span>join with</span>
+					</div>
+					<div class="join-con">
+						<ul>
+							<li class="facebook"><a href="javascript:void(0)">Facebook</a></li>
+							<li class="twiter"><a href="javascript:void(0)">Twitter</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+	</div>
+</div>
+
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about-us-users')->toHtml(); ?>
+<div class="testimoniyel">
+	<div class="container">
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('abouttestimoniyel')->toHtml(); ?>
+	</div>
+</div>
+<div class="special-outer container" style="margin-bottom:0px !important">
+<div class="special-left"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('abtvideo')->toHtml(); ?></div>
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about-us-vdo-rht')->toHtml(); ?>
+<div class="catagory-product-outer met-gallery container" style="padding-top:11%" >
+<div class="gla-title-outer"><h2 class="glalery-title">Artist Profiles</h2></div>
+<ul id="bxslider29">
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+		->addAttributeToFilter('isapproved',1)
+        ->addFieldToFilter('group_id', 3)
+		->addAttributeToSort('created_at', 'DESC');
+        $i=0;
+		//echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+			$i++;
+			?>
+			<?php if($i<13):?>
+			<li>
+			<a href="<?php echo $this->getUrl('custom/index/artist/id/'.$customer->getentityId()); ?>">
+			<?php //echo $customer->getentityId();?>
+			
+			<span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="311px"; width="311px" /></span>
+			<div class="pro-detls">
+				<span>Meet the Artist</span>
+				<p class="name"><?php echo $customer->getName(); ?></p>
+			</div>
+			</a>
+			</li>
+		<?php endif;?>
+		<?php } ?>
+</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+jQuery(window).load(function(){
+	jQuery("#bxslider29").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 3,
+			maxSlides: 3,
+			slideMargin: 24,
+			
+			infiniteLoop: true,
+            
+        });
+		jQuery(".bxslider8").bxSlider({
+            
+            auto : true,
+            speed: 900, 
+            
+        });
+	
+	});
+
+
+</script>

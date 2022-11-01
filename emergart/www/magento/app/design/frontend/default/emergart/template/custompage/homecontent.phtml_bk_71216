@@ -1,0 +1,209 @@
+
+<div class="home-content">
+<div class="banner-section">
+
+ <?php $bannerCollection = Mage::getModel("banner/banner")->getCollection()->addFieldToFilter("status",1); ?>
+        
+        <?php if(count($bannerCollection)): ?>
+            <ul class="bxslider">
+                <?php foreach($bannerCollection as $banner): ?>
+                    
+                    <li>
+					<a href="<?php echo $banner->getContent();  ?>" target="_blank">
+					<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$banner->getFilename(); ?>" title="<?php echo $banner->getTitle() ?>" alt="<?php echo $banner->getTitle() ?>"/>
+					</a>
+					</li>
+                    
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+<div class="banner-shadow">&nbsp;</div>
+<div class="banner-con-outer">
+<div class="con">
+<p>Nothing says more about You than the Artwork You choose to Collect</p>
+</div>
+<div class="botton"><span>How it works</span></div>
+</div>
+</div>
+
+<div class="blog-outer container">
+<div class="blog-1">
+<div class="blog-img">
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('style')->toHtml();?> 
+</div>
+</div>
+<div class="blog-1">
+<div class="blog-img price">
+<ul>
+<li><span class="price">Under $2500</span></li>
+<li><span class="price">$2500-$5000</span></li>
+<li><span class="price">Over $5000</span></li>
+</ul>
+
+</div>
+</div>
+<div class="met-gallery">
+<ul class="bxslider1">
+	<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+        $i=0;
+		//echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+			$i++;
+			?>
+			<?php if($i<5):?>
+			<li>
+			<?php //echo $customer->getentityId();?>
+			
+			<span><a href="<?php echo $this->getUrl('custom/index/details/id/'.$customer->getentityId()); ?>"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></a></span>
+			<span>Meet Gallery Owner</span>
+			<p class="name"><?php echo $customer->getFirstname(); ?>  <?php echo $customer->getLastname(); ?></p>
+			<p><?php echo $customer->getGaleryname();?></p>
+			</li>
+		<?php endif;?>
+		<?php } ?>
+	
+<ul>
+
+</div>
+
+
+<div class="catagory-product-outer met-gallery">
+<ul class="bxslider2">
+<?php
+
+$visibility = array(
+
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+
+	);
+
+	 
+
+	$_productCollection = Mage::getResourceModel('reports/product_collection')
+
+							->addAttributeToSelect('*')
+
+							->addOrderedQty()
+
+							->addAttributeToFilter('visibility', $visibility)
+
+							->setOrder('main_table.created_at','desc');?>
+<?php $i = 0;?>
+							<?php foreach($_productCollection as $_product){?>
+							
+		<?php 
+						$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+						$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+						try {
+						$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+						$result1= $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+						 echo $e->getMessage();
+						}
+
+						foreach($result1 as $res){
+
+						$artisid=$res['userid'];
+						}
+                         $artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>
+					<?php 
+							$product=Mage::getModel('catalog/product')->load($_product->getId());
+							$galid=$product->getGalcode();
+							$customer =Mage::getModel('customer/customer')->load($galid);
+							$galname=$customer->getGaleryname();
+
+							?>
+							<?php
+							$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+							$sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$_product->getId()."'";
+								try {
+									$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+									$like = $chkSystem->fetchall();
+								}
+								catch (Exception $e){
+									 echo $e->getMessage();
+								}
+			       ?>
+				   
+				   <?php
+								$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+								$sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$_product->getId()."'";
+									try {
+										$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+										$follow = $chkSystem->fetchall();
+									}
+									catch (Exception $e){
+										 echo $e->getMessage();
+									}
+			       ?>
+
+								
+			<?php $i++;if($i<5)	{	?>		
+<li><a href="<?php echo $_product->getProductUrl(); ?>" title="View <?php echo $_product->getName(); ?>"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(223,222); ?>" alt="Product image"  class="shadow" rel="black" /></a>
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one"><?php echo count($follow); ?></li>
+<li class="two"><?php echo count($like); ?></li>
+<li class="three"><?php $finalPrice =  $_product->getPrice();echo $formattedPrice = Mage::helper('core')->currency($finalPrice, true, false);?></li>
+</ul>
+</ul>
+<p class="artisname"><?php echo $artiscollection->getName(); ?></p>
+<p class="end">Endorsed By</p>
+<p><?php echo $galname; ?></p>
+</div>
+</li>
+<?php }?>
+<?php }?>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+		
+        
+        jQuery(".bxslider").bxSlider({
+            
+            auto : true,
+            pager: true,
+            nextSelector: ".cls-next",
+	    prevSelector: ".cls-prev",
+            
+        });
+		
+		jQuery(".bxslider1").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 2,
+			maxSlides: 3,
+			slideMargin: 10
+            
+        });
+		
+		jQuery(".bxslider2").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 2,
+			maxSlides: 3,
+			slideMargin: 10
+            
+        });
+		
+		
+        
+    });
+</script>

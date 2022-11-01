@@ -1,0 +1,113 @@
+<div class="home-content">
+<div class="banner-section">
+<ul class="bxslider">
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-4.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-5.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-6.jpg" /></li>
+</ul>
+<div class="banner-shadow">&nbsp;</div>
+<div class="about-banner-con-outer">
+<div class="ab-con-left"><span class="text">A new Paradigm in Artist-Gallery Relations</span></div>
+<div class="ab-con-right">
+<div class="sign-up-con">Getting Started is easy, Sign Up Today!</div>
+<div class="new-account-outer">
+<div class="new-account"><a href="<?php echo $this->getUrl() ?>customer/account/create">New Account</a></div>
+<div class="or">-OR-</div>
+<div class="sign-in-facebook"><a href="#">Sign In with Facebook</a></div>
+<div class="member-outer"><span>Already a member,</span> <a class="ajaxlogin-login">Sign In</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="blog-outer container">
+	<div class="about-blog">
+		<div class="blog-artis">
+			<img src="<?php echo $this->getskinUrl ("images/blog-artis-img.png") ?>" alt=""/>
+			<p class="name">Artists</p>
+			<p>Artists can submit their portfolios to multiple galleries, make connections, gain exposure and make sales at the same time.</p>
+		</div>
+		<div class="blog-gallery">
+			<img src="<?php echo $this->getskinUrl ("images/blog-gallery-img.png") ?>" alt=""/>
+			<p class="name">Gallery Owners</p>
+			<p>Gallery Owners select and endorse specific Art on commission - those selections become available on the public facing side of Emergart.</p>
+		</div>
+		<div class="blog-collector">
+			<img src="<?php echo $this->getskinUrl ("images/blog-collectors-img.png") ?>" alt=""/>
+			<p class="name">Art Collectors</p>
+			<p>Our unique structure and vetting results in high quality Art. - Emergart has the distinct advantage of selected Art from multiple Art World Experts.</p>
+		</div>
+	</div>
+</div>
+<div class="testimoniyel">
+<div class="container">
+<div class="images"><img alt="" src="<?php echo $this->getSkinUrl();?>images/test-img.png" /></div>
+<div class="test-con">
+<p class="con">"The best thing about Emergart is how Artists and Gallery Owners are connecting like never before and of course, every page has beautiful Art."</p>
+<p class="name">- Gallery Owner, Jane Kirkland</p>
+</div>
+</div>
+</div>
+<div class="special-outer container">
+<div class="special-left"><iframe src="https://www.youtube.com/embed/gg5VI2ilHXA" height="315" width="560"></iframe></div>
+<div class="special-right">
+<h2>Why it's Special</h2>
+<p>Our unique platform gives Artists a professional submission platform where Gallery Owners select Art on commission. This arrangement lets Art Collectors discover amazing Art that has been endorsed by multiple Art World Experts.</p>
+<p class="for-artis">Emergart is for Artists, Gallery Owners and Art Collectors.</p>
+<div class="social-icon-outer">
+	<ul>
+		<li class="twiter"><a href="">twiter</a></li>
+		<li class="facebook"><a href="">facebook</a></li>
+		<li class="email"><a href="">email</a></li>
+		<li class="share"><a href="">SHARE</a></li>
+	</ul>
+</div>
+</div>
+</div>
+<div class="catagory-product-outer met-gallery container">
+<div class="gla-title-outer"><h2 class="glalery-title">Artist Profiles</h2></div>
+<ul class="bxslider2">
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+		->addAttributeToFilter('isapproved',1)
+        ->addFieldToFilter('group_id', 3);
+        $i=0;
+		//echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+			$i++;
+			?>
+			<?php if($i<10):?>
+			<li>
+			<a href="<?php echo $this->getUrl('custom/index/artist/id/'.$customer->getentityId()); ?>">
+			<?php //echo $customer->getentityId();?>
+			
+			<span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="311px"; width="311px" /></span>
+			<div class="pro-detls">
+				<span>Meet the Artist</span>
+				<p class="name"><?php echo $customer->getName(); ?></p>
+			</div>
+			</a>
+			</li>
+		<?php endif;?>
+		<?php } ?>
+</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery(".bxslider2").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 2,
+			maxSlides: 3,
+			slideMargin: 10
+            
+        });
+	
+	});
+
+
+</script>

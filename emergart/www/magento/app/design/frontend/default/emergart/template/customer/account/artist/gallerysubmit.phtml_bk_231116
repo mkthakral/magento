@@ -1,0 +1,137 @@
+
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$artisId = $customerData->getId();
+
+
+ $collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+		?>
+        
+ <input type="hidden" class="artisvl" name="customerid" value="<?php echo $artisId; ?>"/>   
+<input type="text" class="dateclick" name="date" value="<?php echo  date("Y-m-d"); ?>"> 
+
+
+
+<div class="submit-gllery-outer">
+	<h1>Submit your portfolio to Galleries</h1>
+	<div class="sbmit-allcatgry-outer">
+		<div class="all-catgry">
+			<select>
+				<option>All Categories</option>
+				<option>All Categories 1</option>
+				<option>All Categories 2</option>
+				<option>All Categories 3</option>
+			</select>
+		</div>
+		<div class="all-styles">
+			<select>
+				<option>All Styles</option>
+				<option>All Styles 1</option>
+				<option>All Styles 2</option>
+				<option>All Styles 3</option>
+			</select>
+		</div>
+		<div class="all-location">
+			<select>
+				<option>All Location</option>
+				<option>All Location 1</option>
+				<option>All Location 2</option>
+				<option>All Location 3</option>
+			</select>
+		</div>
+		<div class="srch-button">
+			<button>
+			<span>
+				<span>Search</span>
+			</span>
+		</button>
+		</div>
+	</div>
+	<?php foreach($collection as $_collection):?>
+	<div class="sbmit-catgry-contant">
+	
+		<div class="cntnt-top">
+	<div class="sbmit-img"><img src="<?php echo $this->getskinUrl ("images/sbmit-img.png") ?>" alt=""/></div>
+			<div class="sbmit-cntnt-right">
+				<div class="promotr-name">
+					<span class="name"><?php echo $_collection->getGaleryname(); ?></span>
+					<span class="city"><?php echo  $_collection->getGallerycity();  ?>,</span>
+					<span class="state"><?php echo  $_collection->getGallerystate();  ?></span>
+				</div>
+				<div class="cnt"><?php echo $_collection->getGalerydescription(); ?></div>
+				<div class="site"><a href="#"><?php echo $_collection->getGallerywebsite(); ?></a></div>
+				<div class="reprsnt-outer">
+					<div class="reprsnt-cnt">
+						<p class="title">Represents</p>
+						<p><span>Painitng, Drawing, Sculpture, Photography,Impressionism, Expressionism, Graffiti, Life, Love,</span><a href="#">more</a></p>
+					</div>
+					<div class="reprsnt-sbmit">
+						<button class="clickport" id="<?php echo $_collection->getId();  ?>">
+							<span>
+								<span>Submit Portfolio</span>
+							</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cntnt-bottom">
+			<ul>
+				<li>
+					Following me :<span>No</span>
+				</li>
+				<li>
+					Reply :<span>0 Message</span>
+				</li>
+				<li>
+					Liked :<span>0 Products</span>
+				</li>
+				<li>
+					Endorsed :<span>0 Products</span>
+				</li>
+				<li>
+					sold :<span>0 Products</span>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	<?php endforeach; ?>
+	
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+	//alert("hello");
+	jQuery(".clickport").click(function(){
+		
+		var galid=jQuery(this).attr("id");
+		var artisid=jQuery(".artisvl").val();
+		var crdate=jQuery(".dateclick").val();
+		//alert(crdate);
+		
+		
+		jQuery.ajax({
+		   url: BaseUrl+'ajax/submitgal.php',
+		   type:        'post',
+		   data:{'galid':galid,'artid':artisid,'curdate':crdate},
+		   success: function(msg)
+		    {
+			 if (msg) {
+			  alert(msg);
+			
+			   
+			   
+			 } 
+		    }
+		 });
+		
+		
+	});
+	
+});
+
+</script>

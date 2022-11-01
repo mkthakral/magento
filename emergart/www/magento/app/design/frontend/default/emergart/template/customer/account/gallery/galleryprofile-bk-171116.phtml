@@ -1,0 +1,99 @@
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$customeremail=$customerData->getEmail();
+$galerycity=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerycity')->getSource()->getAllOptions();
+$galerycountry=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerycountry')->getSource()->getAllOptions();
+$galerystate=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerystate')->getSource()->getAllOptions();
+$galerypro=Mage::getResourceSingleton('customer/customer')->getAttribute('galprorepresent')->getSource()->getAllOptions();
+$galerystyle=Mage::getResourceSingleton('customer/customer')->getAttribute('galstylrepresent')->getSource()->getAllOptions();
+ ?>
+
+<h1>Promoter's Profile</h1>
+<form action="<?php echo Mage::getBaseUrl() ?>customer/account/gallerprofilesave" method="post" autocomplete="off"  enctype="multipart/form-data">
+<input type="hidden" value="<?php echo $customerId;?>" name="customerid">
+<input type="hidden" value="<?php echo $customeremail;?>" name="customeremail">
+<div class="promoter-pro-outer">
+	<div class="promo-add">
+		<ul>
+			<li>
+				<label>Name*</label>
+				<input type="text" name="galeryname" value=""/>
+			</li>
+			<li>
+				<label>Address*</label>
+				<input type="text" name="galleryaddress" value=""/>
+			</li>
+			<li>
+				<label>Phone*</label>
+				<input type="text" name="galleryphone" value=""/>
+			</li>
+			<li>
+				<label>City*</label>
+				<select name="city">
+					<?php foreach ($galerycity as $option):?>
+                      <option value="<?php echo $option['value'] ?>"<?php if ($option['value'] == $fieldValue) echo ' selected="selected"' ?>><?php echo $option['label'] ?></option>
+                     <?php endforeach;?>
+				</select>
+			</li>
+			<li>
+				<label>Email*</label>
+				<input type="text" name="galleryemail" value=""/>
+			</li>
+			<li>
+				<label>State*</label>
+				<select name="state">
+					<?php foreach ($galerystate as $option2):?>
+                      <option value="<?php echo $option2['value'] ?>"<?php if ($option2['value'] == $fieldValue) echo ' selected="selected"' ?>><?php echo $option2['label'] ?></option>
+                     <?php endforeach;?>
+				</select>
+			</li>
+			<li>
+				<label>Website*</label>
+				<input type="text" name="gallerywebsite" value=""/>
+			</li>
+			<li>
+				<label>Country*</label>
+				<select name="country">
+					<?php foreach ($galerycountry as $option1):?>
+                      <option value="<?php echo $option1['value'] ?>"<?php if ($option1['value'] == $fieldValue) echo ' selected="selected"' ?>><?php echo $option1['label'] ?></option>
+                     <?php endforeach;?>
+				</select>
+			</li>
+			<li>
+				<label>ZIP Code*</label>
+				<input type="text" name="galleryzip" value=""/>
+			</li>
+		</ul>
+	</div>	
+	<div class="promo-des">
+		<label>Description:</label>
+		<textarea name="description"></textarea>
+	</div>
+	<div class="pro-repsnt">
+		<ul>
+			<li>
+				<label>Products you represent</label>
+				<select name="productrepresent">
+				
+					<?php foreach ($galerypro as $option5):?>
+                      <option value="<?php echo $option5['value'] ?>"<?php if ($option5['value'] == $fieldValue) echo ' selected="selected"' ?>><?php echo $option5['label'] ?></option>
+                     <?php endforeach;?>
+			
+				</select>
+			</li>
+			<li>
+				<label>Styles you represent</label>
+				<select name="productstylerepresent">
+					<?php foreach ($galerystyle as $option6):?>
+                      <option value="<?php echo $option6['value'] ?>"<?php if ($option6['value'] == $fieldValue) echo ' selected="selected"' ?>><?php echo $option6['label'] ?></option>
+                     <?php endforeach;?>
+				</select>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="acnt-button-outer">
+<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+</div>
+</form>

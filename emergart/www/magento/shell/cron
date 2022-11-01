@@ -1,0 +1,3 @@
+30 02 * * * php -f /var/www/magento/shell/assignRandomPositionToProducts.php
+0 4 * * * php -f /var/www/folyoz/www/shell/assignRandomPositionToProducts.php
+0 2 * * *  /bin/sh /var/www/magento/shell/cleanMagentoSessions.sh

@@ -1,0 +1,1072 @@
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+	
+        function setDefaultImage(){
+            if ($j("#dim1").is(":checked")) {
+                var strs=$j("#rad1").val().split('\\').pop(); 
+                $j("#dim1").val(strs);
+            }else if ($j("#dim2").is(":checked")) {
+                var strs=$j("#rad2").val().split('\\').pop(); 
+                $j("#dim2").val(strs);
+            }else if ($j("#dim3").is(":checked")) {
+                var strs=$j("#rad3").val().split('\\').pop(); 
+                $j("#dim3").val(strs);
+            }else if ($j("#dim4").is(":checked")) {
+                var strs=$j("#rad4").val().split('\\').pop(); 
+                $j("#dim4").val(strs);
+            }else if ($j("#dim5").is(":checked")) {
+                var strs=$j("#rad5").val().split('\\').pop(); 
+                $j("#dim5").val(strs);
+            }else if ($j("#dim6").is(":checked")) {
+                var strs=$j("#rad6").val().split('\\').pop(); 
+                $j("#dim6").val(strs);
+            }
+        }
+        
+        function saveProduct(){
+            $j.post($j("#form-customer-product-editPost").attr('action'), $j("#form-customer-product-editPost").serialize());
+        }
+        
+	function removeImage(pidImageSelector,pid){
+		id=$j('#rm_img_' + pidImageSelector).val();
+                document.getElementById("loader").style.display = "block";
+                $j.ajax({
+                    url:saveProduct(),
+                        success:function(){
+                            $j.ajax({
+        			url: "<?php echo $this->getUrl('marketplace/marketplaceaccount/deleteimage');?>",
+                                    type: "POST",
+                                    data: {file:id,pid:pid},
+                                    dataType: 'html',
+                                    success:function(content){
+					document.getElementById("loader").style.display = "none";
+					window.location.reload();
+                                    }
+                            });
+                        }
+                });
+	}
+				
+	function isFileValid(fileName, fileSize){
+			var isFileValid = true;
+			var numberOfDotsInFilename = fileName.split('.').length - 1;
+			
+			if(numberOfDotsInFilename > 1 ){
+				isFileValid = false;
+				alert('File name cannot have Dot (.) within the name, please rename your file and upload');
+			}
+			//size in KB
+			fileSize = fileSize*1;
+			if(fileSize > 2048){
+				isFileValid = false;
+				alert('File size must be less than 2MB. Please optimize your file - See Help/ Image Sizes');
+			}
+			
+			return isFileValid;
+		}
+	
+	$j(document).ready(function () {
+
+	resizeImageFn = function(id){
+						$j(id).css('visibility','hidden');
+						setTimeout(function(){
+							$j(id).removeAttr('style');
+							$j(id).css({'vertical-align':'middle','display':'inline-block','margin-bottom':0,'border':0});
+							if($j(id).height() > 264){
+								$j(id).css({'display':'block','max-height':264,'margin':'auto'});
+								$j(id).width('auto');
+							}else if($j(id).width() > 264){
+								$j(id).css('max-width',264);
+								$j(id).height('auto');
+							}
+							$j(id).css('visibility','visible');
+						},100);
+		}
+
+						
+		$j(".saved-images").each(function( index ) {
+		  resizeImageFn($j(this).attr('id').replace(/\//g, "-"));
+		});
+		
+		$j('#rad1').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview1').parent().html($j('#preview1').parent().children());
+							$j('#preview1').attr('src', e.target.result);						
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview1');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+		
+		$j('#rad2').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview2').parent().html($j('#preview2').parent().children());
+							$j('#preview2').attr('src', e.target.result);
+							//$j('#preview2').height("auto");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview2');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+		
+		$j('#rad3').on('change', function() {
+			
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview3').parent().html($j('#preview3').parent().children());
+							$j('#preview3').attr('src', e.target.result);
+							//$j('#preview3').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview3');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+		
+		$j('#rad4').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview4').parent().html($j('#preview4').parent().children());
+							$j('#preview4').attr('src', e.target.result);
+							//$j('#preview4').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview4');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+		
+		$j('#rad5').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview5').parent().html($j('#preview5').parent().children());
+							$j('#preview5').attr('src', e.target.result);
+							//$j('#preview5').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview5');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+		
+		$j('#rad6').on('change', function() {
+			
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview6').parent().html($j('#preview6').parent().children());
+							$j('#preview6').attr('src', e.target.result);
+							//$j('#preview6').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview6');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+			
+		});
+		
+	});
+    
+	
+</script>
+<div id="loader" style="display:none"></div>
+<?php 
+$helper=Mage::helper('marketplace');
+$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+$isPartner= 1;
+$product_hint_status = Mage::helper('marketplace')->getProductHintStatus();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+if($isPartner==1){
+	$rightseller=1;
+	if($rightseller==1){?>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<?php
+		$urlid=$this->getRequest()->getParam('id');
+		$loadpro =Mage::getModel('catalog/product')->load($urlid);
+		$instock =  Mage::getModel('cataloginventory/stock_item')->loadByProduct($urlid)->getIsInStock();
+		$qtyStock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($urlid)->getQty();
+		$catids = $loadpro->getCategoryIds();
+		?>
+		<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/editapprovedsimple') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-editPost">
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+			<div class="page-title">
+				<h1 style="float:left;"><?php echo $helper->__('Edit Portfolio Item') ?></h1>
+				
+							
+			</div>
+			<div class="wk_mp_design">
+				
+				<div class="fieldset wk_mp_fieldset">
+					<input type="hidden" name="productid" id="productid" value="<?php echo $urlid; ?>" />
+					<ul class="form-list" id="wk_bodymain">
+						<li style="display:none;">
+							<label><?php echo $helper->__('Product Category') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductCategoryHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductCategoryHint() ?>"/>
+							<?php
+							} ?>
+							<div class="wk_field wk_category">
+								<div class="wk_for_validation">
+									<div id="wk_category_label"><?php echo $helper->__("CATEGORIES"); ?></div>
+									<?php 
+									$categories = $loadpro->getCategoryIds();
+									$cat_ids=implode(",",$categories);
+									foreach ($categories as $value) {
+										?>
+										<input type="hidden" name="category[]" value="<?php echo $value; ?>" id="wk_cat_hide<?php echo $value; ?>"/>
+										<?php
+									}
+									?>
+									<?php 
+									$categories = $loadpro->getCategoryIds();
+									if(Mage::helper('marketplace')->getAllowedCategoryIds()){
+			            				$storeconfig_catids = explode(',',trim(Mage::helper('marketplace')->getAllowedCategoryIds()));
+			            				foreach($storeconfig_catids as $storeconfig_catid)	{
+			            					$cat_model = Mage::getModel("catalog/category")->load($storeconfig_catid); 
+			            					if(isset($cat_model["entity_id"]) && $cat_model["entity_id"]){
+				            					?>
+												<div class="wk_cat_container">
+													</span><span class="wk_foldersign"></span>
+													<span class="wk_elements wk_cat_name"><?php echo $cat_model->getName() ?></span>
+													<?php 
+													if(in_array($cat_model["entity_id"],$categories)) {?>
+														<input class="wk_elements" type="checkbox" value=<?php echo $cat_model['entity_id'] ?> checked />
+													 	<?php 
+													}else { ?>
+														<input class="wk_elements" type="checkbox" value=<?php echo $cat_model['entity_id'] ?>/>
+														<?php 
+													}?>
+												</div> 
+									   			<?php 
+									   		}
+			            				}
+			            			}else{
+										$count = 0;
+										$category_helper = Mage::helper("catalog/category");
+										$category_model = Mage::getModel("catalog/category");
+										$_categories = $category_helper->getStoreCategories();
+										foreach($_categories as $_category)	{
+											$count++; 
+								        	if(count($category_model->getResource()->getAllChildren($category_model->load($_category['entity_id'])))-1 > 0){?>
+													<div class="wk_cat_container">
+														<span class="wk_plus"></span>
+														<span class="wk_foldersign"></span>
+														<span class="wk_elements wk_cat_name">
+															<?php echo $_category->getName() ?>
+														</span>
+														<?php 
+														if(in_array($_category["entity_id"],$categories)) {?>
+															<input class="wk_elements" type="checkbox" value=<?php echo $_category['entity_id'] ?>  checked /> 
+
+															<?php 
+														}else {?>
+															<input class="wk_elements" type="checkbox" value=<?php echo $_category['entity_id'] ?> /> 
+															<?php 
+														}?>
+													</div>
+													<?php
+											} else {?>
+												<div class="wk_cat_container">
+													</span><span class="wk_foldersign"></span>
+													<span class="wk_elements wk_cat_name"><?php echo $_category->getName() ?></span>
+													<?php 
+													if(in_array($_category["entity_id"],$categories)) {?>
+														<input class="wk_elements" type="checkbox" value=<?php echo $_category['entity_id'] ?> checked />
+													 	<?php 
+													}else { ?>
+														<input class="wk_elements" type="checkbox" value=<?php echo $_category['entity_id'] ?>/>
+														<?php 
+													}?>
+												</div>
+												<?php
+										    }
+									    }
+									}
+									?>	
+								</div>
+							</div>
+						</li>
+						<?php $collections= Mage::getModel('catalog/category')->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active',1)->addAttributeToFilter('parent_id',2)->addOrderField('position'); ?>
+								
+								 <li>
+     <label>Select the main category for this Artwork:</label>
+     <select id="category" class="sel-cat" name="parentcat">
+	<option value="0">Please select</option>
+     <?php foreach($collections as $subcat){ ?>
+     <option value= "<?php echo $subcat->getId(); ?>" <?php if(in_array($subcat->getId(),$catids)){ ?> selected="selected"<?php } ?>><?php echo $subcat->getName(); ?> </option>
+     <?php } ?>
+     </select>
+      </li>
+								 
+							<li class="load-sob">
+								<div id="load-now" style="display:none;"><img src="<?php echo $this->getskinUrl() ?>images/opc-ajax-loader.gif"/></div>	 
+								<div class="select-style-art">
+									<label class="required">Select the styles this Artwork:</label>
+									<div id="subcat" class="sub-cat multisub"></div>
+								</div>
+								<div class="select-medium">
+									<label class="required"><?php echo $helper->__('Medium') ?></label>
+									<div id="medium" class="sub-cat multisub"></div>
+								</div>
+
+							</li>
+							
+							<li>
+								
+							</li>
+					<li>
+					<label class="required"><em>*</em><?php echo $helper->__('Medium Description') ?>:</label>
+					<div class="input-box">
+							<input type="text" class="required-entry input-text" value="<?php echo  $loadpro->getMedium(); ?>" name="medium" id="medium" />
+						</div>
+					</li>
+						<li>
+							<label class="required"><em>*</em><?php echo $helper->__('Enter the title for this Artwork') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductNameHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductNameHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input type="text" class="required-entry input-text" name="name" id="name" value="<?php echo $loadpro->getName(); ?>" />
+							</div>
+						</li>
+						<li>
+							<label><?php echo $helper->__('Enter a brief Description for this artwork. Character limit 250') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductDescHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductDescHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<textarea name="description"  rows="5" cols="75" ><?php echo $loadpro->getDescription(); ?></textarea>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label><?php echo $helper->__('Short Description') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductShortDescHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductShortDescHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<textarea name="short_description" id="descriptions" rows="5" cols="75"><?php echo $loadpro->getShortDescription();?></textarea>
+							</div>
+						</li>
+						<?php 
+						$mp_pro_status = 0;
+						$mp_pro_coll =Mage::getModel('marketplace/product')->getCollection()
+											->addFieldToFilter('mageproductid',array('eq'=>$urlid));
+						foreach ($mp_pro_coll as $key => $value) {
+							$mp_pro_status = $value['status'];
+						}
+						if(!Mage::helper('marketplace')->getIsProductEditApproval() && $mp_pro_status==1){ ?>
+							<li style="display:none;">
+								<label class="required"><em>*</em><?php echo $helper->__('Status') ?>:</label>
+								<?php
+								if($product_hint_status && Mage::helper('marketplace')->getProductEnableStatusHint()){?>
+									<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductEnableStatusHint() ?>"/>
+								<?php
+								} ?>
+								<div class="input-box">
+									<input type="radio" class="" name="status" id="status" value="1" <?php if($loadpro->getStatus()==1){ echo 'checked="checked"'; } ?>/><?php echo $helper->__("Enable"); ?><br>
+									<input type="radio" class="" name="status" id="status" value="2" <?php if($loadpro->getStatus()==2){ echo 'checked="checked"'; } ?>/><?php echo $helper->__("Disable"); ?>
+								</div>
+							</li>
+						<?php
+						} ?>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('SKU') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductSkuHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductSkuHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input name="sku" type="text" id="sku" class="input-text required-entry" value="<?php  echo $loadpro->getsku(); ?>"/> 
+							</div>
+							<div id="skuavail" >
+								<span class="success-msg skuavailable"><?php echo $helper->__('SKU Available') ?></span>
+							</div>
+							<div id="skunotavail" >
+								<span class="error-msg skunotavailable"><?php echo $helper->__('SKU Already Exist') ?></span>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo $helper->__('Price') ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductPriceHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductPriceHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input type="text" class="required-entry validate-zero-or-greater input-text" name="price" id="price" value="<?php
+
+								$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+								$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+								$price = Mage::helper('directory')->currencyConvert($loadpro->getPrice(), $baseCurrencyCode, $currentCurrencyCode);
+								  echo number_format($price, 2, '.', ''); ?>" />
+							</div>
+						</li>
+						<li style="display:none;">
+							<label><?php echo $helper->__('Special Price') ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductSpecialPriceHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductSpecialPriceHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input type="text" class="widthinput input-text validate-zero-or-greater" name="special_price" id="special_price" value="<?php
+		                        if($loadpro->getSpecialPrice()!='')
+		                        {
+								$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+								$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+								$special_price = Mage::helper('directory')->currencyConvert($loadpro->getSpecialPrice(), $baseCurrencyCode, $currentCurrencyCode);
+								  echo number_format($special_price, 2, '.', ''); 
+								}
+								else
+								{
+									echo $loadpro->getSpecialPrice();
+								}  
+								  
+								  ?>"/>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label><?php echo $helper->__('Special Price From') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductSpecialFromDateHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductSpecialFromDateHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input name="special_from_date" id="special_from_date" class="input-text" value="<?php echo $loadpro->getData('special_from_date'); ?>" type="text"/>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label><?php echo $helper->__('Special Price To') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductSpecialToDateHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductSpecialToDateHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input name="special_to_date" id="special_to_date" class="input-text" value="<?php echo $loadpro->getData('special_to_date'); ?>" type="text"/>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('Stock') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductStockHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductStockHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input type="text" class="required-entry validate-number input-text" name="stock" id="stock" value="<?php echo number_format($qtyStock, 2, '.', '')?>"/>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('Stock Availability') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductStockAvailabilityHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductStockAvailabilityHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<select id="inventory_stock_availability" class="select" name="is_in_stock">
+									<option <?php if($instock==1)echo "selected"; ?> value="1"><?php echo $helper->__("In Stock"); ?></option>
+									<option <?php if($instock==0)echo "selected"; ?> value="0"><?php echo $helper->__("Out of Stock"); ?></option>
+								</select>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('Visibility') ?>:</label>
+							<div class="input-box">
+								<select id="visibility" class=" required-entry required-entry select" name="visibility">
+									<option value=""><?php echo $helper->__('Please Select')?></option>
+									<?php
+									$product_visibility = Mage::getModel('catalog/product_visibility')->getOptionArray();
+									foreach($product_visibility as $key=>$value){
+										?>
+										<option value="<?php echo $key ?>" <?php if($key==$loadpro->getVisibility()){ echo "selected='selected'";}?>><?php echo $value?></option>
+									<?php 
+									} ?>
+								</select>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('Tax Class') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductTaxHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductTaxHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<select id="tax_class_id" class=" required-entry required-entry select" name="tax_class_id">
+									<option value="0"><?php echo $helper->__("None"); ?></option>
+									<?php
+										$taxid=$loadpro->getData('tax_class_id');
+										$taxes=Mage::getModel('tax/class')->getCollection()
+													->addFieldToFilter('class_type',array('eq'=>'PRODUCT'));
+										foreach($taxes as $tax){
+									?>
+									<option <?php echo $taxid==$tax->getId()? 'selected':''; ?> value="<?php echo $tax->getId() ?>"><?php echo $tax->getClassName()?></option>
+									<?php } ?>
+								</select>
+							</div>
+						</li>
+						<li style="display:none;">
+							<label class="required"><em>*</em><?php echo $helper->__('Weight') ?>:</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductWeightHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductWeightHint() ?>"/>
+							<?php
+							} ?>
+							<div class="input-box">
+								<input type="weight" class="required-entry validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999 input-text" name="weight" id="weight"  value="<?php echo $loadpro->getWeight();?>"/>
+							</div>
+						</li>
+						<li>
+							<label class="required" style="margin-bottom: 0.8em;">Upload Images: 2MB max. File extensions: .jpeg .jpg .png - Files cannot have a dot (.) within the name</label>
+							<?php
+							if($product_hint_status && Mage::helper('marketplace')->getProductImageHint()){?>
+								<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductImageHint() ?>"/>
+							<?php
+							} ?>
+							<div class="out-custom-img">
+								<div id="otherimages" class="image_set">	
+								
+									<?php 
+									$totalcount=6;
+									$_product_coll = Mage::getModel('catalog/product')->load($loadpro->getId());
+									$_product = Mage::getModel('catalog/product')->load($loadpro->getId())->getMediaGalleryImages();
+									$_productimage = Mage::getModel('catalog/product')->load($loadpro->getId())->getImage();
+									if($_product) {  ?>
+										<?php $i=0;
+										foreach($_product as $_image) {
+											$check=$_productimage==$_image->getFile()?"checked='checked'":'';
+										  	$i++; 
+										  	?>
+										   	<div class="setimage">
+											<div height="264px" width="264px" max-height="264px" style="margin-bottom:20px; ">
+												<img id="<?php echo $_image->getFile(); ?>" pid="<?php echo $loadpro->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product_coll, 'thumbnail',$_image->getFile())->resize(264,264); ?>" alt="<?=$this->htmlEscape($_image->getLabel());?>" title="<?=$this->htmlEscape($_image->getLabel()); ?>" class="saved-images"/>
+											</div>
+											  <input type="hidden" value="<?php echo $_image->getFile(); ?>" id="rm_img_<?php echo $loadpro->getId(); ?>_<?php echo $i ?>"/>
+											  <span class="wk_imagedelete" title="Delete" onclick=removeImage('<?php echo $loadpro->getId(); ?>_<?php echo $i ?>','<?php echo $loadpro->getId();?>'); >
+											  <?php echo $helper->__('Remove'); ?>
+												</span>
+												<div class="mchoose">
+													<input type="radio" name="defaultimage" <?php echo  $check ?>  class='defaultimage' value='<?php echo $_image->getValueId(); ?>'>
+													<span class='defaultimageset'><?php echo $helper->__("Use as Main Image"); ?></span>
+												</div>
+										   	</div>
+									   <?php  
+										} 
+								    } ?>
+								
+									
+										
+										<?php $remain=$totalcount-count($_product); 
+										$nextcount=count($_product)+1;
+										
+										?>
+										<?php
+                                        $j=$nextcount;
+										for($j=$nextcount; $j<=6; $j++){ ?>
+										<div class="input-box">
+											<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px; ">
+												<div style="width: 100%;height: 264px;line-height: 264px; text-align:center">Upload an Image
+													<img id="preview<?php echo $j; ?>" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0" ></img>
+												</div>
+											</div>
+											<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px;background: none;position: relative;top: -5px;">
+												<label for="rad<?php echo $j; ?>" style="cursor: pointer;width: auto;">Upload</label>
+												<input type="file" accept=".jpg,.jpeg,.png" id="rad<?php echo $j; ?>"  name="images[]" class='wk_imagevalidate'/></div>
+												<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl<?php echo $j; ?>(this);"><?php echo $helper->__('Remove'); ?></a></div>
+												</div>
+												<div class="mchoose">
+												<input type="radio" value='' id="dim<?php echo $j; ?>" class='defaultimage'    name="defaultimage">
+												<span class='defaultimageset'><?php echo $helper->__("Use as Main Image"); ?></span>
+												</div>
+							
+								
+								
+										</div>
+										
+										<?php } ?>
+								
+									
+								</div>
+							</div>
+							
+						</li>
+						<?php echo $this->getChildHtml();?>
+					<li>
+					<label class="required"><?php echo $helper->__('Year Created') ?></label>
+					<div class="input-box">
+					<input type="number" class="required-entry  input-text"  name="yearmade" value="<?php echo $loadpro->getYearmade(); ?>" placeholder="e.g. 2017"/>
+					</div>
+					
+					</li>
+                 	<li>
+					<label class="required">Size of Artwork</label>
+					<div class="input-box">
+					<input type="text" name="size" class="required-entry input-text" value="<?php echo $loadpro->getSize(); ?>" placeholder="Height X Width X Depth, i.e. 30 X 24 X 1.5 in."/>
+					</div>
+					
+					</li>
+					
+					<label class="enter-detail" style="width: 427px;">Please enter the approximate dimensions and weight of the Artwork when packaged, this is used to calculate shipping fees at checkout.</label>
+					
+					<li>
+					<label class="required"><?php echo $helper->__('Width Of Artwork') ?></label>
+					<div class="input-box">
+					<input type="number" name="width" class="required-entry  input-text" value="<?php echo $loadpro->getWidth(); ?>" placeholder="Package Width in Inches, i.e. 24 (whole number only)"/>
+					</div>
+					
+					</li>
+					
+					<li>
+					<label class="required"><?php echo $helper->__('Height Of Artwork') ?></label>
+					<div class="input-box">
+					<input type="number" name="height" class="required-entry  input-text" value="<?php echo $loadpro->getHeight(); ?>" placeholder="Package Height in Inches, i.e. 24 (whole number only)"/>
+					</div>
+					
+					</li>
+					
+					<li>
+					<label class="required"><?php echo $helper->__('Depth Of Artwork') ?></label>
+					<div class="input-box">
+					<input type="number" name="length" class="required-entry  input-text" value="<?php echo $loadpro->getLength(); ?>" placeholder="Package Depth in Inches, i.e. 5 (whole number only)"/>
+					</div>
+					
+					</li>
+					
+					<li>
+					<label class="required"><?php echo $helper->__('Weight Of Artwork') ?></label>
+					<div class="input-box">
+					<input type="number" name="weight" class="required-entry  input-text" value="<?php echo $loadpro->getWeight(); ?>" placeholder="Package Weight in Pounds, i.e. 7 (whole number only)"/>
+					</div>
+					
+					</li>
+					</ul>
+				</div>
+			</div>	
+				<button class="button wk_mp_btn" title="<?php echo $helper->__('Save') ?>" type="submit" id="save_butn" style="margin-top: 3%;">
+				<span><span><?php echo $helper->__('Save') ?></span></span>
+				</button>			
+		</form>
+		
+		<div class="buttons-set">
+	<!--		<p class="required">* <?php echo $helper->__('Required Fields') ?></p>	-->	
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+			</p>
+		</div>	
+		<?php
+		$allowed_images = $helper->getAllowedImageExtension();
+		?>
+		<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+		</script>
+		<script src="<?php echo $this->getSkinUrl('marketplace/js/jquery.tmpl.min.js') ?>" type="text/javascript"></script>
+		<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS).'tiny_mce/tiny_mce.js' ?>"></script>
+		
+		<script> 
+			var $wk_jq=jQuery.noConflict();
+			var i=2;		
+			function showOtherImage(){
+				$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+				i++;
+			}
+			function removeEvent(divNum){
+				var d = document.getElementById('otherimages');
+				var olddiv = document.getElementById(divNum);
+				d.removeChild(olddiv);
+				i--;
+			}
+			function defaultimagevalue(object){
+				var strs=$wk_jq(object).prev('input').val().split('\\'); 
+				//alert(strs);
+			    $wk_jq(object).val(strs[strs.length-1]);
+				
+			}
+			(function($wk_jq){
+				var newCustomerProductForm = new VarienForm('form-customer-product-editPost', true);
+				$wk_jq( "#special_from_date" ).datepicker({'dateFormat':'yy:mm:dd'});
+				$wk_jq( "#special_to_date" ).datepicker({'dateFormat':'yy:mm:dd'});
+				
+				$wk_jq('.wk_close').click(function(){
+					$wk_jq(this).parent().remove();
+				});
+		
+				$wk_jq('#save_butn').click(function(e){
+					if(newCustomerProductForm.validator.validate()!=false){							     
+						$wk_jq('#save_butn span span').text('<?php echo $helper->__("Saving")?>..');
+						document.getElementById("loader").style.display = "block";
+						$wk_jq('.button').css('opacity','0.7');
+						$wk_jq('.button').css('cursor','default');
+						$wk_jq('.button').attr('disabled','disabled');
+                                                $wk_jq.ajax({
+                                                    url:setDefaultImage(),
+                                                    success:function(){
+                                                        $wk_jq('#form-customer-product-editPost').submit();
+                                                    }
+                                                });
+					}
+				});
+				
+				$wk_jq('.input-text').change(function(){
+					var validt = $wk_jq(this).val();
+					var regex = /(<([^>]+)>)/ig;
+					var mainvald = validt .replace(regex, "");
+					$wk_jq(this).val(mainvald);	
+			    });
+
+			    $wk_jq("body").delegate('.wk_imagevalidate',"change",function(){
+					//$wk_jq( ".defaultimage" ).prop( "checked",false);
+					var ext = $wk_jq(this).val().split('.').pop().toLowerCase();
+					if($wk_jq.inArray(ext, [<?php echo $allowed_images ?>]) == -1) {
+						$wk_jq(this).val('');
+						alert('<?php echo $helper->__("Invalid extension! Please Upload an image")?>');
+					}
+				});
+
+				$wk_jq('input#sku').change(function(){
+					var len=$wk_jq('input#sku').val();
+					var len2=len.length;
+					if(len2==0){
+						alert('<?php echo $helper->__("SKU can\'t be left empty")?>');
+						$wk_jq('div#skuavail').css('display','none');
+						$wk_jq('div#skunotavail').css('display','none');
+					}
+					else{
+						$wk_jq.ajax({
+							url: "<?php echo Mage::getUrl('marketplace/marketplaceaccount/verifysku');?>",
+							type: "POST",
+							data: {sku:$wk_jq('input#sku').val()},
+							dataType: 'html',
+							success:function($data){
+								$data=JSON.parse($data);
+								if($data.avl==1){
+									$wk_jq('div#skuavail').css('display','block');
+									$wk_jq('div#skunotavail').css('display','none');
+								}
+								else{
+									$wk_jq('div#skunotavail').css('display','block');
+									$wk_jq('div#skuavail').css('display','none');
+									$wk_jq("input#sku").attr('value','');
+								}
+							}
+						});
+					}
+				});
+
+				$wk_jq('body').on('change','.wk_elements',function(){
+					var category_id=$wk_jq(this).val();					
+					if(this.checked == true){
+						var $obj = $wk_jq('<input/>').attr('type','hidden').attr('name','category[]').attr('id','wk_cat_hide'+category_id).attr('value',category_id);
+						$wk_jq('.wk_for_validation').append($obj);
+					}else{
+						$wk_jq('#wk_cat_hide'+category_id).remove();
+					}
+				});
+
+				$wk_jq("#wk_bodymain").delegate('.wk_plus ,.wk_plusend,.wk_minus, .wk_minusend ',"click",function(){
+					var thisthis=$wk_jq(this);
+					if(thisthis.hasClass("wk_plus") || thisthis.hasClass("wk_plusend")){
+						if(thisthis.hasClass("wk_plus"))
+							thisthis.removeClass('wk_plus').addClass('wk_plus_click');
+						if(thisthis.hasClass("wk_plusend"))
+							thisthis.removeClass('wk_plusend').addClass('wk_plusend_click');
+						thisthis.prepend("<span class='wk_node_loader'></span>");
+						
+						$wk_jq.ajax({
+							url  	:   "<?php echo $this->getUrl('marketplace/marketplaceaccount/categorytree/');?>",
+							type 	:   "POST",
+							data 	:   {CID:thisthis.siblings("input").val(),
+										ML:thisthis.parent(".wk_cat_container").css("margin-left").replace("px",""),
+										CATS : 	"<?php echo implode(',',$categories); ?>"},
+							dataType:   "html",
+							success :   function(content){
+								var newdata=  $wk_jq.parseJSON(content);
+								len= newdata.length;
+								var pxl= parseInt(thisthis.parent(".wk_cat_container").css("margin-left").replace("px",""))+20;
+								thisthis.find(".wk_node_loader").remove();
+								if(thisthis.attr("class") == "wk_plus")
+									thisthis.attr("class","wk_minus");
+								if(thisthis.attr("class") == "wk_plusend")
+									thisthis.attr("class","wk_minusend");
+								if(thisthis.attr("class") == "wk_plus_click")
+									thisthis.attr("class","wk_minus");
+								if(thisthis.attr("class") == "wk_plusend_click")
+									thisthis.attr("class","wk_minusend");
+							     for(i=0;i<len; i++){ 
+									id=newdata[i].id;
+									checkn=newdata[i].check;
+									nam=newdata[i].name;
+									if(checkn==1){														 
+										if(newdata[i].counting ==0){
+											thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_no"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" checked value='+ id+' </div>');
+										}else{
+											thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_plusend"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" checked value='+ id +'></div>');   
+										}
+									}else{
+										if(newdata[i].counting ==0){
+											thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_no"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" value='+ id+'></div>');
+										}else{
+											thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_plusend"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" value='+ id +'></div>');   
+										}
+									}
+								}	
+								thisthis.parent(".wk_cat_container").nextAll().slideDown(300);
+							}
+						});			
+					}
+					if(thisthis.hasClass("wk_minus") || thisthis.hasClass("wk_minusend")){
+						if(thisthis.attr("class") == "wk_minus")
+							thisthis.attr("class","wk_plus");
+						if(thisthis.attr("class") == "wk_minusend")
+							thisthis.attr("class","wk_plusend");
+						var thiscategory = thisthis.parent(".wk_cat_container");
+						var marg= parseInt(thiscategory.css("margin-left").replace("px",""));
+						while(thiscategory.next().hasClass("wk_removable")){
+						  
+						if(parseInt(thiscategory.next().css("margin-left").replace("px",""))>marg)
+							thiscategory.next().slideUp("slow",function(){$wk_jq(this).remove();});
+							thiscategory = thiscategory.next();	
+							if(typeof thiscategory.next().css("margin-left")!= "undefined"){
+								if( marg==thiscategory.next().css("margin-left").replace("px",""))
+								{
+								  break;
+								}
+							}
+						}
+					}		
+				});
+
+				/*
+				$wk_jq('.image_set span').click(function(event){
+					var dicisionapp=confirm('Click Cancel if you have other changes on this page, save other changes before removing image.\n\nClick OK if you do not have any other changes.');
+					if(dicisionapp==true){
+						var deleteflag=0;			
+						var thisthis = $wk_jq(this);
+						var imag = thisthis.prev('img').attr('id');
+						alert(thisthis.prev('img'));
+						alert(thisthis.prev('img').attr('id'));
+						thisthis.prev('img').attr("src", "/projects/emergart/media/images/loader.gif");
+						resizeImageFn('#' + imag.replace(/\//g, "-"));
+						//thisthis.html("<img src='<?php echo $this->getSkinUrl('marketplace/images/loading.gif'); ?>'/>");
+						//thisthis.removeClass('wk_imagedelete');
+						//thisthis.addClass('wk_imagedeleteload');				
+						$wk_jq.ajax({
+							url: "<?php echo $this->getUrl('marketplace/marketplaceaccount/deleteimage');?>",
+							type: "POST",
+							data: {file:thisthis.prev('img').attr('id'),pid:thisthis.prev('img').attr('pid')},
+							dataType: 'html',
+							success:function(content){
+								//thisthis.parent('div.setimage').remove();
+								window.location.reload();
+							}
+						});
+					}		
+				});
+				*/
+				$wk_jq('.wk_imagedelete img').mouseover(function(event){
+					$wk_jq(event.target).css('width','22px');
+				});
+				$wk_jq('.wk_imagedelete img').mouseout(function(event){
+					$wk_jq(event.target).css('width','20px');
+				});
+			})($wk_jq);
+		</script>
+		<?php 
+	}else{
+		echo "<h2 class='wk_mp_error_msg'>".$helper->__("You are not authorize to edit this product.")."</h2>";
+	}
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>
+<script type="text/javascript">
+	
+	var BaseUrl;
+	jQuery(document).ready(function(){
+		
+		 BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>";
+		
+		var catid=jQuery( "#category" ).val();
+		// alert(catid);
+		var proid=jQuery("#productid").val();
+		// alert(proid);
+       jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/subcat',
+	  type:        'post',
+	  data:{'catid':catid,'proid':proid},
+	  success: function(msg)
+	   {
+		if (msg) {
+		   //alert(msg);
+		   jQuery('#subcat').removeAttr('disabled');
+                   jQuery("#subcat").html(msg);
+		   
+		} 
+	   }
+	});
+	
+	 jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/medium',
+	  type:        'post',
+	  data:{'catid':catid,'proid':proid},
+	  success: function(msg)
+	   {
+		if (msg) {
+		 //  alert(msg);
+		   jQuery('#medium').removeAttr('disabled');
+                   jQuery("#medium").html(msg);
+		   
+		} 
+	   }
+	});
+   
+	  
+ jQuery( ".sel-cat" ).change(function() {
+	  jQuery("#load-now").show();
+ var catid=jQuery( "#category" ).val();
+ 
+
+	
+       jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/subcat',
+	  type:        'post',
+	  data:{'catid':catid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		  // alert(msg);
+		   jQuery("#load-now").hide();
+		   jQuery('#subcat').removeAttr('disabled');
+                   jQuery("#subcat").html(msg);
+		   
+		} 
+	   }
+	});
+	  
+     });
+	 
+	  jQuery( ".sel-cat" ).change(function() {
+ var catid=jQuery( "#category" ).val();
+ 
+
+	
+       jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/medium',
+	  type:        'post',
+	  data:{'catid':catid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		  // alert(msg);
+		   jQuery('#medium').removeAttr('disabled');
+                   jQuery("#medium").html(msg);
+		   
+		} 
+	   }
+	});
+	  
+     });
+  });
+	</script>
+	
+
+
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    var checkAltTextExists = function(id){
+		if ($j(id).html().indexOf('Upload an Image')!=-1){
+			//alert("already have it");
+		}
+		else {
+			$j(id).prepend("Upload an Image");
+		}
+	}
+    function removeUrl1() {
+		checkAltTextExists($j('#preview1').parent());
+        $j('#preview1').removeAttr('src');
+		$j('#rad1').val('');
+    }
+	 function removeUrl2() {
+		checkAltTextExists($j('#preview2').parent());
+        $j('#preview2').removeAttr('src');
+		$j('#rad2').val('');
+    }
+	
+	function removeUrl3() {
+		checkAltTextExists($j('#preview3').parent());
+        $j('#preview3').removeAttr('src');
+		$j('#rad3').val('');
+    }
+	
+	function removeUrl4() {
+		checkAltTextExists($j('#preview4').parent());
+        $j('#preview4').removeAttr('src');
+		$j('#rad4').val('');
+    }
+	
+	function removeUrl5() {
+		checkAltTextExists($j('#preview5').parent());
+        $j('#preview5').removeAttr('src');
+     	$j('#rad5').val('');
+    }
+	
+	function removeUrl6() {
+		checkAltTextExists($j('#preview6').parent());
+        $j('#preview6').removeAttr('src');
+		$j('#rad6').val('');
+    }
+</script>

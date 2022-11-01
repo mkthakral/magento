@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<config>
+	<tabs>
+		<webkul>
+			<label>WEBKUL</label>
+			<sort_order>1</sort_order>
+		</webkul>
+	</tabs>
+		<sections>
+			<marketplace module="marketplace" translate="label">
+			<class>separator-top</class>
+            <label>Marketplace</label>
+            <tab>webkul</tab>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+				<groups>
+					<marketplace_options>
+						<label>Options</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>1</sort_order>	
+						<fields>
+							<percent translate="label">
+								<label>Percent per product sale</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</percent>
+							<taxmanage translate="label">
+								<label>Move Product Tax to Seller Account</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</taxmanage>
+							<ordermanage translate="label">
+								<label>Allow Seller to Manage Orders</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</ordermanage>
+							<attributesetid translate="label">
+								<label>Attribute Set ID</label>
+								<frontend_type>multiselect</frontend_type>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<source_model>marketplace/attributesetid</source_model>  
+							</attributesetid>
+							<partner_approval translate="label">
+								<label>Seller Approval Required</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>3</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partner_approval>
+							<product_approval translate="label">
+								<label>Product Approval Required</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>4</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</product_approval>
+							<product_edit_approval translate="label">
+								<label>Product Update Approval Required</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>5</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</product_edit_approval>							
+							<captcha translate="label">
+								<label>Set Captcha Enable</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>7</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</captcha>							
+							<categoryids translate="label">
+								<label>Allowed Categories for seller to add products</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>8</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<comment>e.g Please enter category ids by comma(,) separated</comment>
+							</categoryids>											
+							<adminemail translate="label">			
+								<label>Admin Email-id</label>			
+								<frontend_type>text</frontend_type>		
+								<sort_order>12</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>				
+							</adminemail>	
+							<uploadimagetype translate="label">		
+								<label>Allowed Product Image Type</label>		
+								<frontend_type>text</frontend_type>		
+								<sort_order>13</sort_order>				
+								<show_in_default>1</show_in_default>	
+								<show_in_website>1</show_in_website>		
+								<show_in_store>1</show_in_store>			
+								<comment>Enter file type separated by comma(,) like jpeg,png,gif,jpg ( For Seller's Products images)</comment>					
+							</uploadimagetype>					
+							<samplefiletype translate="label">		
+								<label>Allowed Sample File Type</label>		
+								<frontend_type>text</frontend_type>		
+								<sort_order>13</sort_order>				
+								<show_in_default>1</show_in_default>	
+								<show_in_website>1</show_in_website>		
+								<show_in_store>1</show_in_store>			
+								<comment>Enter file type separated by comma(,) like jpeg,png,gif,pdf ( For Downloadable Products )</comment>					
+							</samplefiletype>			
+							<downloadfiletype translate="label">	
+								<label>Allowed Link File Type</label>		
+								<frontend_type>text</frontend_type>			
+								<sort_order>14</sort_order>				
+								<show_in_default>1</show_in_default>			
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>				
+								<comment>Enter file type separated by comma(,) like zip,rar,pdf,doc ( For Downloadable Products )</comment>							
+							</downloadfiletype>
+							<allow_for_seller translate="label">
+								<label>Product Type For Seller</label>
+								<frontend_type>multiselect</frontend_type>
+								<source_model>marketplace/producttypemp</source_model>
+								<sort_order>15</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</allow_for_seller>
+						</fields>
+					</marketplace_options>
+					<marketplace_inventory>
+						<label>Inventory Settings</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>4</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>2</sort_order>	
+						<fields>
+							<low_stock_notification translate="label">
+								<label>Enable Low Notification</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<comment>Allow to send low stock notification mail to sellers</comment>
+							</low_stock_notification>
+							<low_stock_amount translate="label">
+								<label>Low Stock Quantity</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<comment>Allow to send low stock notification mail to sellers when product quantity will be equal or less then this quantity</comment>
+							</low_stock_amount>
+	                    </fields>
+					</marketplace_inventory>
+					<marketplace_landingpage>
+						<label>Landing Page Settings</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>4</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>3</sort_order>	
+						<fields>
+							<marketplacelabel translate="label">
+								<label>Marketplace Landing Page Head Title</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>0</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Turn Your Passion Into a Business</comment>
+							</marketplacelabel>
+							<displaybanner translate="label">
+								<label>Display Banner</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</displaybanner>
+							<banner translate="label comment">
+	                            <label>Banner Image</label>
+	                            <frontend_type>image</frontend_type>
+	                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+	                            <upload_dir config="system/filesystem/media" scope_info="1">marketplace/banner</upload_dir>
+	                            <base_url type="media" scope_info="1">marketplace/banner</base_url>
+	                            <sort_order>2</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+	                        </banner>
+	                        <bannercontent translate="label comment">
+	                            <label>Banner Content</label>
+	                            <frontend_type>editor</frontend_type>
+								<frontend_model>marketplace/adminhtml_system_config_editor</frontend_model>
+								<sort_order>3</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>This content will be display over the banner image in the marketplace landing page url-www.yourwebsite.com/marketplace</comment>
+	                        </bannercontent>
+	                        <marketplacelabel1 translate="label">
+								<label>Marketplace Landing Page Label1</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>4</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Turn Your Passion Into a Business (will be display above all feature's icons)</comment>
+							</marketplacelabel1>
+							<marketplacelabel2 translate="label">
+								<label>Marketplace Landing Page Label2</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>5</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Sellers with Taste (will be display above top 4 seller's block)</comment>
+							</marketplacelabel2>
+							<marketplacelabel3 translate="label">
+								<label>Marketplace Landing Page Label3</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>6</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g More than 500 shop owners have joined us last month (will be display above "View All Sellers" button)</comment>
+							</marketplacelabel3>
+							<marketplacelabel4 translate="label">
+								<label>Marketplace Landing Page Label4</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>7</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Why to sell with us (will be display above marketplace content)</comment>
+							</marketplacelabel4>
+							<marketplacebutton translate="label">
+								<label>Marketplace Landing Page Button Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>8</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Open a Marketplace Shop - this will also display over banner</comment>
+							</marketplacebutton>
+							<displayicons translate="label">
+								<label>Display Icons</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>9</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</displayicons>
+	                        <feature_icon1 translate="label comment">
+	                            <label>Feature:1 Icon</label>
+	                            <frontend_type>image</frontend_type>
+	                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+	                            <upload_dir config="system/filesystem/media" scope_info="1">marketplace/icon</upload_dir>
+	                            <base_url type="media" scope_info="1">marketplace/icon</base_url>
+	                            <sort_order>10</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+	                        </feature_icon1>
+	                        <feature_icon1_label translate="label">
+								<label>Feature:1 Icon Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>11</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Register Yourself</comment>
+							</feature_icon1_label>
+							<feature_icon2 translate="label comment">
+	                            <label>Feature:2 Icon</label>
+	                            <frontend_type>image</frontend_type>
+	                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+	                            <upload_dir config="system/filesystem/media" scope_info="1">marketplace/icon</upload_dir>
+	                            <base_url type="media" scope_info="1">marketplace/icon</base_url>
+	                            <sort_order>12</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+	                        </feature_icon2>
+	                        <feature_icon2_label translate="label">
+								<label>Feature:2 Icon Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>13</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Add Products</comment>
+							</feature_icon2_label>
+							<feature_icon3 translate="label comment">
+	                            <label>Feature:3 Icon</label>
+	                            <frontend_type>image</frontend_type>
+	                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+	                            <upload_dir config="system/filesystem/media" scope_info="1">marketplace/icon</upload_dir>
+	                            <base_url type="media" scope_info="1">marketplace/icon</base_url>
+	                            <sort_order>14</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+	                        </feature_icon3>
+	                        <feature_icon3_label translate="label">
+								<label>Feature:3 Icon Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>15</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Start Selling</comment>
+							</feature_icon3_label>
+							<feature_icon4 translate="label comment">
+	                            <label>Feature:4 Icon</label>
+	                            <frontend_type>image</frontend_type>
+	                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+	                            <upload_dir config="system/filesystem/media" scope_info="1">marketplace/icon</upload_dir>
+	                            <base_url type="media" scope_info="1">marketplace/icon</base_url>
+	                            <sort_order>16</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+	                        </feature_icon4>
+	                        <feature_icon4_label translate="label">
+								<label>Feature:4 Icon Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>17</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g Generate Revenues</comment>
+							</feature_icon4_label>							
+							<marketplaceprofile translate="label">
+								<label>About Marketplace</label>
+								<frontend_type>editor</frontend_type>
+								<frontend_model>marketplace/adminhtml_system_config_editor</frontend_model>
+								<sort_order>18</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g webkul</comment>
+							</marketplaceprofile>
+							<sellerlisttop translate="label">
+								<label>Marketplace Seller List Page Top Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>19</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g webkul</comment>
+							</sellerlisttop>
+							<sellerlistbottom translate="label">
+								<label>Marketplace Seller List Page Bottom Label</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>20</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<default>1</default>
+								<comment>e.g webkul</comment>
+							</sellerlistbottom>
+	                    </fields>
+					</marketplace_landingpage>
+					<seller_profile>
+						<label>Seller Profile Page Settings</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>4</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>3</sort_order>	
+						<fields>
+							<activecolorpicker translate="label">
+								<label>Enable Color Picker</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<comment>Allow sellers to change their profile page background color</comment>
+							</activecolorpicker>
+							<partner_policy_approval translate="label">
+								<label>Seller Policies Enable at frontend</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>6</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partner_policy_approval>
+							<url_rewrite translate="label">
+								<label>Rewrite Seller's Shop URL</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>6</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<comment>Allow Sellers To Manage their Shop URL</comment>	
+							</url_rewrite>
+	                    </fields>
+					</seller_profile>
+					<marketplace_products>
+						<label>Marketplace Products Hints</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>4</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>4</sort_order>	
+						<fields>
+							<product_hint_status translate="label">
+								<label>Enable Product Hints</label>
+								<frontend_type>select</frontend_type>
+                    			<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</product_hint_status>
+							<product_category translate="label">
+								<label> Product Category</label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_category>
+							<product_name translate="label">
+								<label>Product Name </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>2</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_name>
+							<product_des translate="label">
+								<label>Product Description </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>3</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_des>
+							<product_sdes translate="label">
+								<label>Product Short Description </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>4</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_sdes>
+							<product_sku translate="label">
+								<label>Product Sku </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>5</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_sku>
+							<product_price translate="label">
+								<label>Product Price</label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>6</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_price>
+							<product_sprice translate="label">
+								<label>Product Special Price </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>7</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_sprice>
+							<product_sdate translate="label">
+								<label>Product Special Price Start Date </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>8</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_sdate>
+							<product_edate translate="label">
+								<label>Product Special Price End Date  </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>9</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_edate>
+							<product_qty translate="label">
+								<label>Product Quantity </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>10</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_qty>
+							<product_stock translate="label">
+								<label>Product Stock Availability </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>11</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_stock>
+							<product_tax translate="label">
+								<label>Product Tax Types </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>12</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_tax>
+							<product_weight translate="label">
+								<label>Product Weight </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>13</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_weight>
+							<product_image translate="label">
+								<label>Product Image </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>14</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_image>
+							<product_enable translate="label">
+								<label>Product Enable </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>18</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>		
+							</product_enable>
+						</fields>
+			        </marketplace_products>			        
+			        <marketplace_profile>
+						<label>Marketplace Profile Hints</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>5</sort_order>	
+						<fields>
+							<profile_hint_status translate="label">
+								<label>Enable Profile Hints</label>
+								<frontend_type>select</frontend_type>
+                    			<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_hint_status>
+							<become_seller translate="label">
+								<label>Do You Want To Become Seller / Vendor ? </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</become_seller>
+							<shopurl_seller translate="label">
+								<label>Shop URL</label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</shopurl_seller>
+							<profile_tw translate="label">
+								<label>Profile Twitter id </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_tw>
+							<profile_fb translate="label">
+								<label>Profile Facebook id </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>2</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_fb>
+							<profile_cn translate="label">
+								<label>Profile Contact Number </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>2</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_cn>
+							<profile_bc translate="label">
+								<label>Profile Background Color </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>3</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_bc>
+							<profile_shop translate="label">
+								<label>Profile Shop Name </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>4</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_shop>
+							<profile_banner translate="label">
+								<label>Profile Shop Banner Image </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>6</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_banner>
+							<profile_logo translate="label">
+								<label>Profile Company Logo </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>7</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_logo>
+							<profile_loc translate="label">
+								<label>Profile Company Locality </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>9</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_loc>
+							<profile_desciption translate="label">
+								<label>Profile Company Description </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>9</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_desciption>
+							<returnpolicy translate="label">
+								<label>Return Policy </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>9</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</returnpolicy>
+							<shippingpolicy translate="label">
+								<label>Shipping Policy </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>9</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</shippingpolicy>
+							<profile_country translate="label">
+								<label>Profile Country </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>10</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_country>
+							<profile_meta translate="label">
+								<label>Profile Meta Keywords </label>
+								<frontend_type>Textarea</frontend_type>	
+								<sort_order>11</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_meta>
+							<profile_mdesc translate="label">
+								<label>Profile Meta Description </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>12</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_mdesc>
+							<profile_bank translate="label">
+								<label>Profile Payment Information </label>
+								<frontend_type>Textarea</frontend_type>
+								<sort_order>13</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</profile_bank>
+						</fields>
+			        </marketplace_profile>
+			        <marketplace_review>
+						<label>Marketplace Seller Review Settings</label>
+						<frontend_type>text</frontend_type>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<sort_order>6</sort_order>	
+						<fields>
+							<review_status translate="label">
+								<label>Make a Review on only Order Purchase</label>
+								<frontend_type>select</frontend_type>
+                    			<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>1</sort_order>				
+								<show_in_default>1</show_in_default>		
+								<show_in_website>1</show_in_website>			
+								<show_in_store>1</show_in_store>	
+							</review_status>
+						</fields>
+			        </marketplace_review>
+			        <email_option>
+						<label>Marketplace Transactional Emails</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>7</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<partnerrequest translate="label">
+								<label>Seller Request Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partnerrequest>
+							<partnerapprove translate="label">
+								<label>Seller Approved Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partnerapprove>
+							<partnerdisapprove translate="label">
+								<label>Seller Unsubscribe Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>3</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partnerdisapprove>
+							<partnerdeny translate="label">
+								<label>Seller Deny by Admin Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>4</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</partnerdeny>
+							<approveproduct translate="label">
+								<label>Product Approval Request to Admin Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>5</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</approveproduct>
+							<productdeny translate="label">
+								<label>Product Deny Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>6</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</productdeny>
+							<querypartner_email translate="label">
+								<label>Ask Question to Seller Regarding Product Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>7</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</querypartner_email>							
+							<askquerypartner_email translate="label">
+								<label>Ask Question to Seller Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>8</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</askquerypartner_email>
+							<queryadminemail translate="label">
+								<label>Ask Question to Admin By Seller Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>9</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</queryadminemail>
+							<whenproductapproved translate="label">
+								<label>Product approval Mail to Seller Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>10</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</whenproductapproved>
+							<orderplacenotifymail translate="label">
+								<label>Seller Order Placed Notification Mail Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>11</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</orderplacenotifymail>
+							<webkulorderinvoice translate="label">
+								<label>Seller Order Invoiced Notification Mail Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>12</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>	
+							</webkulorderinvoice>
+							<sellertransactionmail translate="label">
+								<label>Seller Transaction Mail Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>13</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</sellertransactionmail>
+							<lowStockNotificationMail translate="label">
+								<label>Seller Lock Stock Notification Template</label>
+								<frontend_type>select</frontend_type>
+								<source_model>marketplace/system_config_source_email_template</source_model>
+								<sort_order>14</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</lowStockNotificationMail>
+						</fields>
+					</email_option>
+				</groups>
+			</marketplace>
+		</sections>
+	</config>

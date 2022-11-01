@@ -1,0 +1,37 @@
+.cryozonic.payment-info td {
+    padding-right: 20px;
+    font: 13px/1.5em Arial, Helvetica, sans-serif;
+    vertical-align: middle;
+}
+.cryozonic.payment-info td.result {
+    color: #666;
+    font-weight: bold;
+    opacity: 0.9;
+}
+.cryozonic.payment-info td.result.pass {
+    color: #4F8A10;
+}
+.cryozonic.payment-info td.result img {
+    display: none;
+}
+.cryozonic.payment-info td.result.pass img.passed {
+    display: inline-block;
+}
+.cryozonic.payment-info td.result.fail {
+    color: #D8000C;
+}
+.cryozonic.payment-info td.result.fail img.failed {
+    display: inline-block;
+}
+.cryozonic.payment-info td.result.unchecked {
+    color: #9E9E9E;
+}
+.cryozonic.payment-info td.result.radar.elevated {
+    color: orange;
+}
+.cryozonic.payment-info td.result {
+    font-weight: bold;
+}
+ul#payment_form_cryozonic_stripe {
+    padding-left: 0;
+}

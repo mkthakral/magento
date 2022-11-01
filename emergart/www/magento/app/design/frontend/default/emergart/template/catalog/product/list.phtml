@@ -1,0 +1,999 @@
+<link rel="stylesheet" href="/skin/frontend/default/emergart/css/bootstrap.min.css">
+<link rel="stylesheet" href="/skin/frontend/default/emergart/css/select2.min.css">
+<script src="/skin/frontend/default/emergart/js/select2.min.js"></script>
+<script src="/skin/frontend/default/emergart/js/jquery.nicescroll.min.js"></script>
+<div id="loader" style="display:none;"></div>
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/* @var $this Mage_Catalog_Block_Product_List */
+?>
+<!-- or -->
+
+<?php
+ 
+  //  print_r($attributeOptions);
+     $currentUrl = $this->helper('core/url')->getCurrentUrl();
+	 $search=strpos($currentUrl,'catalogsearch');
+	 if($search==false){
+	 $currentCategory = Mage::registry('current_category');
+     $catid=$currentCategory->getId();
+
+     $catcollections= Mage::getModel('catalog/category')->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active',1)->addAttributeToFilter('parent_id',$catid)->addOrderField('position');
+	
+if($catid==3){	
+$name='paintmedium';
+}
+
+if($catid==4){	
+$name='drawingmedium';
+}
+
+if($catid==5){	
+$name='photomedium';
+}
+
+if($catid==6){	
+$name='sclupmedium';
+}
+    $attributeInfo = Mage::getResourceModel('eav/entity_attribute_collection')->setCodeFilter($name)->getFirstItem();
+    $attributeId = $attributeInfo->getAttributeId();
+    $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($attributeId);
+    $attributeOptions = $attribute ->getSource()->getAllOptions(false); 
+		
+?>
+
+<?php $resetstyle="display:none"; ?>
+<?php if($_REQUEST['submit_action']=="search"){  ?>
+<?php
+$resetstyle="display:inline-block";
+
+$price=$_REQUEST['price'];
+$expprice=explode("-",$price);
+$style=$_REQUEST['style'];
+$medium=$_REQUEST['medium'];
+$sort=$_REQUEST['sort'];
+if($style==0){
+$_productCollection = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->joinField('category_id', 'catalog/category_product', 'category_id', 'product_id = entity_id', null, 'left')
+                ->addAttributeToSelect('*')
+				->addFieldToFilter('status',Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+				/*->addFieldToFilter('galcode', array('notnull'=> false ))*/
+                ->addAttributeToFilter('category_id',$catid);
+				
+				
+				$_productCollection->joinField('is_in_stock',
+                'cataloginventory/stock_item',
+                'is_in_stock',
+                'product_id=entity_id',
+                'is_in_stock=1',
+                '{{table}}.stock_id=1',
+                'left');  
+}
+else{
+	$_productCollection = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->joinField('category_id', 'catalog/category_product', 'category_id', 'product_id = entity_id', null, 'left')
+                ->addAttributeToSelect('*')
+				->addFieldToFilter('status',Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+				/*->addFieldToFilter('galcode', array('notnull'=> false ))*/
+                ->addAttributeToFilter('category_id',$style);
+				
+				$_productCollection->joinField('is_in_stock',
+                'cataloginventory/stock_item',
+                'is_in_stock',
+                'product_id=entity_id',
+                'is_in_stock=1',
+                '{{table}}.stock_id=1',
+                'left');  
+	
+}
+?>
+<?php if($price!=""){?>
+<?php
+$_productCollection->addAttributeToSelect('*');
+$_productCollection->addAttributeToFilter('price', array('gteq' =>$expprice[0]));
+$_productCollection->addAttributeToFilter('price', array('lteq' =>$expprice[1]));
+?>
+
+<?php } ?>	
+
+<?php if($style!=0){?>
+<?php
+$_productCollection; 
+}?>
+<?php if($medium!=0){ ?>
+<?php $_productCollection->addAttributeToFilter($name, array('finset' => $medium)); ?>
+<?php } ?>
+
+<?php if($sort=="new") { ?>
+<?php $_productCollection->addAttributeToSort('created_at', 'DESC'); ?>
+<?php } ?>
+<?php if($sort=="prclow") { ?>
+<?php $_productCollection->addAttributeToSort('created_at', 'DESC'); ?>
+<?php } ?>
+<?php if($sort=="prchigh") { ?>
+<?php $_productCollection->addAttributeToSort('created_at', 'ASC'); ?>
+<?php } ?>
+
+<?php } else { 
+
+   $_productCollection=$this->getLoadedProductCollection();
+    echo $this->getToolbarHtml();
+}
+?>
+
+<?php 
+    $_helper = $this->helper('catalog/output');
+	?>
+	<div class="mob-filter">FILTER</div>
+<div class="outer-filter">
+<div class="mobinner-filter">
+<span><?php echo $currentCategory->getName(); ?></span>
+
+<span class="clasall">Close All</span>
+</div>
+<form method="get" class="catagory-list-form">
+<ul class="catagory-list-ul">
+<li>
+	<input type="hidden" value="<?php echo $_REQUEST['style'] ?>" id="style" name="style"/>
+	<select id="styleSelect2" onchange="document.getElementById('style').value=this.options[this.selectedIndex].value" data-minimum-results-for-search="Infinity">
+	<option value="0">All Styles</option>
+	<?php foreach($catcollections as $subcat){?>
+	<option value="<?php echo $subcat->getId();  ?>"<?php if($_REQUEST['style']== $subcat->getId()){ ?>selected="selected"<?php } ?>><?php echo $subcat->getName(); ?></option>
+	<?php } ?>
+
+	</select>
+</li>
+<li>
+<input type="hidden" value="<?php echo $_REQUEST['medium'] ?>" id="medium" name="medium"/>
+<select id="mediumSelect2" onchange="document.getElementById('medium').value=this.options[this.selectedIndex].value" data-minimum-results-for-search="Infinity">
+<option value="0">All Mediums</option>
+<?php foreach( $attributeOptions  as $med){?>
+<option value="<?php echo $med['value'];  ?>" <?php if($_REQUEST['medium']== $med['value']){ ?>selected="selected"<?php } ?>"><?php echo $med['label']; ?></option>
+<?php } ?>
+
+</select>
+</li>
+<li>
+<input type="hidden" value="<?php echo $_REQUEST['price'] ?>" id="price" name="price"/>
+<select id="priceSelect2" onchange="setPrice(this.options[this.selectedIndex].value)" data-minimum-results-for-search="Infinity">
+<option value="0">All Prices</option>
+<option value="0-1000" <?php if($_REQUEST['price']=="0-1000"){ ?>selected="selected"<?php } ?>>Under $1000</option>
+<option value="1000-2500" <?php if($_REQUEST['price']=="1000-2500"){ ?>selected="selected"<?php } ?>>$1000 - $2500</option>
+<option value="2500-5000" <?php if($_REQUEST['price']=="2500-5000"){ ?>selected="selected"<?php } ?>>$2500-$5000</option>
+<option value="5000-50000" <?php if($_REQUEST['price']=="5000-50000"){ ?>selected="selected"<?php } ?>>Over $5000</option>
+
+</select>
+</li>
+</ul>
+
+<button class="form-button" name="submit_action" type="submit" id="filter-search" value="search"><span>SEARCH</span></button>
+
+</form>
+</div>
+  <?php 
+  $style=$_REQUEST['style'];
+  $medium=$_REQUEST['medium'];
+  $price=$_REQUEST['price'];
+  ?>
+  
+  <ul class="catagory-list-ul">
+			<li>
+			<span id="store-result-selected" class="gla-select" style="display:none;">
+			<?php if($_REQUEST['sort']==""){ ?>Sort Result By <?php } ?> <?php if($_REQUEST['sort']=="new"){ ?> Newest First <?php } ?>
+             <?php if($_REQUEST['sort']=="prclow" ){ ?> Low to High <?php } ?>
+			   <?php if($_REQUEST['sort']=="prchigh"){ ?>High to Low <?php } ?>
+
+			</span>
+			  
+				
+				 <select onchange="setLocation(this.value);javascript:document.getElementById('store-result-selected').innerHTML=this.options[this.selectedIndex].text;">
+            
+				<option></option>
+			<option value="<?php echo  $currentCategory->getUrl()  ?>?style=<?php echo $style ?>&medium=<?php echo $medium; ?>&price=<?php echo $price ?>&sort=new&submit_action=search"><?php echo $this->__($_order) .'Newest First' ?></option>
+				
+                <option value="<?php echo  $currentCategory->getUrl()  ?>?style=<?php echo $style ?>&medium=<?php echo $medium; ?>&price=<?php echo $price ?>&sort=prclow&submit_action=search"><?php echo $this->__($_order) . 'Low to High' ?></option>
+				 <option value="<?php echo  $currentCategory->getUrl()  ?>?style=<?php echo $style ?>&medium=<?php echo $medium; ?>&price=<?php echo $price ?>&sort=prchigh&submit_action=search"><?php echo $this->__($_order) . 'High to Low' ?></option>
+           
+            </select>
+				
+			</li>
+			</ul>
+	<?php } else { 
+	
+	 $_productCollection=$this->getLoadedProductCollection();
+    echo $this->getToolbarHtml();
+	 } ?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There is no Work matching this criteria.') ?></p>
+<?php else: ?>
+
+<div class="category-products container">
+  
+    <?php // List mode ?>
+    <?php if($this->getMode()!='grid'): ?>
+    <?php $_iterator = 0; ?>
+    <ol class="products-list" id="products-list">
+    <?php foreach ($_productCollection as $_product): ?>
+        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+            <?php // Product Image ?>
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                <?php /* Based on the native RWD styling, product images are displayed at a max of ~400px wide when viewed on a
+                        one column page layout with four product columns from a 1280px viewport. For bandwidth reasons,
+                        we are going to serve a 300px image, as it will look fine at 400px and most of the times, the image
+                        will be displayed at a smaller size (eg, if two column are being used or viewport is smaller than 1280px).
+                        This $_imgSize value could even be decreased further, based on the page layout
+                        (one column, two column, three column) and number of product columns. */ ?>
+                <?php $_imgSize = 300; ?>
+                <img id="product-collection-image-<?php echo $_product->getId(); ?>"
+                     src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->keepFrame(false)->resize($_imgSize); ?>"
+                     alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+            </a>
+            <?php // Product description ?>
+            <div class="product-shop">
+                <div class="f-fix">
+                    <div class="product-primary">
+                        <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                        <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+                        <?php if($_product->getRatingSummary()): ?>
+                        <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                        <?php endif; ?>
+                        <?php
+                        // Provides extra blocks on which to hang some features for products in the list
+                        // Features providing UI elements targeting this block will display directly below the product name
+                        if ($this->getChild('name.after')) {
+                            $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                            foreach ($_nameAfterChildren as $_nameAfterChildName) {
+                                $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                                $_nameAfterChild->setProduct($_product);
+                                echo $_nameAfterChild->toHtml();
+                            }
+                        }
+                        ?>
+                    </div>
+                    <div class="product-secondary">
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                    </div>
+                    <div class="product-secondary">
+                        <?php if(!$_product->canConfigure() && $_product->isSaleable()): ?>
+                            <p class="action"><button type="button" title="<?php echo $this->quoteEscape($this->__('Add to Cart')) ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
+                        <?php elseif($_product->getStockItem() && $_product->getStockItem()->getIsInStock()): ?>
+                            <p class="action"><a title="<?php echo $this->quoteEscape($this->__('View Details')) ?>" class="button" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a></p>
+                        <?php else: ?>
+                            <p class="action availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                        <?php endif; ?>
+                        <ul class="add-to-links" style="padding-top:38px">
+                            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                            <?php endif; ?>
+                            <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                                <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    <div class="desc std">
+                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                    </div>
+                </div>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('products-list', 'none-recursive')
+	</script>
+
+    <?php else: ?>
+
+    <?php // Grid Mode ?>
+
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = 3; ?>
+	
+	<input type="hidden" id="total-number-of-pages" value="<?php echo $_productCollection->getLastPageNumber(); ?>" />
+	<input type="hidden" id="current-page-number" value="<?php echo $_SERVER['REQUEST_URI'] ?>" />
+    <div id="container">
+	
+	
+	<?php //echo $catid ?>
+    <ul class="products-grid products-grid--max-<?php echo $_columnCount; ?>-col">
+        <?php $i=0; foreach ($_productCollection as $_product): ?>
+            <?php  /*if ($i++%$_columnCount==0): ?>
+            <?php endif*/ ?>
+			
+			<?php if($catid==3){ ?>
+				<li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>" itemscope itemtype="http://schema.org/Painting">
+			<?php } else if($catid==6) {?>
+				<li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>" itemscope itemtype="http://schema.org/Sculpture">
+			<?php } else if($catid==5) {?>
+				<li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>" itemscope itemtype="http://schema.org/Photograph">
+			<?php } else {?>
+				<li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>" itemscope itemtype="http://schema.org/CreativeWork">
+            <?php }?>
+<?php
+
+$useragent=$_SERVER['HTTP_USER_AGENT'];
+
+if(preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"])){
+
+
+?>
+ <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+<?php } else{ ?>
+ <a href="#" id="<?php echo $_product->getId(); ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image" data-image-id="<?php echo $i++ ?>" data-toggle="modal" data-image="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(680,625); ?>" data-target="" onclick="openModal(this)">
+
+<?php } ?>
+                  <input type="hidden" id="detail-page-link-<?php echo $_product->getId(); ?>" value="<?php echo $_product->getProductUrl() ?>"/>
+					
+					<?php $_imgSize = 210; ?>
+                    <img id="product-collection-image-<?php echo $_product->getId(); ?>"
+                         src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(300,300); ?>"
+                         alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" itemprop="image"/>
+					
+                <div class="product-info">
+                   
+                    <?php
+                    // Provides extra blocks on which to hang some features for products in the list
+                    // Features providing UI elements targeting this block will display directly below the product name
+                    if ($this->getChild('name.after')) {
+                        $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                        foreach ($_nameAfterChildren as $_nameAfterChildName) {
+                            $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                            $_nameAfterChild->setProduct($_product);
+                            echo $_nameAfterChild->toHtml();
+                        }
+                    }
+                    ?>
+					
+					<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+
+          foreach($result1 as $res){
+				$artisid=$res['userid'];
+		   }
+          $artiscollection=Mage::getModel('customer/customer')->load($artisid);
+          
+		if($artiscollection->getDefaultBillingAddress())
+		{
+			$countryCode = $artiscollection->getDefaultBillingAddress()->getCountry();
+			$country = Mage::getModel('directory/country')->loadByCode($countryCode);
+			$artistCountryName = $country->getName();
+			$artist_city = $artiscollection->getDefaultBillingAddress()->getCity();
+		}
+
+	?>
+		  <input type="hidden" id="user-friedly-artist-profile-url-<?php echo $artisid ?>" value="<?php echo Mage::getModel('core/url_rewrite')->loadByIdPath('artist-profile-id-'.$artisid)->getRequestPath() ?>"/>
+          <input type="hidden" id="artist-id-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo $artisid ?>"/>
+          <input type="hidden" id="artist-name-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo $artiscollection->getName()?>"/>
+          <input type="hidden" id="artist-description-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo str_replace("\"","&quot;",$artiscollection->getArtdescription())?>"/>
+          <input type="hidden" id="artist-image-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$artiscollection->getAvatar()?>"/>
+          <input type="hidden" id="artist-region-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo $artist_city ?>"/>
+		  <input type="hidden" id="artist-country-of-product-id-<?php echo $_product->getId() ?>" value="<?php echo $artistCountryName?>"/>
+          <input type="hidden" id="artist-entity-id-product-id-<?php echo $_product->getId() ?>" value="<?php echo $artiscollection->getentityId()?>"/>
+          <input type="hidden" id="product-price-product-id-<?php echo $_product->getId() ?>" value="<?php echo strstr(Mage::helper('core')->currency($_product->getPrice(),true,false),'.',true)?>"/>
+          <input type="hidden" id="product-name-product-id-<?php echo $_product->getId() ?>" value="<?php echo $_product->getName()?>"/>
+		  <input type="hidden" id="product-height-product-id-<?php echo $_product->getId() ?>" value="<?php echo $_product->getData('height');?>"/>
+          <input type="hidden" id="product-width-product-id-<?php echo $_product->getId() ?>" value="<?php echo $_product->getData('width');?>"/>
+          <input type="hidden" id="product-depth-product-id-<?php echo $_product->getId() ?>" value="<?php echo $_product->getData('length');?>"/>
+		<?php 
+					$product=Mage::getModel('catalog/product')->load($_product->getId());
+					$galid=$product->getGalcode();
+					$customer =Mage::getModel('customer/customer')->load($galid);
+					$galname=$customer->getGaleryname();
+
+					?>
+					<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$_product->getId()."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$artisid."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+					<div class="pro-detls">
+						<ul>
+						<!--<li class="one"><?php echo count($follow); ?></li>
+						<li class="two"><?php echo count($like); ?></li>-->
+                        <li id="" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><?php echo $artiscollection->getName(); ?></span></li>
+						<li id="" itemprop="name"><?php echo $_product->getName() ?></li>
+						<li class="three" itemprop="about" itemscope itemtype="http://schema.org/Product"><span itemprop="offers" itemscope itemtype="http://schema.org/Offer"><meta itemprop="priceCurrency" content="USD" /><span itemprop="price" content="<?php echo $_product->getPrice() ?>"><?php echo strstr(Mage::helper('core')->currency($_product->getPrice(),true,false),'.',true) ?></span></span></li>
+						</ul>
+						<!--<p><?php echo $artiscollection->getName(); ?></p>
+						<p class="end">Art Endorsed By</p>
+						<p><?php echo $galname; ?></p>-->
+					</div>
+                    <?php if($_product->getRatingSummary()): ?>
+                    <?php // echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                    <?php endif; ?>
+					
+                    <div class="actions" style="display:none;">
+                        <?php if(!$_product->canConfigure() && $_product->isSaleable()): ?>
+                            <button type="button" title="<?php echo $this->quoteEscape($this->__('Add to Cart')) ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                        <?php elseif($_product->getStockItem() && $_product->getStockItem()->getIsInStock()): ?>
+                            <a title="<?php echo $this->quoteEscape($this->__('View Details')) ?>" class="button" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a>
+                        <?php else: ?>
+                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                        <?php endif; ?>
+                        <ul class="add-to-links">
+                            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist" id="wishlist-url-<?php echo $_product->getId(); ?>"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                            <?php endif; ?>
+                            <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                                <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </div>
+				</a>
+            </li>
+            <?php /*if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+            <?php endif*/ ?>
+        <?php endforeach ?>
+		
+    </ul>
+	
+	</div>
+	
+<div class="modal fade" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin:0px; min-width: 0px;">
+        <div class="modal-content" style="height: 640px;min-height=543">
+            
+            <div class="modal-body" style="padding: 0px">
+				<div class="row verticalAlignModal" style="width:100%">
+					<div class="col-md-8 imageSectionHeight" style="width:auto;">
+					  <img id="image-gallery-image-2" alt="artwork image large size" class="" src="" style="height: auto;margin: auto;margin-left: 0px;position: relative; top: 50%;transform: translateY(-50%);-ms-transform: translateY(-50%);-webkit-transform: translateY(-50%);-moz-transform: translateY(-50%);-o-transform: translateY(-50%);">
+					</div>
+					<div class="col-md-4 paddingLeft0" style="padding-top: 30px;padding-right:0px;width:300px;"><!--modalContentAlignment-->
+						<div class="product-shop">  
+							<div class="product-name">
+								<p class="h1" id="modalProductName" style="margin-bottom:0px; font-size: 14px; color:black;font-weight: bold;">Zin Lim</p>
+								<p id="modal-product-dimension" style="margin-bottom:4px; font-size: 14px; color:black">Zin Lim</p>
+								<p class="h1" id="modal-product-price" style="margin-bottom:0px; font-size: 16px; color:black;font-weight: bold;">Zin Lim</p>
+							</div>
+							
+							<!-- <div class="price-info">
+								<div class="price-box">
+									<span class="regular-price" id="modal-product-price" style="font-size: 14px;">
+										<span class="">$1,700.00</span>   
+									</span>                    
+								</div>							
+							</div> -->
+							<div class="save-outer">
+								<ul class="add-to-links">
+									<li><a href="https://www.emergart.com/wishlist/index/add/product/819/form_key/UE1cYpoakxznZvQA/" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist" id="addProductToWishlist">Add to Saved</a></li>
+									<li><a href="<?php echo $_product->getProductUrl() ?>" class="link-wishlist" target="_blank" id="viewDetailPage">View Detail Page</a></li>
+								</ul>
+							</div>
+							
+							
+							<div class="artist-details dital-bottom" style="padding-top: 16px;">
+								<div class="list-artis-con">
+									<div class="top">
+										<div class="images"><img src="" class="img autoheight" id="artistImage" style="max-height: 125px;" alt="artist who created this artwork"></div>
+										<div class="con">
+											<p id="artistName"></p>
+											<p id="artistCity"></p>
+											<p id="artistCountry"></p>
+											<!--<a href="https://www.emergart.com/custom/index/artist/id/398/">profile Page</a>-->
+										</div>									
+									</div>
+									<div class="bottom" style="font-size: 13px;">
+										<p id="artistDetails" style="width: 94%;line-height: 1.4em;height: 5.5em;">3 different interpretations about human being. ID series draw people I remember, NOMAD series draw life as traveler and ALLEGRO series is improvisation for capturing carnival energy. </p>
+										
+                                        <a href="<?php echo $this->getUrl('custom/index/artist/id/'.$artisid); ?>"  target="_blank" class="link-wishlist" id="modalArtistDetailLink">More by this Artist</a>
+                                        <input type="hidden" id="domain-name" value="<?php echo $_SERVER['SERVER_NAME'] ?>"/>
+                                        <input type="hidden" id="is-http-protocol-secure" value="<?php echo Mage::app()->getFrontController()->getRequest()->isSecure() ?>"/>
+
+                                        
+									</div>
+								</div>
+							</div>   	               
+						</div>
+					</div>
+			  </div>
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	
+    <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+    
+</div>
+<?php endif; ?>
+<?php
+// Provides a block where additional page components may be attached, primarily good for in-page JavaScript
+if ($this->getChild('after')) {
+    $_afterChildren = $this->getChild('after')->getSortedChildren();
+    foreach ($_afterChildren as $_afterChildName) {
+        $_afterChild = $this->getChild('after')->getChild($_afterChildName);
+        //set product collection on after blocks
+        $_afterChild->setProductCollection($_productCollection);
+        echo $_afterChild->toHtml();
+    }
+}
+?>
+<script type="text/javascript">
+
+	
+jQuery(document).ready(function(){
+	
+	jQuery('.select2-selection').css('border-radius','0px')
+	jQuery('.select2-container').children().css('border-radius','0px')
+
+	jQuery(document).on('click','.select2-selection',function(){
+	//	jQuery(this).css('background','#F5F5F5');
+	});
+
+	jQuery(".mob-filter").click(function(){
+		
+jQuery(".outer-filter").show();		
+		
+	});
+	
+	jQuery(".clasall").click(function(){	
+		
+	jQuery(".outer-filter").hide();	
+	});
+	
+
+	jQuery("#styleSelect2").select2();
+	jQuery("#mediumSelect2").select2();
+	jQuery("#priceSelect2").select2();
+
+	jQuery(document).on('touchcancel', '.select2-chosen', function(e) {
+		var field = $(e.target);
+		field.trigger('touchstart');
+		return field.trigger('touchend');
+	});
+	
+	jQuery('#styleSelect2').select2()
+        .on("select2:open", function(e) {
+          jQuery('.select2-results__options').niceScroll({
+			  cursorcolor:"#C1C1C1",
+			  cursoropacitymin:1,
+			  cursorwidth:"8.5px"
+			  });
+    })
+	jQuery('#mediumSelect2').select2()
+        .on("select2:open", function(e) {
+          jQuery('.select2-results__options').niceScroll({
+			  cursorcolor:"#C1C1C1",
+			  cursoropacitymin:1,
+			  cursorwidth:"8.5px"
+			  });
+    })
+});
+
+function setPrice(price){
+	if(price != "0" && price !=0){
+		document.getElementById('price').value=price;
+	}else{
+		document.getElementById('price').value="";
+	}
+}
+
+</script>
+
+<script type="text/javascript">
+//jQuery("")
+jQuery(document).ready(function(){
+var style=jQuery("#style option:selected").text();
+var medium=jQuery("#medium option:selected").text();
+var price=jQuery("#price option:selected").text();
+//alert(style);
+	
+	
+});
+
+    function initialise(){
+         jQuery( ".products-grid li" ).hover(
+	  function() {
+		 jQuery(this).find(">a").css('background-color','#202020');
+		 jQuery(this).find("img").css('opacity',0.8);
+		 jQuery(this).find(".product-info").css('opacity',1);
+	  }, function() {
+		  jQuery(this).find(">a").css('background-color','none');
+		  jQuery(this).find("img").css('opacity',1);
+		  jQuery(this).find(".product-info").css('opacity',0);
+	  }
+	);
+    };
+	function openModal(obj){
+			/*var current_image;
+			if(jQuery(obj).attr('id') == 'show-previous-image'){
+                current_image--;
+            } else {
+                current_image++;
+            }
+*/
+            jQuery('#loader').css('display','block')
+			var selector = jQuery('[data-image-id="' + jQuery(obj).attr('id') + '"]');            
+			jQuery.ajax({
+				url: updateGallery(selector),
+				success:function(){
+					afterModalCalls();
+				}
+			});
+	}
+	var orgHeight;
+	function afterModalCalls(){
+		
+		jQuery('#loader').css('display','none')
+		jQuery('#image-gallery').modal('show');
+	}
+	
+
+	function updateGallery(selector) {
+            //jQuery('#loader').css('display','block')
+			
+			var $sel = selector;
+            current_image = $sel.data('image-id');
+            var product_id = jQuery(selector).attr('id');
+            jQuery('#viewDetailPage').attr('href', jQuery('#detail-page-link-'+product_id).val());
+            jQuery('#addProductToWishlist').attr('href',jQuery('#wishlist-url-'+product_id).attr('href'));
+			jQuery('#image-gallery-image-2').attr('src', $sel.data('image'));
+ 	        jQuery('#artistName').text(jQuery('#artist-name-of-product-id-' + product_id).val());
+            jQuery('#artistCity').text(jQuery('#artist-region-of-product-id-' + product_id).val());
+            jQuery('#artistCountry').text(jQuery('#artist-country-of-product-id-' + product_id).val());
+            jQuery('#artistImage').attr('src',jQuery('#artist-image-of-product-id-' + product_id).val());
+            jQuery('#artistDetails').text(jQuery('#artist-description-of-product-id-' + product_id).val());
+            jQuery('#modal-product-price').text(jQuery('#product-price-product-id-' + product_id).val());
+            jQuery('#modalArtistName').text(jQuery('#artist-name-of-product-id-' + product_id).val());
+            jQuery('#modalProductName').text(jQuery('#product-name-product-id-' + product_id).val());
+            var height = jQuery('#product-height-product-id-' + product_id).val();
+            var width = jQuery('#product-width-product-id-' + product_id).val();
+            var depth = jQuery('#product-depth-product-id-' + product_id).val();
+			jQuery('#modal-product-dimension').text(height + "X" + width + "X" + depth + "\"");
+                
+            
+            if (!(typeof product_id == 'undefined')){
+                var artistId = jQuery('#artist-id-of-product-id-' + product_id).val();
+        
+                if(jQuery('#user-friedly-artist-profile-url-' + artistId).val().trim().length > 0){
+                    if(jQuery('#is-http-protocol-secure') == 'true'){
+                        jQuery('#modalArtistDetailLink').attr('href','https://' + jQuery('#domain-name').val() + "/" + jQuery('#user-friedly-artist-profile-url-' + artistId).val());
+                    }else{
+                        jQuery('#modalArtistDetailLink').attr('href','http://' + jQuery('#domain-name').val() + "/" + jQuery('#user-friedly-artist-profile-url-' + artistId).val());
+                    }
+                }else{
+                    jQuery('#modalArtistDetailLink').attr('href','custom/index/artist/id/' + artistId);
+                }    
+            }
+            
+            
+			
+	
+			var tmpImg = new Image();
+			tmpImg.src=$sel.data('image');
+			$(tmpImg).on('load',function(){
+			  var orgWidth = tmpImg.width;
+			  orgHeight = tmpImg.height;
+			  jQuery('.modal-dialog').width(orgWidth+350)
+			  
+			  //Reducing modal height
+			/*
+			 if(orgHeight < 796){
+				 //jQuery('.modal-content').attr('min-height',543);
+				 if(orgHeight < 220){
+					jQuery('#addProductToWishlist').css('display','none');
+					//artist image
+					jQuery('.images').css('width','0%');
+					//artist name and country
+					jQuery('.con').css('display','none');
+					//comple artist block
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-9px');
+					jQuery('.save-outer').css('bottom','43px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.con').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 }else if(orgHeight < 340){
+					jQuery('#addProductToWishlist').css('display','block');
+					jQuery('.images').css('width','0%');
+					jQuery('.con').css('display','none');
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-9px');
+					jQuery('.save-outer').css('bottom','-7px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.con').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 }
+				  else if(orgHeight < 370){
+					jQuery('#addProductToWishlist').css('display','block');
+					jQuery('.images').css('width','22%');
+					jQuery('.con').css('display','inline-block');
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-9px');
+					jQuery('.add-to-links').css('padding-top','0px');
+					jQuery('.add-to-links').css('margin','0px');
+					jQuery('.save-outer').css('bottom','-7px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.con').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 }
+				 else if(orgHeight < 450){
+					jQuery('#addProductToWishlist').css('display','block');
+					jQuery('.images').css('width','22%');
+					jQuery('.con').css('display','inline-block');
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-25px');
+					jQuery('.add-to-links').css('padding-top','6px');
+					jQuery('.save-outer').css('bottom','-19px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.con').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 }else if(orgHeight < 500){
+					jQuery('#addProductToWishlist').css('display','block');
+					jQuery('.images').css('width','40%');
+					jQuery('.con').css('display','inline-block');
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-25px');
+					jQuery('.add-to-links').css('padding-top','24px');
+					jQuery('.save-outer').css('bottom','-19px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.bottom').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 }
+				 else if(orgHeight < 550){
+					jQuery('#addProductToWishlist').css('display','block');
+					jQuery('.images').css('width','40%');
+					jQuery('.con').css('display','inline-block');
+					jQuery('.artist-details').css('padding-top','0px');
+					jQuery('.artist-details').css('bottom','-82px');
+					jQuery('.add-to-links').css('padding-top','24px');
+					jQuery('.save-outer').css('bottom','-15px');
+					jQuery('.add-to-links').css('margin','0px');
+					jQuery('.list-artis-con .top').css('margin-bottom','0px');
+					jQuery('#artistDetails').text('');
+					jQuery('.bottom').append(jQuery('#modalArtistDetailLink'));
+					jQuery('.modal-content').height(orgHeight);
+				 } else if(orgHeight < 595){
+					 jQuery('#addProductToWishlist').css('display','block');
+					 jQuery('.images').css('width','40%');
+					 jQuery('.con').css('display','inline-block');
+					 jQuery('.artist-details').css('padding-top','16px');
+					 jQuery('.artist-details').css('bottom','-82px');
+					 jQuery('.add-to-links').css('padding-top','24px');
+ 					 jQuery('#artistDetails').text('');
+					 jQuery('.bottom').append(jQuery('#modalArtistDetailLink'));
+					 jQuery('.modal-content').height(orgHeight);
+				 }else{
+					 jQuery('#addProductToWishlist').css('display','block');
+					 jQuery('.images').css('width','40%');
+					 jQuery('.con').css('display','inline-block');
+					 jQuery('.artist-details').css('padding-top','16px');
+					 jQuery('.artist-details').css('bottom','-82px');
+					 jQuery('.save-outer').css('bottom','-50px');
+					 jQuery('.add-to-links').css('margin','7px');
+					 jQuery('.add-to-links').css('padding-top','24px');
+					 jQuery('.list-artis-con .top').css('margin-bottom','20px');
+					 jQuery('.top').css('margin-bottom','20px');
+					 jQuery('.bottom').append(jQuery('#modalArtistDetailLink'));
+					 jQuery('.modal-content').height(orgHeight);
+				 }
+			  }
+			  */
+			  /*
+			  if(orgWidth>=600){
+				  jQuery('.col-md-8').css('width','69%');
+				  jQuery('.col-md-4').css('width','29%');
+				  jQuery('.col-md-4').css('margin-left','17px');
+			  }else if(orgWidth<370){
+				  jQuery('.col-md-8').css('width','56%');
+				  jQuery('.col-md-4').css('width','44%');
+				  jQuery('.col-md-4').css('margin-left','0px');
+			  }else if(orgWidth<417){
+				  jQuery('.col-md-8').css('width','60%');
+				  jQuery('.col-md-4').css('width','40%');
+				  jQuery('.col-md-4').css('margin-left','0px');
+			  }else{
+				  jQuery('.col-md-8').css('width','67%');
+				  jQuery('.col-md-4').css('width','33%');
+				  jQuery('.col-md-4').css('margin-left','0px');
+			  }
+			  */
+			  
+			if(orgHeight < 796){
+				 //jQuery('.modal-content').attr('min-height',543);
+				 if(orgHeight < 600){
+					 
+					 jQuery('.artist-details').css('bottom','-48px');
+					 jQuery('.save-outer').css('bottom','-24px');
+					 jQuery('.add-to-links').css('padding-top','24px');
+					 jQuery('.top').css('margin-top','0px');
+					 jQuery('.modal-content').height(600);
+					 
+					 //adding left border to image
+					 jQuery('.modal-dialog').width(jQuery('.modal-dialog').width()+17);
+					 jQuery('.col-md-8').css('padding-left','40px');
+					 jQuery('.col-md-4').removeClass('paddingLeft0');
+					 jQuery('.col-md-4').css('padding-left','7px');
+					
+					 jQuery('.col-md-8').height(600);
+				 }else{
+					 
+					 jQuery('.artist-details').css('bottom','-82px');
+					 jQuery('.save-outer').css('bottom','-50px');
+					 jQuery('.add-to-links').css('margin','7px');
+					 jQuery('.add-to-links').css('padding-top','24px');
+					 jQuery('.list-artis-con .top').css('margin-bottom','20px');
+					 jQuery('.top').css('margin-top','27px');
+					 jQuery('.top').css('margin-bottom','20px');
+					 jQuery('.modal-content').height(orgHeight-1);
+					 jQuery('.col-md-8').height(orgHeight-1);
+					 
+					 //removing left border from image
+					 jQuery('.col-md-8').css('padding-left','15px');
+					 jQuery('.col-md-4').css('padding-left','15px');
+					 jQuery('.col-md-4').addClass('paddingLeft0');
+				 }
+			  }
+			  
+			  jQuery('.col-md-8').width(orgWidth+4);
+			  
+			});
+			
+        }
+		
+function adjustProductInfoPosition(){
+	jQuery('.products-grid li').hover(
+			function(){
+				currentHeight=jQuery(this).find('.product-info').height();
+				
+				if(currentHeight>83 && !jQuery(this).find('.product-info').hasClass('topAdjustmentDone')){
+					adjustTop=currentHeight-83;
+					currentTop=jQuery(this).find('.product-info').css('top').replace(/[^-\d\.]/g, '');
+					newTop=currentTop-adjustTop;
+					jQuery(this).find('.product-info').css('top', newTop+'px')
+					jQuery(this).find('.product-info').addClass('topAdjustmentDone');
+				}
+				}
+			);
+}	
+jQuery(document).ready(function(){
+    
+    initialise();
+    
+    var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+    setInterval(function(){ 
+    	 loadGallery(true, 'a.product-image');
+         initialise();
+		 adjustProductInfoPosition();
+    }, 2000);
+
+    loadGallery(true, 'a.product-image');
+
+    //This function disables buttons when needed
+    function disableButtons(counter_max, counter_current){
+        jQuery('#show-previous-image, #show-next-image').show();
+        if(counter_max == counter_current){
+            jQuery('#show-next-image').hide();
+        } else if (counter_current == 1){
+            jQuery('#show-previous-image').hide();
+        }
+    }
+
+    /**
+     *
+     * @param setIDs        Sets IDs when DOM is loaded. If using a PHP counter, set to false.
+     * @param setClickAttr  Sets the attribute for the click handler.
+     */
+
+    function loadGallery(setIDs, setClickAttr){
+        var current_image,
+            selector,
+            counter = 0;
+
+        jQuery('#show-next-image, #show-previous-image').click(function(){
+            if(jQuery(this).attr('id') == 'show-previous-image'){
+                current_image--;
+            } else {
+                current_image++;
+            }
+
+            selector = jQuery('[data-image-id="' + current_image + '"]');
+            
+			jQuery.ajax({
+				url: updateGallery(selector),
+				success:function(){
+					afterModalCalls();
+				}
+			});
+			
+        });
+		
+		
+		
+		
+
+        
+		function resizeModal(){
+		
+			jQuery('#image-gallery-image-2').on('load', function(){
+				var imageWidth = jQuery(this).width();
+				console.log(imageWidth);
+				jQuery('.modal-dialog').width(imageWidth+350)
+			});
+		}
+		
+        if(setIDs == true){
+            jQuery('[data-image-id]').each(function(){
+                counter++;
+               // jQuery(this).attr('data-image-id',pageNo+"_"+(jQuery(this).attr('data-image-id')));
+            });
+        }/**/
+        jQuery(setClickAttr).on('click',function(){
+            updateGallery(jQuery(this));
+        });
+		
+    }
+
+	
+});
+
+   
+
+</script>

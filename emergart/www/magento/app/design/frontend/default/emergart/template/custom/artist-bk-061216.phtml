@@ -1,0 +1,45 @@
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+ ->load($id);
+     ?>
+	 <?php echo  $collection->getName(); ?>
+	   <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+	 
+
+     
+    <?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE galeryid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			
+			?>
+      
+<?php foreach($resultnew as $res){ ?>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u18">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u18_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u19">
+          <p class="qes"><span><?php echo $res['question']; ?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u20">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u20_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u21">
+          <p><span><?php echo $res['answer'];  ?></span></p>
+        </div>
+      </div>
+<?php } ?>
+      <!-- Unnamed (Image) -->
+      
+    </div>

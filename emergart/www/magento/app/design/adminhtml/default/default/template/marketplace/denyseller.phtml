@@ -1,0 +1,55 @@
+<?php
+$helper=Mage::helper('marketplace');
+?>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('marketplace/css/style.css');?>">
+<div id="ask_data"> 
+	<div class="modal_header">
+		<h4 class="modal-title"><?php echo $helper->__('What is the reason to deny this seller?') ?></h4>
+		<span  class="wk_close" >x</span>
+		<span  class="clear" ></span>
+	</div>
+	
+	<form id="ask_form" method="get" enctype="multipart/form-data" action="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/marketplace_partners/deny/')?>">
+		<div class="modal-body">
+			<div class="bootbox-body">
+				<textarea class="bootbox-input bootbox-input-text form-control required-entry" name="seller_deny_reason"></textarea>
+				<input type="hidden" name="sellerid" id="sellerid" value=""/>			
+			</div>
+		</div>
+		<div class="modal_footer">
+			<span class="error"></span>
+			<input type="reset" value="<?php echo $helper->__('Cancel') ?>" id="" class="wk_btn wk_btn_default"/>
+			<input type="submit" value="<?php echo $helper->__('Deny') ?>" id="" class="wk_btn wk_btn_primary"/>
+			<span class="clear"></span>
+		</div>
+	</form>
+</div>
+<script>
+var wk=jQuery.noConflict();
+var newCustomerProductForm = new varienForm('ask_form', true);
+(function($wk_jq){
+	$wk_jq(function(){
+		$wk_jq('body').append($wk_jq('#ask_data'));		
+		$wk_jq('#html-body').delegate('.wk_denyseller','click',function(){
+			$wk_jq('#sellerid').val($wk_jq(this).attr('customer-id'));
+			$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+			$wk_jq('.wrapper').css('pointer-events','none');
+			$wk_jq('.wrapper').css('opacity','0.4');
+			$wk_jq('#ask_data').show();
+			$wk_jq('.form-control').focus();
+		});
+		
+		$wk_jq('#html-body').delegate('.wk_close','click',function(){
+			$wk_jq('.wrapper').css('pointer-events','auto');
+			$wk_jq('.wrapper').css('opacity','1');
+			$wk_jq('.wk_btn_default').trigger('click');
+			$wk_jq('#ask_data').hide();			
+		});
+	});
+})(wk);
+</script>

@@ -1,0 +1,309 @@
+<script type="text/javascript">
+	function updateYoutubeURLInInframe(){
+		var videoId = extractYoutubeVideoId(jQuery('#youtube-share-video-url').val());
+		jQuery('#youtube-video-iframe').attr('src','//www.youtube.com/embed/' + videoId);
+	}
+	function extractYoutubeVideoId(url) {
+		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+		var match = url.match(regExp);
+
+		if (match && match[2].length == 11) {
+			return match[2];
+		} else {
+			return 'error';
+		}
+	}
+</script>
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+ ->load($id);
+ $currentUrl=$this->helper('core/url')->getCurrentUrl(); 
+     ?>
+	 <div class="artis-viewpro-outer">
+		 <div class="artis-view-left">
+			<div class="mob-back-previous"><a onclick="history.go(-1)">Back to Previous Page</a></div>
+			<div class="title"><h1 class="title text-transform-capitalize"><?php echo  $collection->getName(); ?></div>
+			<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+			
+		  </div>
+		  <div class="artis-view-right">
+			<div class="artis-tab">
+				<ul>
+					<li class="abt-artis">About the Artist</li>
+					<li class="view-prot active">View Portfolio</li>
+				</ul>
+			</div>
+			<input type="hidden" id="page_url" value="" />
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="javascript:popWin('http://twitter.com/share?text=Artist <?php echo $collection->getName(); ?> on Emergart. Incredible Art by Exceptional Artists.&url=<?php echo $currentUrl; ?>&hashtags=Emergart','','width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');"  title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="javascript:popWin('https://www.facebook.com/sharer/sharer.php?u=<?php echo $currentUrl ?>', '', 'width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes');" title="Share on Facebook" class="link-facebook""  title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="mailto:?subject=Check out this Artist&amp;body=Thought you might be interested in this Artist <?php echo $collection->getName();  ?>.%0D%0D<?php echo  $currentUrl;  ?>%0D%0DArtwork chosen by best galleries at www.emergart.com"
+   title="Share by Email" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">share this page</a></li>
+					</ul>
+
+				</div>
+		  </div>
+		</div>
+		 <?php 
+	 $protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+	 $sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+		<div class="gallery-work-outer">
+			<div class="gallery-work">
+				<div class="gla-title">Available Work</div>
+				<ul class="products-grid">
+				<?php foreach($result1 as $res1){ ?>
+							<?php //echo $res1['mageproductid']; ?>
+							<?php 
+							$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+							$procode=$product->getGalcode();
+							$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+							$qty=number_format($stock->getQty(),0);
+							$customer =Mage::getModel('customer/customer')->load($procode);
+					        $galname=$customer->getGaleryname();
+							
+							
+							
+							if($qty==1){?>
+							
+							<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$res1['mageproductid']."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$id."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+					<li>
+					<a href="<?php echo $product->getProductUrl(); ?>">
+					<img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li ><?php echo $collection->getName(); ?></li>
+								
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price"><?php  echo Mage::helper('core')->currency($product->getPrice()); ?></span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							
+							
+							</div>
+						
+						</div>
+					</a>
+					</li>
+						<?php }} ?>	
+					
+				</ul>
+			</div>
+			
+				
+			
+			    <?php $soldCount = 0; ?>
+				<?php foreach($result1 as $res1){ 
+				    $product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+					$procode=$product->getGalcode();
+					$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+					$qty=number_format($stock->getQty(),0);
+ 			        if($qty==0){ ?>
+                    <?php 
+                         $soldCount++; 
+                         if($soldCount == 1){
+                    ?>
+                            <div class="gallery-work">
+                                <div class="gla-title">SOLD Work</div>
+                                    <ul class="products-grid">
+                   <?php                                                              
+                         }                
+                                         
+                    ?>
+  					<li>
+						<a href="<?php echo $product->getProductUrl(); ?>">
+						  <img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/>
+						  <div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class=""><?php echo $collection->getName(); ?></li>
+								<li class="three sold">
+									SOLD
+								</li>
+							</ul>
+							</div>
+											
+							
+					</div>
+					</a>
+					</li>
+				<?php }} ?>
+				</ul>
+			</div>
+		
+		</div>
+		
+		<div class="abt-artis-outer" style="display:none;">
+			<div class="about-artis">
+				<div class="title">About the Artist</div>
+				<?php if ($collection->getData("link_facebook") || $collection->getData("link_twitter") || $collection->getData("link_instagram") || $collection->getData("link_website")):?>
+						<?php $socialLinkPresent="true"; ?>
+						<div class="con">
+								
+							<p>
+								<div class="artis-view-right">
+									<ul itemscope itemtype="http://schema.org/Person" class="sharing-links">
+										<span itemprop="name" class="display-none"><?php echo  $collection->getName(); ?></span>
+										<?php if ($collection->getData("link_facebook")):?>
+											<li class="facebook display-inline-block">
+												<a itemprop="sameAs" href="<?php echo $collection->getData("link_facebook") ?>" target="_blank" title="Follow Artist on Facebook" class="link-facebook">
+											Follow Artist on Facebook</a>
+											</li>
+										<?php endif;?>
+										<?php if ($collection->getData("link_twitter")):?>
+											<li class="twiter display-inline-block">
+												<a itemprop="sameAs" href="<?php echo $collection->getData("link_twitter") ?>" target="_blank" title="Follow Artist on Twitter" class="link-twitter">
+											Follow Artist on Twitter</a>
+											</li>
+										<?php endif;?>
+										<?php if ($collection->getData("link_instagram")):?>
+											<li class="display-inline-block">
+												<a itemprop="sameAs" href="<?php echo $collection->getData("link_instagram") ?>" target="_blank" title="Follow Artist on Instagram" class="link_instagram">
+											<img src="/skin/frontend/default/emergart/images/instagram-square.png" style="width: 36px;height: 38px;"  alt="Artist Instagram"></a>
+											</li>
+										<?php endif;?>
+										<?php if ($collection->getData("link_website")):?>
+											<li class="display-inline-block">
+												<a href="<?php echo $collection->getData("link_website") ?>" target="_blank" title="Follow Artist on Personal Website" class="link_website background-image-none">
+											<img src="/skin/frontend/default/emergart/images/website.png" style="width: 36px;height: 38px;" alt="Artist Website"></a></a>
+											</li>
+										<?php endif;?>
+											<li class="position-relative" style="bottom: -11px;left: 6px;">Artist Links</li>
+									</ul>
+								</div>
+							</p>
+							
+						</div>
+						<div id="blank-div-for-space" class="margin-top-11-percent"/>
+					<?php endif;?>
+				
+				<div class="abt-content">
+					<?php if ($collection->getData("link_yt_video")){?>
+					<div>
+								<input type="hidden" value="<?php echo $collection->getData("link_yt_video")?>" id="youtube-share-video-url"/>
+								<iframe src="" width="560" height="315" frameborder="0" allowfullscreen id="youtube-video-iframe" class="<?php if($socialLinkPresent == "true") {?>margin-top-11-percent<?php }?> display-block"></iframe>
+								<script type="text/javascript">
+									updateYoutubeURLInInframe();
+								</script>
+					</div>
+					<?php } else {?>
+						
+					<?php }?>
+					<div class="con">
+						<p class="margin-top-5-percent">Mission Statement:</p>
+						<p><h2 class="about-artist-theory"><?php echo nl2br($collection->getArtdescription());  ?></h2></p>
+					</div>
+					<div class="con">
+					        <p>Biography:</p>	
+						<p><h3 class="about-artist-theory text-transform-none"><?php echo nl2br($collection->getBiography());  ?></h3></p>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="about-artis">
+					
+					<?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName(' artist_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE artistid='".$id."' order by ABS(title)";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			$count=count($resultnew);
+			?>
+            <?php if($count!=0){ ?>
+            <div class="title">Q & A</div>
+				<div class="abt-content">
+			<?php foreach($resultnew as $res){ ?>
+			<div class="con">
+						<p style="font-weight: bold;"><?php echo $res['question']; ?></p>
+						<p><?php echo nl2br($res['answer']);  ?></p>
+					</div>
+			<?php } ?>
+				</div>
+            <?php } ?>
+			</div>
+			
+		</div>
+
+     
+    
+      
+      
+    </div>
+	
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery(".abt-artis").click(function(){
+			jQuery(".abt-artis-outer").show();
+			jQuery(".gallery-work-outer").hide();
+			jQuery(".abt-artis").addClass("active");
+			jQuery(".view-prot").removeClass("active");
+			
+		});
+		
+		jQuery(".view-prot").click(function(){
+			jQuery(".gallery-work-outer").show();
+			jQuery(".abt-artis-outer").hide();
+			jQuery(".view-prot").addClass("active");
+			jQuery(".abt-artis").removeClass("active");
+			
+		});
+	
+		var current_url = window.location.href;
+		var pageURL = document.getElementById('page_url_2');
+		//$('#page-url').val(current_url);	
+		pageURL.value = current_url;
+		
+	});
+	
+	
+	</script>

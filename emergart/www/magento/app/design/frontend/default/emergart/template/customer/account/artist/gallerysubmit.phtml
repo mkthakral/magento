@@ -1,0 +1,315 @@
+
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$artisId = $customerData->getId();
+//echo "<pre>"; print_r($customerData);  echo "</pre>";
+$isapproved=$customerData['isapproved'];
+
+ $collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+		?>
+        <?php
+if($isapproved==0){
+	
+	$class="disapered";
+}
+
+		?>
+		
+		
+ <input type="hidden" class="artisvl" name="customerid" value="<?php echo $artisId; ?>"/>   
+<input type="hidden" class="dateclick" name="date" value="<?php echo  date("Y-m-d"); ?>"> 
+
+
+
+<div class="submit-gllery-outer">
+	<h3>Submit your portfolio to Galleries</h3>
+	<?php if($isapproved==0){ ?>
+	<span class="errorr-warn">You will not be able to submit while your portfolio profile is under review. </span>
+	<?php } ?>
+	<div class="sbmit-allcatgry-outer">
+		<div class="all-catgry">
+			<span id="all-catgry-selected" class="gla-select">All Categories</span>
+			<select onchange="javascript:document.getElementById('all-catgry-selected').innerHTML=this.options[this.selectedIndex].text;">
+				<option>All Categories</option>
+				<option>All Categories 1</option>
+				<option>All Categories 2</option>
+				<option>All Categories 3</option>
+			</select>
+		</div>
+		
+		<div class="all-location">
+			<span id="all-location-selected" class="gla-select">All Categories</span>
+			<select onchange="javascript:document.getElementById('all-location-selected').innerHTML=this.options[this.selectedIndex].text;">
+				<option>All Location</option>
+				<option>All Location 1</option>
+				<option>All Location 2</option>
+				<option>All Location 3</option>
+			</select>
+		</div>
+		<div class="srch-button">
+			<button>
+			<span>
+				<span>Search</span>
+			</span>
+		</button>
+		</div>
+	</div>
+	<?php foreach($collection as $_collection):?>
+	<?php $approve=$_collection->getData('isapproved'); ?>
+	<?php if($approve==1){ ?>
+	<div class="sbmit-catgry-contant">
+	
+		<div class="cntnt-top">
+	<div class="sbmit-img"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$_collection->getSstechProfileimage();?>" alt=""/></div>
+			<div class="sbmit-cntnt-right">
+			
+		
+				<div class="promotr-name">
+					<span class="name"><a href="<?php echo $this->getUrl() ?>custom/index/details/id/<?php echo $_collection->getId();  ?>" target="_blank"><?php echo $_collection->getGaleryname(); ?></a></span>
+					<span class="city"> 
+						<?php if ($_collection->getData('city')): ?>
+						<?php echo $_collection->getData('city');?><?php endif;?>,
+                    </span>
+					<span class="state">
+						<?php if ($_collection->getData('country')): ?>
+						<?php  echo $_collection->getData('country'); ?>
+						<?php endif;?>
+                   </span>
+				</div>
+				<div class="cnt"><?php echo nl2br($_collection->getGalerydescription()); ?></div>
+				<div class="reprsnt-outer">
+					<div class="reprsnt-cnt">
+						<p class="title">Represents</p>
+						<p><span><?php if ($_collection->getData('galprorepresent')): ?>
+<?php echo nl2br($_collection->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($_collection)) ?>
+<?php endif;?></p>
+
+<p><span><?php if ($_collection->getData('galstylrepresent')): ?>
+<?php echo nl2br($_collection->getResource()->getAttribute('galstylrepresent')->getFrontend()->getValue($_collection)) ?>
+<?php endif;?></p>
+
+
+					</div>
+					
+					<div class="reprsnt-sbmit <?php echo $class; ?>" id="div_<?php echo $_collection->getId();?>">
+					<?php
+                                            $artistSubmitTableName = Mage::getSingleton('core/resource')->getTableName('artis_submit');
+                                            $artistSubmitQuery = "SELECT * FROM ".$artistSubmitTableName." WHERE gallery_id='".$_collection->getId()."' AND artist_id='". $artisId."'";
+                                            try {
+                                                 $artistSubmitGallerySystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($artistSubmitQuery);
+                                                 $artistSubmitQueryResult = $artistSubmitGallerySystem->fetchall();
+                                                 }
+                                            catch (Exception $e){
+                                                 echo $e->getMessage();
+                                            }
+                                            if (count($artistSubmitQueryResult) == 0){
+                                        	$requestAlreadySubmitted = False;                             
+					    }else{
+					        $requestAlreadySubmitted = True;
+					    }
+                                       ?>
+					<?php 
+					   if($requestAlreadySubmitted == False){
+                                        ?>
+						<button class="clickport submit-port" id="<?php echo $_collection->getId();  ?>">
+							<span>
+							     <span>Submit Portfolio</span>
+							</span>
+						</button>
+                                        <?php } else { ?>
+					     <button class="clickport disabled-btn submit-port" id="<?php echo $_collection->getId();  ?>" disabled>
+                                                        <span>
+                                                             <span>Submitted</span>
+                                                        </span>
+                                                </button>
+					<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cntnt-bottom" style="">
+		<?php
+		
+		 $id=array();
+		 $likepro=Mage::getModel('marketplace/product')->getCollection()
+						     ->addFieldToFilter('userid',array('eq'=>$artisId));
+							 
+					foreach($likepro as $lproducts){
+						
+						$id[]=$lproducts->getMageproductid();
+						
+					}
+		
+		 $tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+         $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  galid='".$_collection->getId()."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+	$likecount=0;				
+     foreach($like as $likepro){
+		  $likeid=$likepro['proid'];
+		if (in_array($likeid,$id)){
+			
+			$likecount++;
+		}
+		
+		 
+	 }
+							
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  galid='".$_collection->getId()."' AND artistid='".$artisId."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				    <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('gallery_message');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  gallery_id='".$_collection->getId()."' AND artist_id='".$artisId."' ORDER BY created_at DESC";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$message = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   <?php
+
+                  $endorseproducts =Mage::getModel('marketplace/product')->getCollection()
+						     ->addFieldToFilter('userid',array('eq'=>$artisId));
+							 $endorsecount=0;
+                             $salescount=0;
+							 foreach($endorseproducts as $pro){
+								 
+									$id=$pro->getMageproductid();
+									$product=Mage::getModel('catalog/product')->load($id);
+
+									$galcode=$product->getGalcode();
+									if($galcode==$_collection->getId()){
+									   $endorsecount++;
+                                        
+                                       $stock=Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+                                       $qty=number_format($stock->getQty(),0);
+                                       if($qty==0){
+                                            $salescount++;
+                                       }
+									}
+								 
+							 }
+                             
+                    ?>
+				   
+			<ul class="gallery-statistics">
+				<li class="tooltip">
+                    <!--<span class="tooltiptext"><?php echo $_collection->getGaleryname(); ?> is<?php if(count($follow)==0) echo " not"?> following you</span>-->
+					Watches Me: <?php if(count($follow)==0) { ?>No<?php } else { ?>Yes<?php } ?>
+				</li>
+				<li class="tooltip messagesfromgallery" id="<?php echo $_collection->getId(); ?>">
+                    <!--<span class="tooltiptext" id="tooltip_<?php echo $_collection->getId(); ?>"><?php echo $_collection->getGaleryname(); ?> has sent you <?php echo count($message); ?> message/s. <?php if(count($message)>0) { ?>Click to read<?php } ?></span>-->
+                    
+					Messages: <?php if(count($message)==0) { ?><span style="margin-left: 0px;">0</span><?php }  else { ?><a  style="margin-left: 0px; color: red;" id="<?php echo $_collection->getId(); ?>" class=""><?php echo count($message); ?></a><?php } ?>
+				</li>
+				<li class="tooltip">
+                    <!--<span class="tooltiptext"><?php echo $_collection->getGaleryname(); ?> has liked <?php echo $likecount; ?> of your artworks</span>-->
+					Liked My Work: <span style="margin-left: 0px;"><?php echo $likecount; ?></span>
+				</li>
+				<li class="tooltip">
+                    <!--<span class="tooltiptext"><?php echo $_collection->getGaleryname(); ?> has endorsed <?php echo $endorsecount; ?> of your artworks</span>-->
+					Endorsed My Work: <span style="margin-left: 0px;"><?php echo $endorsecount;  ?></span>
+				</li>
+				<li class="tooltip">
+                    <!--<span class="tooltiptext"><?php echo $_collection->getGaleryname(); ?> has helped you in selling <?php echo $salescount; ?> artworks</span>-->
+					Sales Related: <span style="margin-left: 0px;"><?php echo $salescount; ?></span>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	 <div class="msg-overlay" id="msg_<?php echo $_collection->getId();  ?>" style="display:none;">
+			<ul>
+			<?php foreach($message as $msg){ ?>
+			<li>
+				<span class="name"><b><?php 
+                    $dateTime = new DateTime($msg['created_at'], new DateTimeZone('America/New_York')); 
+                    echo $dateTime->format("d-M-y  h:i")." EST"; 
+                                              ?></b></span>
+				<span class="massage"><?php echo nl2br($msg['message']); ?></span>
+			</li>
+			<?php } ?>
+			</ul>
+			</div>
+	<?php } ?>
+	<?php endforeach; ?>
+	
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+	//alert("hello");
+	jQuery(".clickport").click(function(){
+		
+		var galid=jQuery(this).attr("id");
+		var artisid=jQuery(".artisvl").val();
+		var crdate=jQuery(".dateclick").val();
+		var div_id = 'div_' + galid;
+	        //Disable button	
+		jQuery('#' + galid).text('Submitting...');
+                jQuery('#'+ galid).css('opacity','0.7');
+                jQuery('#' + galid).css('cursor','default');
+                jQuery('#' + galid).attr('disabled','disabled');
+		jQuery('#' + galid).css("background-color","#34494F");
+		
+		jQuery.ajax({
+		   url: BaseUrl+'ajax/submitgal.php',
+		   type:        'post',
+		   data:{'galid':galid,'artid':artisid,'curdate':crdate},
+		   success: function(msg)
+		    {
+			 if (msg) {
+			  jQuery(this).addClass('disabled-btn');
+			  jQuery('#'+div_id).load(location.href + ' #' + div_id + ' > *', '');
+			  alert(msg); 
+			 } 
+		    },
+		   error: function (jqXHR, exception) {
+			jQuery('#' + galid).text('Submit Portfolio');
+	                jQuery('#'+ galid).css('opacity','1');
+        	        jQuery('#' + galid).css('cursor','auto');
+		       	jQuery('#' + galid).prop("disabled", false);
+			jQuery('#' + galid).css("background-color","#3991d7");
+		   }
+		 });
+		
+		
+	});
+	
+});
+
+</script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+	jQuery(".messagesfromgallery").click(function(){
+		var id=jQuery(this).attr("id");
+		jQuery("#tooltip_"+id).toggle();
+        jQuery("#msg_"+id).toggle();
+	});
+	
+});
+
+</script>

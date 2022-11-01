@@ -1,0 +1,139 @@
+<div class="home-content">
+<div class="about-banner-section">
+	<div class="container">
+		<div class="abt-ban-left">
+			<div class="abt-vedio"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('aboutustopvedio')->toHtml(); ?></div>
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/home?status=vvvvvvvvv+http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html&amp;p[images][0]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2Fp%2Fa%2Fpaint-img-4.png&amp;p[title]=vvvvvvvvv&amp;p[summary]=%3Cp%3Etest%3C%2Fp%3E" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="http://digitalmate.in/magento/emergart/index.php/sendfriend/product/send/id/13/cat_id/4/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">SHARE</a></li>
+					</ul>
+			</div>
+		</div>
+		<div class="abt-ban-right">
+			<div class="abt-signin">
+				<div class="sign-title">Sign In or <a href="<?php echo $this->getUrl() ?>customer/account/create"class="rigstr">Register</a></div>
+				<div class="outer-signin">
+					<?php echo $this->getLayout()->createBlock('customer/form_login')->setTemplate('persistent/customer/form/aboutlogin.phtml')->toHtml(); ?>
+				</div>
+				 
+
+				<div class="abt-join-outer">
+					<div class="join-title">
+						<span>join with</span>
+					</div>
+					<div class="join-con">
+						<ul>
+							<li class="facebook"><a href="javascript:void(0)">Facebook</a></li>
+							<li class="twiter"><a href="javascript:void(0)">Twitter</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="blog-outer container">
+	<div class="about-blog">
+		<div class="blog-artis">
+			<img src="<?php echo $this->getskinUrl ("images/blog-artis-img.png") ?>" alt=""/>
+			<p class="name">Artists</p>
+			<p>Artists can submit their portfolios to multiple galleries, make connections, gain exposure and make sales at the same time.</p>
+		</div>
+		<div class="blog-gallery">
+			<img src="<?php echo $this->getskinUrl ("images/blog-gallery-img.png") ?>" alt=""/>
+			<p class="name">Gallery Owners</p>
+			<p>Gallery Owners select and endorse specific Art on commission - those selections become available on the public facing side of Emergart.</p>
+		</div>
+		<div class="blog-collector">
+			<img src="<?php echo $this->getskinUrl ("images/blog-collectors-img.png") ?>" alt=""/>
+			<p class="name">Art Collectors</p>
+			<p>Our unique structure and vetting results in high quality Art. - Emergart has the distinct advantage of selected Art from multiple Art World Experts.</p>
+		</div>
+	</div>
+</div>
+<div class="testimoniyel">
+	<div class="container">
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('abouttestimoniyel')->toHtml(); ?>
+	</div>
+</div>
+<div class="special-outer container">
+<div class="special-left"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('abtvideo')->toHtml(); ?></div>
+<div class="special-right">
+<h2>Why it's Special</h2>
+<p>Our unique platform gives Artists a professional submission platform where Gallery Owners select Art on commission. This arrangement lets Art Collectors discover amazing Art that has been endorsed by multiple Art World Experts.</p>
+<p class="for-artis">Emergart is for Artists, Gallery Owners and Art Collectors.</p>
+<div class="social-icon-outer">
+	<ul>
+		<li class="twiter"><a href="">twiter</a></li>
+		<li class="facebook"><a href="">facebook</a></li>
+		<li class="email"><a href="">email</a></li>
+		<li class="share"><a href="">SHARE</a></li>
+	</ul>
+</div>
+</div>
+</div>
+<div class="catagory-product-outer met-gallery container">
+<div class="gla-title-outer"><h2 class="glalery-title">Artist Profiles</h2></div>
+<ul class="bxslider2">
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+		->addAttributeToFilter('isapproved',1)
+        ->addFieldToFilter('group_id', 3);
+        $i=0;
+		//echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+			$i++;
+			?>
+			<?php if($i<10):?>
+			<li>
+			<a href="<?php echo $this->getUrl('custom/index/artist/id/'.$customer->getentityId()); ?>">
+			<?php //echo $customer->getentityId();?>
+			
+			<span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="311px"; width="311px" /></span>
+			<div class="pro-detls">
+				<span>Meet the Artist</span>
+				<p class="name"><?php echo $customer->getName(); ?></p>
+			</div>
+			</a>
+			</li>
+		<?php endif;?>
+		<?php } ?>
+</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery(".bxslider2").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 2,
+			maxSlides: 3,
+			slideMargin: 24
+            
+        });
+		jQuery(".bxslider").bxSlider({
+            
+            auto : true,
+            pager: true,
+            nextSelector: ".cls-next",
+	    prevSelector: ".cls-prev",
+		speed: 900, 
+            
+        });
+	
+	});
+
+
+</script>

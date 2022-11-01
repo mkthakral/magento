@@ -1,0 +1,29 @@
+<div itemscope itemtype="http://schema.org/WebSite">
+<meta itemprop="url" content="<?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME'].'/' ?>"/>
+
+<form id="search_mini_form" action="<?php echo $this->helper('catalogsearch')->getResultUrl() ?>" method="get" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
+	<meta itemprop="target" content="<?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME']?>/catalogsearch/result/?q={q}"/>
+    <div class="form-search input-box">	
+        <label for="search"><?php echo $this->__('Search:') ?></label>
+        <input  itemprop="query-input" id="search" type="text" name="<?php echo $this->helper('catalogsearch')->getQueryParamName() ?>" value="<?php echo $this->helper('catalogsearch')->getEscapedQueryText() ?>"  class="input-text" />
+        <button type="submit" title="<?php echo $this->__('Search') ?>" class="button search-button"><span><span><?php echo $this->__('Search') ?></span></span></button>
+        <div id="search_autocomplete" class="search-autocomplete"></div>
+<!--
+        <script type="text/javascript">
+        //<![CDATA[
+            var searchForm = new Varien.searchForm('search_mini_form', 'search', '<?php echo $this->__('Search entire store here...') ?>');
+            searchForm.initAutocomplete('<?php echo $this->helper('searchautocomplete')->getSuggestUrl() ?>', 'search_autocomplete');
+        //]]>
+        </script>
+-->
+        <script type="text/javascript">
+        //<![CDATA[
+            var searchForm = new Varien.searchForm('search_mini_form', 'search', '<?php echo $this->__('Search entire store here...') ?>');
+            searchForm.initAutocomplete('<?php echo $this->helper('searchautocomplete')->getSuggestUrl() ?>', 'search_autocomplete');
+        //]]>
+        </script>
+
+    </div>
+</form>
+</div>
+<?php echo Mage::helper('searchautocomplete')->getStyle(); ?>

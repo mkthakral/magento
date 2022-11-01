@@ -1,0 +1,318 @@
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+ ->load($id);
+     ?>
+	 <div class="artis-viewpro-outer">
+		 <div class="artis-view-left">
+			<div class="mob-back-previous"><a onclick="history.go(-1)">Back to Previous Page</a></div>
+			<div class="title"><?php echo  $collection->getName(); ?></div>
+			<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+			
+		  </div>
+		  <div class="artis-view-right">
+			<div class="artis-tab">
+				<ul>
+					<li class="abt-artis">About the Artist</li>
+					<li class="view-prot active">View Portfolio</li>
+				</ul>
+			</div>
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/home?status=vvvvvvvvv+http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html&amp;p[images][0]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2Fp%2Fa%2Fpaint-img-4.png&amp;p[title]=vvvvvvvvv&amp;p[summary]=%3Cp%3Etest%3C%2Fp%3E" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="http://digitalmate.in/magento/emergart/index.php/sendfriend/product/send/id/13/cat_id/4/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">share this page</a></li>
+					</ul>
+
+				</div>
+		  </div>
+		</div>
+		 <?php 
+	 $protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+	 $sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+		<div class="gallery-work-outer">
+			<div class="gallery-work">
+				<div class="gla-title">Gallery Endorsed Work</div>
+				<ul class="products-grid">
+				<?php foreach($result1 as $res1){ ?>
+							<?php //echo $res1['mageproductid']; ?>
+							<?php 
+							$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+							$procode=$product->getGalcode();
+							$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+							$qty=number_format($stock->getQty(),0);
+							$customer =Mage::getModel('customer/customer')->load($procode);
+					        $galname=$customer->getGaleryname();
+							
+							
+							
+							if($procode!=""&&$qty==1){?>
+							
+							<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$res1['mageproductid']."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$id."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+					<li>
+					<a href="<?php echo $product->getProductUrl(); ?>">
+					<img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one"><?php echo count($follow); ?></li>
+								<li class="two"><?php echo count($like); ?></li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price"><?php  echo Mage::helper('core')->currency($product->getPrice()); ?></span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p><?php echo $collection->getName(); ?></p>
+							<p class="end">Art Endorsed By</p>
+							<p><?php echo $galname; ?></p>
+							</div>
+						
+						</div>
+					</a>
+					</li>
+						<?php }} ?>	
+					
+				</ul>
+			</div>
+			
+			
+			<div class="gallery-work">
+				<div class="gla-title">Un-Endorsed Work</div>
+				<ul class="products-grid">
+				<?php foreach($result1 as $res1){ ?>
+				<?php 
+				
+					$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+					$procode=$product->getGalcode();
+					$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+					$qty=number_format($stock->getQty(),0);
+					
+					if($procode=="" && $qty>0){?>
+					
+					<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$res1['mageproductid']."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$id."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+					<li>
+						<a href="<?php echo $product->getProductUrl(); ?>">
+						<img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one"><?php echo count($follow); ?></li>
+								<li class="two"><?php echo count($like); ?></li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+											<span class="price"><?php  echo Mage::helper('core')->currency($product->getPrice()); ?></span>           
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p><?php echo $collection->getName(); ?></p>
+							</div>
+											
+							
+					</div>
+					</a>
+					</li>
+					<?php }} ?>
+				</ul>
+			</div>
+			
+			
+			<div class="gallery-work">
+				<div class="gla-title">SOLD Work</div>
+				<ul class="products-grid">
+				<?php foreach($result1 as $res1){ ?>
+								<?php //echo $res1['mageproductid']; ?>
+								<?php 
+								$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+								$procode=$product->getGalcode();
+								$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+								$qty=number_format($stock->getQty(),0);
+								
+								if($qty==0){?>
+							<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$res1['mageproductid']."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+                    $sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$id."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$follow = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>	
+					<li>
+						<a href="<?php echo $product->getProductUrl(); ?>">
+						<img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one"><?php echo count($follow); ?></li>
+								<li class="two"><?php echo count($like); ?></li>
+								<li class="three sold">
+									SOLD
+
+								</li>
+							</ul>
+							<p><?php echo $collection->getName(); ?></p>
+							</div>
+											
+							
+					</div>
+					</a>
+					</li>
+				<?php }} ?>
+				</ul>
+			</div>
+		
+		</div>
+		
+		<div class="abt-artis-outer" style="display:none;">
+			<div class="about-artis">
+				<div class="title">About the Artist</div>
+				<div class="abt-content">
+					<div class="con">
+						<p>Mission Statement:</p>
+						<p><?php echo nl2br($collection->getArtdescription());  ?> </p>
+					</div>
+					<div class="con">
+					        <p>Biography:</p>	
+						<p><?php echo nl2br($collection->getBiography());  ?></p>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="about-artis">
+				<div class="title">Q & A</div>
+				<div class="abt-content">
+					
+					<?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName(' artist_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE artistid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			
+			?>
+			<?php foreach($resultnew as $res){ ?>
+			<div class="con">
+						<p><?php echo $res['question']; ?></p>
+						<p><?php echo $res['answer'];  ?></p>
+					</div>
+			<?php } ?>
+				</div>
+			</div>
+			
+		</div>
+
+     
+    
+      
+      
+    </div>
+	
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery(".abt-artis").click(function(){
+			jQuery(".abt-artis-outer").show();
+			jQuery(".gallery-work-outer").hide();
+			jQuery(".abt-artis").addClass("active");
+			jQuery(".view-prot").removeClass("active");
+			
+		});
+		
+		jQuery(".view-prot").click(function(){
+			jQuery(".gallery-work-outer").show();
+			jQuery(".abt-artis-outer").hide();
+			jQuery(".view-prot").addClass("active");
+			jQuery(".abt-artis").removeClass("active");
+			
+			
+		});
+		
+	});
+	
+	
+	</script>

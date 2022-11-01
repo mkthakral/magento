@@ -1,0 +1,136 @@
+<?php  
+$feeds=$this->getFeed();
+if(!isset($feeds['feedprice'])){
+	$feeds['feedprice'] = 0;
+}
+if(!isset($feeds['feedvalue'])){
+	$feeds['feedvalue'] = 0;
+}
+if(!isset($feeds['feedquality'])){
+	$feeds['feedquality'] = 0;
+}
+$partner=$this->getProfileDetail();
+$helper = Mage::helper('marketplace');
+$seller_id=$partner['mageuserid'];
+$seller=Mage::getModel('customer/customer')->load($seller_id);
+$shoptitle = $partner->getShoptitle();
+if(!$shoptitle){
+	$shoptitle = $seller->getName();
+}
+$feedback_url = $helper->getRewriteUrl('marketplace/seller/feedback/'.$partner['profileurl']);
+$feed_collection = Mage::getModel('marketplace/feedback')->getCollection()
+				   	->addFieldToFilter('status',array('neq'=>0))
+				   	->addFieldToFilter('proownerid',array('eq'=>$seller_id))
+				   	->setOrder('feedid','DESC')
+				   	->setPageSize(2)
+					->setCurPage(1);
+?>
+<div class="wk_mp_design">
+	<div class="wk_mp_design_inner">
+		<div class="store-name storename">
+			<?php echo $helper->__("%s 's Rating",$shoptitle) ?>
+		</div>
+		<div class="wk_mp_design_inner wk_mp_design_inner_last">
+			<div class="row">			
+				<span><?php echo $helper->__('Average Rating') ?></span>
+				<div class="mpfeedback">
+					<div class="price">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Price') ?> </span><span>:</span>
+						<div class="ratingslider-box">
+							<div class="rating" style="width:<?php echo ceil($feeds['price']);?>%;"></div>
+						</div>
+						<span>&nbsp;(<?php echo round(($feeds['price']/20), 1, PHP_ROUND_HALF_UP) ?>)</span>
+						<div class="clear"></div>
+					</div>
+					<div class="value">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Value') ?> </span><span>:</span>
+						<div class="ratingslider-box" >
+							<div class="rating" style="width:<?php echo ceil($feeds['value']);?>%;"></div>								
+						</div>
+						<span>&nbsp;(<?php echo round(($feeds['value']/20), 1, PHP_ROUND_HALF_UP)?>)</span>
+						<div class="clear"></div>
+					</div>
+					<div class="quality">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Quality') ?> </span><span>:</span>
+						<div class="ratingslider-box">
+							<div class="rating" style="width:<?php echo ceil($feeds['quality']);?>%;"></div>
+						</div>
+						<span>&nbsp;(<?php echo round(($feeds['quality']/20), 1, PHP_ROUND_HALF_UP)?>)</span>
+						<div class="wk_clear"></div>
+					</div>
+					<div class="quality">
+						<span><?php echo $helper->__('Reviwed') ?> </span>
+						<a class="store-name" href="<?php echo $feedback_url ?>" style="font-weight: bold;padding-left: 2px;"><?php echo $helper->__("%s Times",$feeds['feedcount'])?></a>
+					</div>
+					<a href="<?php echo $feedback_url ?>">
+						<button class="button" title="<?php echo $helper->__("Make a Review") ?>">
+							<span>
+								<span>
+									<?php echo $helper->__('Make a Review'); ?>
+								</span>
+							</span>
+						</button>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="store-name storename">
+			<?php echo $helper->__("Recent Feedbacks") ?>
+		</div>
+		<?php
+		foreach ($feed_collection as $keyed) {
+			$feedcustomer = Mage::getModel('customer/customer')->load($keyed['userid']); 
+			$name = $feedcustomer['firstname'].' '.$feedcustomer['lastname'];
+			$feed_datetime= strtotime($keyed['createdat']);
+    		$feed_date = date('d-M-Y', $feed_datetime);
+			?>
+			<div class="wk_mp_design_inner" style="border-bottom:none;">
+				<span class="store-name storename">
+					<?php echo $helper->__("By %s",$name,$keyed['createdat'])."</span> ".$helper->__("on")." <span class='store-name storename'>".$helper->__("%s",$feed_date) ?>
+				</span>
+			</div>
+			<div class="wk_mp_design_inner wk_mp_design_inner_last">
+				<div><?php echo $keyed['feedreview']; ?> </div>
+				<div class="mpfeedback">
+					<div class="price">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Price') ?> </span><span>:</span>
+						<div class="ratingslider-box">
+							<div class="rating" style="width:<?php echo ceil($keyed['feedprice']);?>%;"></div>
+						</div>
+						<span>&nbsp;(<?php echo round(($keyed['feedprice']/20), 1, PHP_ROUND_HALF_UP)?>)</span>
+						<div class="clear"></div>
+					</div>
+					<div class="value">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Value') ?> </span><span>:</span>
+						<div class="ratingslider-box" >
+							<div class="rating" style="width:<?php echo ceil($keyed['feedvalue']);?>%;"></div>								
+						</div>
+						<span>&nbsp;(<?php echo round(($keyed['feedvalue']/20), 1, PHP_ROUND_HALF_UP)?>)</span>
+						<div class="clear"></div>
+					</div>
+					<div class="quality">
+						<span class="wk_ordertitle_label"><?php echo $helper->__('Quality') ?> </span><span>:</span>
+						<div class="ratingslider-box">
+							<div class="rating" style="width:<?php echo ceil($keyed['feedquality']);?>%;"></div>
+						</div>
+						<span>&nbsp;(<?php echo round(($keyed['feedquality']/20), 1, PHP_ROUND_HALF_UP)?>)</span>
+						<div class="wk_clear"></div>
+					</div>
+					<a href="<?php echo $feedback_url ?>">
+						<button class="button" title="<?php echo $helper->__("Make a Review") ?>">
+							<span>
+								<span>
+									<?php echo $helper->__('Make a Review'); ?>
+								</span>
+							</span>
+						</button>
+					</a>
+				</div>
+			</div>
+		<?php
+			# code...
+		}
+		?>
+		
+	</div>
+</div>

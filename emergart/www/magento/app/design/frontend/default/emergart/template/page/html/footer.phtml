@@ -1,0 +1,75 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/font-awesome.css') ?>">
+
+	<div class="footer-container">
+				<hr class="footer-line"/>
+				<div class="footer container">
+					<div class="foot-top">
+						<ul>
+							<li><a href="<?php echo $this->getBaseUrl() ?>about">About Emergart</a></li>
+							<li><a href="<?php echo $this->getBaseUrl() ?>faq">Buyer FAQ</a></li>
+							<li><a href="<?php echo $this->getBaseUrl() ?>privacy-policy">Privacy Policy</a></li>
+							<li><a href="<?php echo $this->getBaseUrl() ?>terms-of-service">Terms of Service</a></li>
+							<li><a href="<?php echo $this->getBaseUrl() ?>copyright">Copyright Policy</a></li>
+							<li><a href="<?php echo $this->getBaseUrl() ?>contact">Contact</a></li>
+						</ul>
+					</div>
+					<div class="social-link">
+							<ul class="footer-social-icons" itemscope itemtype="http://schema.org/Organization">
+								<span itemprop="name" class="display-none">Emergart</span>
+								<span itemprop="logo" class="display-none"><?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME'].'/skin/frontend/default/emergart/images/logo.png'?></span>
+								<link itemprop="url" href="<?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME']?>">
+								<li class="ins-icon"><a itemprop="sameAs" href="https://www.instagram.com/emergart/" target="_blank"></a></li>
+                                <li class="twiter"><a itemprop="sameAs" href="https://twitter.com/emergart" target="_blank"></a></li>
+                                <li class="face-book"><a itemprop="sameAs" href="https://www.facebook.com/emergart.online/" target="_blank" class=""></a></li>
+                                <li class="email-icon" style="display:none"><a href="mailto:?Subject=Check this out&body=I thought you might be interested in this site, artists submit to galleries and the galleries select the Art for sale, great concept.%0D%0DHere's the link: www.emergart.com">email</a></li>
+							</ul>
+					</div>
+                    <div itemscope="" itemtype="https://schema.org/LocalBusiness">
+                        <span itemprop="name" class="display-none">emergart.com</span>
+                        <span itemprop="url" class="display-none"><?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME']?></span>
+                        <span itemprop="logo" class="display-none"><?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME'].'/skin/frontend/default/emergart/images/logo.png'?></span>
+                        <span itemprop="image" class="display-none"><?php echo $_SERVER['REQUEST_SCHEME'] .'://'.$_SERVER['SERVER_NAME'].'/skin/frontend/default/emergart/images/logo.png'?></span>
+                        <span itemprop="description" class="display-none">Beautiful & Original Paintings, Drawings, Photography, Sculptures for sale on emergart.com</span>
+                        <span itemprop="telephone" class="display-none">+1 (843) 302-9247</span>
+                        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress" class="display-none">
+                            <span itemprop="addressCountry" class="display-none">US</span>
+                            <span itemprop="addressLocality" class="display-none">Mount Pleasant</span>
+                            <span itemprop="addressRegion" class="display-none">SC</span>
+                            <span itemprop="postalCode" class="display-none">29464</span>
+                            <span itemprop="email" class="display-none">info@emergart.net</span>
+                        </div>
+                    </div>
+                                    </div>
+				<div class="copy-right">
+					<div class="container">
+						<span>All content &copy; Emergart Inc. 2016</span>
+						<a href="#"><img src="<?php echo $this->getskinUrl("images/footer-logo.png") ?>" alt="logo"/></a>
+					</div>
+				</div>
+			</div>

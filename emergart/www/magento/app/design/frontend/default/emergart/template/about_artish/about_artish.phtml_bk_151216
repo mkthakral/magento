@@ -1,0 +1,126 @@
+<div class="home-content">
+<div class="banner-section">
+<ul class="bxslider">
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-4.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-5.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-6.jpg" /></li>
+</ul>
+<div class="banner-shadow">&nbsp;</div>
+<div class="about-banner-con-outer">
+<div class="ab-con-left"><span class="text">A new Paradigm in Artist-Gallery Relations</span></div>
+<div class="ab-con-right">
+<div class="sign-up-con">Getting Started is easy, Sign Up Today!</div>
+<div class="new-account-outer">
+<div class="new-account"><a id="registernow">New Account</a></div>
+<div class="or">-OR-</div>
+<div class="sign-in-facebook"><a href="#">Sign In with Facebook</a></div>
+<div class="member-outer"><span>Already a member,</span> <a class="ajaxlogin-login">Sign In</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="blog-outer container">
+	<div class="about-blog">
+		<div class="blog-artis">
+			<img src="<?php echo $this->getskinUrl ("images/blog-artis-img.png") ?>" alt=""/>
+			<p class="name">Artists</p>
+			<p>Artists can submit their portfolios to multiple galleries, make connections, gain exposure and make sales at the same time.</p>
+		</div>
+		<div class="blog-gallery">
+			<img src="<?php echo $this->getskinUrl ("images/blog-gallery-img.png") ?>" alt=""/>
+			<p class="name">Gallery Owners</p>
+			<p>Gallery Owners select and endorse specific Art on commission - those selections become available on the public facing side of Emergart.</p>
+		</div>
+		<div class="blog-collector">
+			<img src="<?php echo $this->getskinUrl ("images/blog-collectors-img.png") ?>" alt=""/>
+			<p class="name">Art Collectors</p>
+			<p>Our unique structure and vetting results in high quality Art. - Emergart has the distinct advantage of selected Art from multiple Art World Experts.</p>
+		</div>
+	</div>
+</div>
+<div class="testimoniyel">
+<div class="container">
+<div class="images"><img alt="" src="<?php echo $this->getSkinUrl();?>images/test-img.png" /></div>
+<div class="test-con">
+<p class="con">"The best thing about Emergart is how Artists and Gallery Owners are connecting like never before and of course, every page has beautiful Art."</p>
+<p class="name">- Gallery Owner, Jane Kirkland</p>
+</div>
+</div>
+</div>
+<div class="special-outer container">
+<div class="special-left"><iframe src="https://www.youtube.com/embed/gg5VI2ilHXA" height="315" width="560"></iframe></div>
+<div class="special-right">
+<h2>Why it's Special</h2>
+<p>Our unique platform gives Artists a professional submission platform where Gallery Owners select Art on commission. This arrangement lets Art Collectors discover amazing Art that has been endorsed by multiple Art World Experts.</p>
+<p class="for-artis">Emergart is for Artists, Gallery Owners and Art Collectors.</p>
+<div class="social-icon-outer">
+	<ul>
+		<li class="twiter"><a href="">twiter</a></li>
+		<li class="facebook"><a href="">facebook</a></li>
+		<li class="email"><a href="">email</a></li>
+		<li class="share"><a href="">SHARE</a></li>
+	</ul>
+</div>
+</div>
+</div>
+<div class="catagory-product-outer met-gallery container">
+<ul class="bxslider2">
+<?php
+
+$visibility = array(
+
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+
+	);
+
+	 
+
+	$_productCollection = Mage::getResourceModel('reports/product_collection')
+
+							->addAttributeToSelect('*')
+
+							->addOrderedQty()
+
+							->addAttributeToFilter('visibility', $visibility)
+
+							->setOrder('main_table.created_at','desc');?>
+<?php $i = 0;?>
+							<?php foreach($_productCollection as $_product){?>
+
+								
+			<?php $i++;if($i<5)	{	?>		
+<li><a href="<?php echo $_product->getProductUrl(); ?>" title="View <?php echo $_product->getName(); ?>"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(223,222); ?>" alt="Product image"  class="shadow" rel="black" /></a>
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three"><?php $finalPrice =  $_product->getPrice();echo $formattedPrice = Mage::helper('core')->currency($finalPrice, true, false);?></li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+<?php }?>
+<?php }?>
+</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery(".bxslider2").bxSlider({
+            
+            slideWidth: 315,
+			minSlides: 2,
+			maxSlides: 3,
+			slideMargin: 10
+            
+        });
+	
+	});
+
+
+</script>

@@ -1,0 +1,104 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+$customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$isapproved=$customerData['isapproved'];
+
+?>
+
+<div class="dashboard">
+
+<form class="rst-approval" action="<?php echo Mage::getBaseUrl() ?>customer/account/sendrequest" method="post" autocomplete="off">
+<input type="hidden" name="email" value="<?php echo  $customerData->getEmail();  ?>"/>
+<input type="hidden" name="name" value="<?php echo  $customerData->getName();  ?>"/>
+<?php if($customerGroupId==2){ ?>
+<input type="hidden" name="type" value="<?php echo  "Galery Owner";  ?>"/>
+<?php } ?>
+<?php if($customerGroupId==3){ ?>
+<input type="hidden" name="type" value="<?php echo  "Artist";  ?>"/>
+<?php } ?>
+<?php if($isapproved==0&&$customerGroupId==2||$customerGroupId==3){ ?>
+ <button type="submit">Request for approval</button>
+<?php } ?>
+ </form>
+
+
+<div class="dshbrd-cntnt-top">   
+	<div class="dshbrd-cnt-left">
+   <div class="dash-name">
+   <span>Hello </span><span><?php echo $customer->getName();  ?></span>
+   </div>
+   <div>
+  
+   </div>
+   <div class="dash-msg">
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('dashmsg')->toHtml(); ?>
+	</div>
+	</div>
+	
+<div class="dash-video">
+<?php if($customerGroupId==1){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('collector-video')->toHtml(); ?>
+<?php } ?>
+
+<?php if($customerGroupId==2){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('galery-video')->toHtml(); ?>
+<?php } ?>
+
+
+<?php if($customerGroupId==3){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artis-video')->toHtml(); ?>
+<?php } ?>
+</div>	
+</div>
+<div class="dshbrd-cntnt-bottom">
+<div class="stay-informed">
+<h1>Stay Informed</h1>
+<div class="infrmed-outer">
+	<div class="infrme-cnt">Join us on any of these social channels for news and updates. We will regularly post artist’s work, bio’s and interviews on IG, Twitter and FB.</div>
+	<div class="infrmed-socialicon">
+		<ul>
+			<li class="facebook"><a href="#">facebook</a></li>
+			<li class="twiter"><a href="#">twiter</a></li>
+			<li class="instragrm"><a href="#">instragrme</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function sendrequest() {
+   alert("hello");
+}
+</script>
+
+

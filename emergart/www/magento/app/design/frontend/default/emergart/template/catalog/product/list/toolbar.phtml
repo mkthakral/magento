@@ -1,0 +1,79 @@
+<?php
+/**
+* @author    	Magentiamo http://www.magentiamo.com <info@magentiamo.com>
+* @copyright 	Copyright (C) 2016 Magentiamo.com
+* @theme 		Bazar
+*
+*/
+?>
+<?php if($this->getCollection()->getSize()): ?>
+
+<div class="toolbar">
+  <?php if( $this->isExpanded() ): ?>
+  <div class="sorter">
+    <?php if( $this->isEnabledViewSwitcher() ): ?>
+    <p class="view-mode hide-for-small">
+      <?php $_modes = $this->getModes(); ?>
+      <?php if($_modes && count($_modes)>1): ?>
+      <label><?php echo $this->__('View as') ?>:</label>
+      <?php foreach ($this->getModes() as $_code=>$_label): ?>
+      <?php if($this->isModeActive($_code)): ?>
+      <a class="active" href="#" title="<?php echo $_label ?>"><i class="fa fa-<?php if($_code=='grid'):echo'th'; else: echo 'th-list';endif ?>"></i></a>
+      <?php else: ?>
+      <a href="<?php echo $this->getModeUrl($_code) ?>" title="<?php echo $_label ?>"><i class="fa fa-<?php if($_code=='grid'):echo'th'; else: echo 'th-list';endif ?>"></i></a>
+      <?php endif; ?>
+      <?php endforeach; ?>
+      <?php endif; ?>
+    </p>
+    <?php endif; ?>
+    <?php // Show pager only if there are more than one page ?>
+    <?php if ($_pager_html = trim($this->getPagerHtml())): ?>
+    <div class="pager">
+      <p class="amount">
+        <?php // if($this->getLastPageNum()>1): ?>
+        <?php //echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+        <?php //else: ?>
+        <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+        <?php //endif; ?>
+      </p>
+      <?php echo $_pager_html; ?> </div>
+    <?php endif; ?>
+    <?php // If there is no pager: display the amount in sorter ?>
+    <?php if(empty($_pager_html)): ?>
+    <p class="amount">
+      <?php if($this->getLastPageNum()>1): ?>
+      <?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+      <?php else: ?>
+      <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+      <?php endif; ?>
+    </p>
+    <?php endif; ?>
+    <div class="sort-by col-md-4">
+      <label><?php echo $this->__('Sort By') ?></label>
+      <div class="select-style">
+        <select class="selectpicker">
+          <?php foreach($this->getAvailableOrders() as $_key=>$_order): ?>
+          <option value="<?php echo $this->getOrderUrl($_key, 'asc') ?>"<?php if($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>> <?php echo $this->__($_order) ?> </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <?php if($this->getCurrentDirection() == 'desc'): ?>
+      <a class="category-desc v-middle" href="<?php echo $this->getOrderUrl(null, 'asc') ?>" title="<?php echo $this->__('Set Ascending Direction') ?>"><i class="fa chevron-down"></i></a>
+      <?php else: ?>
+      <a class="category-asc v-middle" href="<?php echo $this->getOrderUrl(null, 'desc') ?>" title="<?php echo $this->__('Set Descending Direction') ?>"><i class="fa fa-chevron-up"></i></a>
+      <?php endif; ?>
+    </div>
+    <div class="limiter hide-for-small col-md-3">
+      <label><?php echo $this->__('Show') ?></label>
+      <div class="select-style">
+        <select>
+          <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
+          <option value="<?php echo $this->getLimitUrl($_key) ?>"<?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>> <?php echo $_limit ?> </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+  </div>
+  <?php endif; ?>
+</div>
+<?php endif ?>

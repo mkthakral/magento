@@ -1,0 +1,121 @@
+<?php 
+$partner = Mage::getModel('marketplace/userprofile')->isPartner(Mage::getSingleton('customer/session')->getCustomerId()); 
+$magentoCurrentUrl = Mage::helper('core/url')->getCurrentUrl(); 
+$helper=Mage::helper('marketplace');
+$allow_pro_type=Mage::helper('marketplace')->getAllowedProductType();
+?>	
+<?php
+$current_store = Mage::app()->getStore();
+if(Mage::getStoreConfig('design/package/name',$current_store) == 'default'){ ?>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('marketplace/css/default.css')?>">
+<?php 
+} ?>
+	<div class="block block-account">	
+		<div class="block-title">	
+			<strong><span><?php echo $helper->__('Marketplace') ?></span></strong>
+		</div>		
+		<div class="block-content">		
+			<ul class="wk_cont_ul">		
+				<?php if($partner){ ?>	
+					<li  <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')? "class=current":"";?>>		
+					<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')){ ?>	
+						<strong><?php echo $helper->__('Seller Profile') ?></strong>		
+						<?php }			
+						else{ ?>	
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/editprofile'); ?>">
+								<?php echo $helper->__('Seller Profile') ?>
+							</a>				
+					<?php } ?>		
+					</li>
+					<?php 
+					if(strpos($allow_pro_type,'configurable') !== false){ ?>
+						<li  <?php echo strpos($magentoCurrentUrl,'newattribute')? "class=current":"";?>>		
+						<?php if(strpos($magentoCurrentUrl,'newattribute')){ ?>					
+							<strong><?php echo $helper->__('Create Attribute') ?></strong>	
+							<?php }		
+							else{ ?>		
+								<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/newattribute'); ?>">
+									<?php echo $helper->__('Create Attribute') ?></a>			
+							<?php } ?>				
+						</li>
+						<?php
+					}
+					?>
+					<li  <?php echo (strpos($magentoCurrentUrl,'marketplaceaccount/new') && strpos($magentoCurrentUrl,'marketplaceaccount/newattribute')===false)? "class=current":"";?>>			
+					<?php if(strpos($magentoCurrentUrl,'marketplaceaccount/new') && strpos($magentoCurrentUrl,'marketplaceaccount/newattribute')===false){ ?>		
+						<strong><?php echo $helper->__('New Products') ?></strong>	
+						<?php }					
+						else{ ?>					
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/new'); ?>">
+								<?php echo $helper->__('New Products') ?>
+							</a>						
+						<?php } ?>			
+					</li>					
+					<li  <?php echo strpos($magentoCurrentUrl,'myproductslist')? "class=current":"";?>>			
+					<?php if(strpos($magentoCurrentUrl,'myproductslist')){ ?>		
+						<strong><?php echo $helper->__('My Products List') ?></strong>	
+						<?php }					
+						else{ ?>					
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/myproductslist'); ?>">
+								<?php echo $helper->__('My Products List') ?>
+							</a>						
+						<?php } ?>			
+					</li>
+								
+					<li  <?php echo strpos($magentoCurrentUrl,'mydashboard')? "class=current":"";?>>	
+						<?php if(strpos($magentoCurrentUrl,'mydashboard')){ ?>		
+						<strong><?php echo $helper->__('My Dashboard') ?></strong>				
+						<?php }					
+						else{ ?>		
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/mydashboard'); ?>">
+								<?php echo $helper->__('My Dashboard') ?>
+							</a>					
+						<?php } ?>					
+					</li>	
+					
+					<li  <?php echo strpos($magentoCurrentUrl,'mytransaction')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'mytransaction')){ ?>
+							<strong><?php echo $helper->__('My Transaction List') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/mytransaction'); ?>"><?php echo $helper->__('My Transaction List') ?></a>
+						<?php } ?>					
+					</li>
+					<?php if(Mage::helper('marketplace')->getIsOrderManage()=="1") {?>
+					<li <?php echo strpos($magentoCurrentUrl,'marketplace/order/shipping/')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'marketplace/order/shipping')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('Manage Shipping') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/order/shipping'); ?>"><?php echo Mage::helper('marketplace')->__('Manage Shipping') ?></a>
+						<?php } ?>
+					</li>
+					<?php } ?>		
+					<?php echo $this->getChildHtml();?>
+					<li class="last <?php echo strpos($magentoCurrentUrl,'marketplace/order/history')? "current":"";?>">		
+						<?php if(strpos($magentoCurrentUrl,'marketplace/order/history')){ ?>	
+							<strong><?php echo $helper->__('My Order History') ?></strong>	
+						<?php }		
+						else{ ?>		
+							<a href="<?php echo $this->getUrl('marketplace/order/history'); ?>">
+								<?php echo $helper->__('My Order History') ?>
+							</a>						
+						<?php } ?>	
+					</li>	
+					<?php }		
+					else{ ?>	
+					<?php echo $this->getChildHtml();?>
+					<li class="last <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')? "current":"";?>">
+						<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')){ ?>	
+							<strong><?php echo $helper->__('Become Partner') ?></strong>	
+						<?php }			
+						else{ ?>	
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/becomepartner'); ?>">
+								<?php echo $helper->__('Become Partner') ?>
+							</a>					
+						<?php } ?>		
+					</li>		
+				<?php } ?>	
+			</ul>	
+		</div>	
+	</div>

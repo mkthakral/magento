@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+ <modules>
+      <EmergartNS_Emergart>
+           <active>true</active>
+           <codePool>local</codePool>
+      </EmergartNS_Emergart>
+  </modules>
+</config>

@@ -1,0 +1,98 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php   $this->getMessagesBlock()->toHtml(); ?>
+
+
+<?php /*
+<?php if ($this->getOrderId()):?>
+<?php if ($this->getCanViewOrder()) :?>
+    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+<?php  else :?>
+    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+<?php endif;?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+<?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
+    <p>
+        <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+        <?php echo $this->getChildHtml() ?>
+    </p>
+<?php endif;?>
+<?php endif;?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId())))?></p>
+<?php endif;?>
+
+<?php if ($profiles = $this->getRecurringProfiles()):?>
+<p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+<ul class="disc">
+<?php foreach($profiles as $profile):?>
+<?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id')));?>
+    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description')))?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>
+*/ ?>
+<div class="container ">
+	<h2 class="sub-title"><?php echo $this->__('payment Successfully Processed') ?></h2>
+	<div class="success-outer">
+		<div class="success-inner">
+			<p>
+				<span class="thnk-prching">Thank you for purchasing original art through emergart.</span>
+				<span class="prchs-oder-id">Your Purchase order number is: <span class="order-id"><?php echo $this->getOrderId(); ?></span></span>
+			</p>
+			<p>The artist will be notified to make the necessary arrangements and you should have delivery in approximately 14 days. Depending on your location,
+				your package could arrive sooner or later. You will then have 7 Days to inspect the artwork for damages, if you are unsatisfied, please contact us
+				from Help in “My Account.” For other assistance or to check the status of your package, please see Help or My Purchases, in your “My Account”
+				section.
+			</p>
+			<p>We sincerely hope you are satisfied with our service and if you have any recommendation on how we can improve our service, don’t hesitate to reach out and let us know.</p>
+			<p>Thanks again and we look forward to helping you in the future.</p>
+			<p>The Emergart Team</p>
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/home?status=vvvvvvvvv+http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html&amp;p[images][0]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2Fp%2Fa%2Fpaint-img-4.png&amp;p[title]=vvvvvvvvv&amp;p[summary]=%3Cp%3Etest%3C%2Fp%3E" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="http://digitalmate.in/magento/emergart/index.php/sendfriend/product/send/id/13/cat_id/4/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">Follow us to stay informed about New Artist’s Work and Gallery Owner Q&A’s</a></li>
+					</ul>
+
+			</div>
+			
+		</div>
+	</div>
+</div>

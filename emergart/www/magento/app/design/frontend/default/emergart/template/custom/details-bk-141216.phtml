@@ -1,0 +1,174 @@
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+        
+        
+         ->load($id);
+       // echo '<pre>';print_r($collection->getData());
+   //echo $collection->getEmail();die;?>
+<div class="" id="base">
+	<div class="gallery-details-top">
+      <!-- Unnamed (Image) -->
+      <div class="ax_image" id="u0">
+        <?php if ($collection->getSstechProfileimage()): ?> 
+            
+         <img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$collection->getSstechProfileimage();?>" class="img " id="u0_img"/>
+          
+        <?php endif ?>
+        <!-- Unnamed () -->
+        <div class="text" id="u1" style="top: 100px; transform-origin: 98px 0px 0px;">
+          <p><span></span></p>
+        </div>
+      </div>
+	  <div class="gl-dtls-right"> 	
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u2">
+        
+        <!-- Unnamed () -->
+        <div class="text" id="u3">
+          <p><span><?php echo $collection->getGaleryname();?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u4">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u4_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u5">
+          <p><span>
+         <?php if ($collection->getData('gallerycity')): ?>
+<?php echo nl2br($collection->getResource()->getAttribute('gallerycity')->getFrontend()->getValue($collection)) ?>
+<?php endif;?>
+<?php if ($collection->getData('gallerystate')): ?>
+<?php echo ',' . nl2br($collection->getResource()->getAttribute('gallerystate')->getFrontend()->getValue($collection)) ?>
+<?php endif;?>
+          </span></p>
+        </div>
+      </div>
+	  <div class="ax_paragraph" id="u8">
+		<img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u8_img">
+		<!-- Unnamed () -->
+		<div class="text" id="u9">
+			 <p><span><?php echo $collection->getEmail();?></span></p>
+		</div>
+	  </div>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u6">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u6_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u7">
+          <p><span style="text-decoration:underline;"><?php echo $collection->getGallerywebsite();?></span></p>
+        </div>
+      </div>
+      <!-- Unnamed (Shape) -->
+	  <div class="ax_paragraph reprsnt" id="u12">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u12_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u13">
+          <p class="title"><span>Represents</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u14">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u14_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u15">
+          <p><span><?php if ($collection->getData('galprorepresent')): ?>
+<?php echo nl2br($collection->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($collection)) ?>
+<?php endif;?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u16">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u16_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u17">
+          <p><span><?php if ($collection->getData('galstylrepresent')): ?>
+<?php echo nl2br($collection->getResource()->getAttribute('galstylrepresent')->getFrontend()->getValue($collection)) ?>
+<?php endif;?></span></p>
+        </div>
+      </div>
+	  </div>	
+     </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u10">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u10_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u11">
+          <?php echo $collection->getGalerydescription();?>
+        </div>
+      </div>
+	  <div class="gallery-details-top">
+		<div class="ax_image" id="u42">
+        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u43" style="top: 68px; transform-origin: 65px 0px 0px;">
+          <p><span></span></p>
+        </div>
+      </div>
+	  <div class="gl-dtls-right"> 	
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u44">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u44_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u45">
+          <p><span><?php echo $collection->getFirstname(); ?>  <?php echo $collection->getLastname(); ?></span></p>
+        </div>
+      </div>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u46">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u46_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u47">
+          <p><span>
+          <?php if ($collection->getData('gallery_owner_city')): ?>
+<?php echo  nl2br($collection->getResource()->getAttribute('gallery_owner_city')->getFrontend()->getValue($collection)) ?>
+<?php endif;?>
+<?php if ($collection->getData('gallery_owner_state')): ?>
+<?php echo ',' . nl2br($collection->getResource()->getAttribute('gallery_owner_state')->getFrontend()->getValue($collection)) ?>
+<?php endif;?>
+</span></p>
+        </div>
+      </div>
+	  </div>
+	  </div>
+	  
+
+    <?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE galeryid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			
+			?>
+      
+<?php foreach($resultnew as $res){ ?>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u18">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u18_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u19">
+          <p class="qes"><span><?php echo $res['question']; ?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u20">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u20_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u21">
+          <p><span><?php echo $res['answer'];  ?></span></p>
+        </div>
+      </div>
+<?php } ?>
+      <!-- Unnamed (Image) -->
+      
+    </div>

@@ -1,0 +1,276 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->toHtml() ?></div>
+<div class="product-view container">
+    <div class="product-essential">
+        <form action="<?php echo $this->getSubmitUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <?php echo $this->getBlockHtml('formkey') ?>
+            <div class="no-display">
+                <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                <input type="hidden" name="related_product" id="related-products-field" value="" />
+            </div>
+			<div class="product-name">
+                    <span class="h1"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span>
+            </div>
+            <div class="product-img-box">
+                <div class="product-name">
+                    <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+                </div>
+                <?php echo $this->getChildHtml('media') ?>
+            </div>
+
+            <div class="product-shop">
+                <div class="gla-watch-like">
+					<ul>
+						<li class="gla-watch">3 Galleries are Watching this Artist</li>
+						<li class="gla-like">5 Galleries Liked this Artwork</li>
+					</ul>
+				</div>
+				<div class="sharing-outer">
+					<?php echo $this->getChildHtml('sharing') ?>
+				</div>
+				<div class="price-cart-outer">
+					<div class="price-info">
+						<?php echo $this->getPriceHtml($_product); ?>
+						<?php echo $this->getChildHtml('bundle_prices') ?>
+						<?php echo $this->getTierPriceHtml() ?>
+					</div>
+					<div class="save-outer">
+						<?php echo $this->getChildHtml('addto') ?>
+					</div>
+					<div class="add-to-box">
+                        <?php if($_product->isSaleable()): ?>
+                            <?php echo $this->getChildHtml('addtocart') ?>
+                            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                                <span class="or"><?php echo $this->__('OR') ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+				</div>
+				<div class="product-details-info">
+					<span>Category <br/>Oil on canvas</span>
+					<span>60X28 Inches <br/> 2016</span>
+				</div>
+
+                <div class="extra-info">
+                    <?php echo $this->getReviewsSummaryHtml($_product, 'default', false)?>
+                    <?php echo $this->getChildHtml('product_type_availability'); ?>
+                </div>
+
+                <?php echo $this->getChildHtml('alert_urls') ?>
+
+                <?php if ($_product->getDescription()):?>
+                    <div class="short-description">
+                        <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getDescription()), 'description') ?></div>
+                    </div>
+                <?php endif;?>
+
+				<div class="paypal-outer"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('paypal')->toHtml();?> </div>
+
+
+                <?php echo $this->getChildHtml('other');?>
+
+                <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+                <?php endif;?>
+
+            </div>
+
+            <div class="add-to-cart-wrapper">
+                <?php echo $this->getChildHtml('product_type_data') ?>
+                <?php echo $this->getChildHtml('extrahint') ?>
+
+                <?php if (!$this->hasOptions()):?>
+                    
+                    <?php echo $this->getChildHtml('extra_buttons') ?>
+                <?php elseif (!$_product->isSaleable()): ?>
+                    <div class="add-to-box">
+                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php echo $this->getChildHtml('sharing') ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php echo $this->getChildHtml('related_products') ?>
+
+            <div class="clearer"></div>
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+            <?php endif;?>
+        </form>
+        <script type="text/javascript">
+        //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button, url) {
+                if (this.validator.validate()) {
+                    var form = this.form;
+                    var oldUrl = form.action;
+
+                    if (url) {
+                       form.action = url;
+                    }
+                    var e = null;
+                    try {
+                        this.form.submit();
+                    } catch (e) {
+                    }
+                    this.form.action = oldUrl;
+                    if (e) {
+                        throw e;
+                    }
+
+                    if (button && button != 'undefined') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function(button, url){
+                if(this.validator) {
+                    var nv = Validation.methods;
+                    delete Validation.methods['required-entry'];
+                    delete Validation.methods['validate-one-required'];
+                    delete Validation.methods['validate-one-required-by-name'];
+                    // Remove custom datetime validators
+                    for (var methodName in Validation.methods) {
+                        if (methodName.match(/^validate-datetime-.*/i)) {
+                            delete Validation.methods[methodName];
+                        }
+                    }
+
+                    if (this.validator.validate()) {
+                        if (url) {
+                            this.form.action = url;
+                        }
+                        this.form.submit();
+                    }
+                    Object.extend(Validation.methods, nv);
+                }
+            }.bind(productAddToCartForm);
+        //]]>
+        </script>
+    </div>
+			<?php
+			$product=Mage::getModel('catalog/product')->load($_product->getId());
+			$galid=$product->getGalcode();
+			$collection =Mage::getModel('customer/customer')->load($galid);
+
+			?>
+	<div class="artist-details dital-bottom">
+		<?php 
+		$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+		$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_product->getId()."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+
+          foreach($result1 as $res){
+			  
+		$artisid=$res['userid'];
+		  }
+    $artiscollection=Mage::getModel('customer/customer')->load($artisid);
+		?>
+		
+		<h2 class="title">the Artist</h2>
+		<div class="artis-con">
+			<div class="top">
+				<div class="images"><img src="<?php echo $this->getskinUrl ("images/artis-img-1.png") ?>" alt=""/></div>
+				<div class="con">
+					<p><?php echo $artiscollection->getName(); ?></p>
+					<a href="">More by this Artist</a>
+				</div>
+				
+			</div>
+			<div class="bottom">
+				<p>Started several mistake joy say painful removed reached end. State burst think end are its. Arrived off she elderly beloved him affixed noisier yet. An course regard to up he hardly. View four has said does men saw find dear shy. Talent men wicket add garden. </p>
+			</div>
+		</div>
+		</div>		
+	<div class="gallery-details dital-bottom">
+	<h2 class="title">Endorsed By</h2>
+	<div class="glry-detail">
+		<div class="images"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$collection->getSstechProfileimage();?>" alt=""/></div>
+		<div class="glry-con">
+			<div class="name"><a href="<?php echo $this->getUrl('custom/index/details/id/'.$galid); ?>"><?php echo $collection->getGaleryname(); ?></a></div>
+			<div class="city">
+				<?php if ($collection->getData('gallerycity')): ?>
+				<?php echo nl2br($collection->getResource()->getAttribute('gallerycity')->getFrontend()->getValue($collection)) ?>
+				<?php endif;?>
+				<?php if ($collection->getData('gallerystate')): ?>
+				<?php echo ',' . nl2br($collection->getResource()->getAttribute('gallerystate')->getFrontend()->getValue($collection)) ?>
+				<?php endif;?>
+			</div>
+			<div class="mail"><a href="#"><?php echo $collection->getGallerywebsite();?></a></div>
+			<div class="con"><?php echo $collection->getGalerydescription();?></div>
+			<div class="represent">
+				<p><b>Represents</b></p>
+				<p><?php if ($collection->getData('galprorepresent')): ?>
+<?php echo nl2br($collection->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($collection)) ?>
+<?php endif;?></p>
+				<p><?php if ($collection->getData('galstylrepresent')): ?>
+<?php echo nl2br($collection->getResource()->getAttribute('galstylrepresent')->getFrontend()->getValue($collection)) ?>
+<?php endif;?></p>
+			</div>
+		</div>
+	</div>
+	
+	
+	</div>
+		
+    <div class="product-collateral toggle-content tabs" style="display:none;">
+        <?php if ($detailedInfoGroup = $this->getChildGroup('detailed_info', 'getChildHtml')):?>
+            <dl id="collateral-tabs" class="collateral-tabs">
+                <?php foreach ($detailedInfoGroup as $alias => $html):?>
+                    <dt class="tab"><span><?php echo $this->escapeHtml($this->getChildData($alias, 'title')) ?></span></dt>
+                    <dd class="tab-container">
+                        <div class="tab-content"><?php echo $html ?></div>
+                    </dd>
+                <?php endforeach;?>
+            </dl>
+        <?php endif; ?>
+    </div>
+
+    <?php //echo $this->getChildHtml('upsell_products') ?>
+    <?php //echo $this->getChildHtml('product_additional_data') ?>
+
+</div>

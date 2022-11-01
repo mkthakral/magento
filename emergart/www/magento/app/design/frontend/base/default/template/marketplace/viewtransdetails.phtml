@@ -1,0 +1,142 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+if($isPartner==1){
+	?>
+	<?php 
+	$sellerid = Mage::getSingleton('customer/session')->getId();
+	$collection = Mage::getModel('marketplace/sellertransaction')->load($this->getRequest()->getParam('id'));
+	if($collection->getTransactionid()){
+	    $orderslist = Mage::getModel('marketplace/saleslist')->getCollection()
+						->addFieldToFilter('transid',array('eq'=>$this->getRequest()->getParam('id')))
+						->addFieldToFilter('mageorderid',array('neq'=>0));
+		$helper=Mage::helper('marketplace');
+		?>
+		<script type="text/javascript">
+			if (typeof jQuery == 'undefined'){
+			    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+			}
+		</script>
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('View Transaction Details') ?></h1>			
+		</div>
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					<strong><span><h4><?php echo $helper->__('Transaction Details') ?></h4></span></strong>
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<div class="page-title title-buttons">
+				    <h1 style="text-transform: inherit;"><?php echo $this->__('Transaction Id %s - %s', $collection->getTransactionid(), Mage::helper('marketplace')->__('Paid')) ?></h1>
+				</div>
+				<div class="wk_mp_order-info-box">
+				    <div>
+				        <div class="box">
+				            <div class="box-title">
+				                <h2><?php echo $helper->__('Transaction Information') ?></h2>
+				            </div>
+				            <div class="box-content">
+				                <div class="wk_row">
+									<span class="label"><?php echo $helper->__('Date')?> : </span>
+									<span class="value"><?php echo $this->formatDate($collection->getCreatedAt(), 'long'); ?></span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Amount')?> : </span>
+									<span class="value"><?php echo Mage::helper('core')->currency($collection->getTransactionamount(), true, false); ?></span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Type')?> : </span>
+									<span class="value"><?php echo $collection->getType(); ?></span>
+								</div>
+								<div class="wk_row">
+									<span class="label"><?php echo $helper->__('Method')?> : </span>
+									<span class="value"><?php echo $collection->getMethod(); ?></span>
+								</div>
+								<div class="wk_row">
+									<?php
+									if($collection->getCustomnote()){
+										$customnote = $collection->getCustomnote();
+									}else{
+										$customnote = $helper->__('None');
+									}
+									?>
+									<span class="label"><?php echo $helper->__('Comment Message')?> : </span>
+									<span class="value"><?php echo $customnote; ?></span>
+								</div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<div class="order-items order-details">
+				    <h2 class="table-caption"><?php echo $helper->__('Transaction Order Information') ?>        
+				    </h2>
+				    <table class="data-table" id="my-orders-table" summary="<?php echo $this->__('Paid Order') ?>">
+					    <col />
+					    <col width="1" />
+					    <col width="1" />
+					    <col width="1" />
+					    <col width="1" />
+					    <thead>
+					        <tr>
+					            <th><?php echo $helper->__('Order Id #') ?></th>
+					            <th  style="width: 100%;"><?php echo $helper->__('Product Name') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Price') ?></th>				            
+					            <th class="a-center"><?php echo $helper->__('Qty') ?></th>
+					            <th class="a-center"><?php echo $helper->__('Total Price') ?></th>
+					            <th class="a-center"><?php echo $helper->__('Total Tax') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Commission') ?></th>
+					            <th class="a-right"><?php echo $helper->__('Subtotal') ?></th>
+					        </tr>
+					    </thead>
+					    <?php $i = 0; ?>
+					    <?php $_count = count($orderslist); ?>
+					    <?php
+					    	$subtotal = 0;
+							foreach($orderslist as $item){
+								$i++;
+								$mageorderid = $item->getMageorderid();
+								$item_status="";
+								$subtotal=$subtotal+$item->getActualparterprocost();
+								?>			
+								<tbody class="<?php echo $class = ($i%2 != 0)? 'odd':'even'?>">
+									<tr class="border first" id="order-item-row-384">
+										<td><h3 class="product-name"><?php echo $item->getMagerealorderid();?></h3></td>
+										<td data-rwd-label="<?php echo $helper->__('Product Name') ?>"><?php echo $item['mageproname'];?></td>
+										<td class="price" data-rwd-label="<?php echo $helper->__('Price') ?>"><?php echo Mage::helper('core')->currency($item->getMageproprice(), true, false);?></td>
+										<td class="qty" data-rwd-label="<?php echo $helper->__('Qty') ?>"><?php echo $item->getMagequantity();?></td>
+										<td class="price" data-rwd-label="<?php echo $helper->__('Total Price') ?>"><?php echo Mage::helper('core')->currency($item->getTotalamount(), true, false);?></td>
+										<td class="price" data-rwd-label="<?php echo $helper->__('Total Tax') ?>"><?php echo Mage::helper('core')->currency($item->getTotaltax(), true, false);?></td>
+										<td class="price" data-rwd-label="<?php echo $helper->__('Admin Commission') ?>"><?php echo Mage::helper('core')->currency($item->getTotalcommision(), true, false);?></td>
+										<?php
+										$admintotaltax = 0;
+							        	$vendortotaltax = 0;
+							        	if(!Mage::helper('marketplace')->getConfigTaxMange()){
+							                $admintotaltax = $item->getTotaltax();
+							            }else{
+							            	$vendortotaltax = $item->getTotaltax();
+							            }
+										?>
+										<td class="row_total" data-rwd-label="<?php echo $helper->__('Subtotal') ?>"><?php echo Mage::helper('core')->currency($item->getActualparterprocost()+$vendortotaltax, true, false);?></td>
+									</tr>
+								</tbody>
+								<?php 
+							} 
+							?>							
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="buttons-set">
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+			</p>
+		</div>
+		<?php 
+	}
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

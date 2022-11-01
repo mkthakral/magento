@@ -1,0 +1,59 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+	<div class="footer-container">
+				<div class="footer container">
+					<div class="foot-top">
+						<ul>
+							<li><a href="<?php echo $this->getUrl() ?>about">About Emergart</a></li>
+							<li><a href="<?php echo $this->getUrl() ?>faq">Buyer FAQ</a></li>
+							<li><a href="<?php echo $this->getUrl() ?>privacy-policy">Privacy Policy</a></li>
+							<li><a href="<?php echo $this->getUrl() ?>terms-of-service">Terms of Service</a></li>
+							<li><a href="<?php echo $this->getUrl() ?>copyright">Copyright Policy</a></li>
+							<li><a href="<?php echo $this->geturl() ?>contacts">Contact</a></li>
+						</ul>
+					</div>
+					<div class="social-link">
+							<ul>
+								<li class="twiter"><a href="#">twiter</a></li>
+								<li class="face-book"><a href="#">facebook</a></li>
+								<li class="ins-icon"><a href="#">ins</a></li>
+							</ul>
+					</div>
+					<div class="social-link">
+							<ul>
+								<li class="email-icon"><a href="#">email</a></li>
+								<li class="email-frnd">Email to a Friend</li>
+							</ul>
+					</div>
+				</div>
+				<div class="copy-right">
+					<div class="container">
+						<span>All content &copy; Emergart Inc. 2016</span>
+						<a href="#"><img src="<?php echo $this->getskinUrl("images/footer-logo.png") ?>" alt=""/></a>
+					</div>
+				</div>
+			</div>

@@ -1,0 +1,71 @@
+<?php 
+$partner = Mage::getModel('marketplace/userprofile')->isPartner(Mage::getSingleton('customer/session')->getCustomerId()); 
+$magentoCurrentUrl = Mage::helper('core/url')->getCurrentUrl(); 
+$helper=Mage::helper('marketplace');
+$allow_pro_type=Mage::helper('marketplace')->getAllowedProductType();
+?>	
+<?php
+$current_store = Mage::app()->getStore();
+if(Mage::getStoreConfig('design/package/name',$current_store) == 'default'){ ?>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('marketplace/css/default.css')?>">
+<?php 
+} ?>
+	<div class="block block-account">	
+			
+		<div class="block-content">		
+			<ul class="wk_cont_ul">		
+				<?php if($partner){ ?>	
+					<li  <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')? "class=current":"";?>>		
+					<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')){ ?>	
+						<strong><?php echo $helper->__('Artis Profile') ?></strong>		
+						<?php }			
+						else{ ?>	
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/editprofile'); ?>">
+								<?php echo $helper->__('Artis Profile') ?>
+							</a>				
+					<?php } ?>		
+					</li>
+					
+					<li  <?php echo (strpos($magentoCurrentUrl,'marketplaceaccount/new') && strpos($magentoCurrentUrl,'marketplaceaccount/newattribute')===false)? "class=current":"";?>>			
+					<?php if(strpos($magentoCurrentUrl,'marketplaceaccount/new') && strpos($magentoCurrentUrl,'marketplaceaccount/newattribute')===false){ ?>		
+						<strong><?php echo $helper->__('New Products') ?></strong>	
+						<?php }					
+						else{ ?>					
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/new'); ?>">
+								<?php echo $helper->__('New Products') ?>
+							</a>						
+						<?php } ?>			
+					</li>					
+					<li  <?php echo strpos($magentoCurrentUrl,'myproductslist')? "class=current":"";?>>			
+					<?php if(strpos($magentoCurrentUrl,'myproductslist')){ ?>		
+						<strong><?php echo $helper->__('My Products List') ?></strong>	
+						<?php }					
+						else{ ?>					
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/myproductslist'); ?>">
+								<?php echo $helper->__('My Products List') ?>
+							</a>						
+						<?php } ?>			
+					</li>
+								
+					
+					
+					
+				
+					
+					<?php }		
+					else{ ?>	
+					<?php echo $this->getChildHtml();?>
+					<li class="last <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')? "current":"";?>">
+						<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')){ ?>	
+							<strong><?php echo $helper->__('Become Partner') ?></strong>	
+						<?php }			
+						else{ ?>	
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/becomepartner'); ?>">
+								<?php echo $helper->__('Become Partner') ?>
+							</a>					
+						<?php } ?>		
+					</li>		
+				<?php } ?>	
+			</ul>	
+		</div>	
+	</div>

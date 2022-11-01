@@ -1,0 +1,8 @@
+<!--@subject ActiveCodeline custom email module @-->
+<!--@vars
+{"htmlescape var=$name":"Recipient Name",
+"var myvar1":"Recipient Email address",
+"var myvar2":"Url for Product",
+"var myvar3":"Product Name",
+@-->
+Hi there {{var myvar1}} {{var myvar2}} from {{var myvar3}}. This is just some example template to test custom email module.

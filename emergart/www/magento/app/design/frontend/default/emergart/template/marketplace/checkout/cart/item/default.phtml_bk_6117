@@ -1,0 +1,117 @@
+<?php
+$_item = $this->getItem();
+$isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
+$canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
+$users = Mage::getModel('marketplace/product')->getCollection()->addFieldToFilter('mageproductid',array('eq'=>$_item->getProductId()));
+$sellerid = 0;
+foreach ($users as $value) {
+    $sellerid = $value->getUserid();
+    $sellername = Mage::getModel('customer/customer')->load($sellerid)->getName();
+}
+$shoptitle='';
+$profileurl='';
+$users = Mage::getModel('marketplace/userprofile')->getCollection()->addFieldToFilter('mageuserid',array('eq'=>$sellerid));
+foreach ($users as $value) {
+    $shoptitle = $value->getShoptitle();
+    $profileurl = $value->getProfileurl();
+}
+if($shoptitle){
+    $sellername = $shoptitle;
+}
+?>
+<?php
+					$product=Mage::getModel('catalog/product')->load($_item->getProductId());
+					$galid=$product->getGalcode();
+					$collection =Mage::getModel('customer/customer')->load($galid);
+
+					?>
+						<?php 
+						$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+						$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE mageproductid='".$_item->getProductId()."'";
+						try {
+						$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+						$result1= $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+						echo $e->getMessage();
+						}
+
+						foreach($result1 as $res){
+
+						$artisid=$res['userid'];
+						}
+						$artiscollection=Mage::getModel('customer/customer')->load($artisid);
+						?>
+		
+		<?php
+					$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+					$sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$_item->getProductId()."'";
+						try {
+							$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+							$like = $chkSystem->fetchall();
+						}
+						catch (Exception $e){
+							 echo $e->getMessage();
+						}
+			       ?>
+				   
+				   <?php
+							$tableName= Mage::getSingleton('core/resource')->getTableName('follow_art');
+							$sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  artistid='".$artisid."'";
+								try {
+									$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+									$follow = $chkSystem->fetchall();
+								}
+								catch (Exception $e){
+									 echo $e->getMessage();
+								}
+			       ?>
+	<div class="cart-top-outer">			   
+	<div class="cart-img-outer">
+	   <div class="image">
+	   <?php if ($this->hasProductUrl()):?>
+	   <a href="<?php echo $this->getProductUrl() ?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image"><?php endif;?><img src="<?php echo $this->getProductThumbnail()->resize(300); ?>" width="300" height="300" alt="<?php echo $this->escapeHtml($this->getProductName()) ?>" /><?php if ($this->hasProductUrl()):?>
+	   </a>
+	   <?php endif;?>
+	   </div>
+		
+			<div class="cart-con-right">
+			<div class="name">
+			<?php if ($this->hasProductUrl()):?>
+			  <?php echo $this->escapeHtml($this->getProductName()) ?>
+			<?php else: ?>
+				<?php echo $this->escapeHtml($this->getProductName()) ?>
+			<?php endif; ?>
+			</div>
+			<div class="price"><?php echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice()) ?></div>
+			<div class="gla-watch-like">
+			<ul>
+							<li class="gla-watch"><?php echo count($follow); ?> Galleries are Watching this Artist</li>
+							<li class="gla-like"><?php echo count($like); ?> Galleries Liked this Artwork</li>
+						</ul>
+			</div>
+			
+			<a class="remove" href="<?php echo $this->getDeleteUrl()?>" title="<?php echo $this->__('Remove item')?>"><?php echo $this->__('Remove item')?></a>
+		  
+	   </div>
+   </div>
+   <div class="top">
+				<div class="images"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo  $artiscollection->getAvatar();?>" class="img " id="u42_img"></div>
+				<div class="con">
+				Artist
+					<p><?php echo $artiscollection->getName(); ?></p>
+					
+				</div>
+				
+			</div>
+			
+			<div class="top">
+			<div class="images"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img"></div>
+			<div class="con">
+			Art endorsed by:
+				<div class="name"><a href="<?php echo $this->getUrl('custom/index/details/id/'.$galid); ?>"><?php echo $collection->getGaleryname(); ?></a></div>
+				<?php echo $collection->getName(); ?>
+				
+			</div>
+		</div>
+	</div>

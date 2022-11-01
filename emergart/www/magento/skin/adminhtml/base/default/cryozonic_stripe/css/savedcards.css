@@ -1,0 +1,132 @@
+/* Customer Account */
+.saved-cards label {
+    display: inline;
+}
+#new-card .form-list select {
+    width: auto;
+}
+#new-card .form-list label {
+    float: none;
+}
+#cryozonic_stripe_cc_cid {
+    width: 40px;
+}
+
+/* Checkout */
+ul#payment_form_cryozonic_stripe {
+    padding-left: 20px;
+}
+ul#payment_form_cryozonic_stripe li {
+    display: block;
+}
+ul#payment_form_cryozonic_stripe li.stripe-new {
+    display: none;
+}
+ul#payment_form_cryozonic_stripe.stripe-new li.stripe-new {
+    display: block;
+}
+.sp-methods .saved-cards li label {
+    float: none;
+}
+.saved-cards {
+    margin-top: 14px;
+}
+.saved-cards input.select {
+    position: relative;
+    top: -1px;
+}
+.saved-cards span {
+    display: inline-block;
+}
+.saved-cards span.type {
+    font-weight: bold;
+    margin-left: 3px;
+}
+.saved-cards span.exp {
+    float: right;
+}
+.saved-cards label {
+    display: inline;
+}
+.saved-cards span.cryozonic-stripe-fade {
+    color: #aaa;
+    font-weight: normal;
+}
+.form-list .saved-cards label {
+    float: none;
+}
+
+/* Card Icons */
+#payment_form_cryozonic_stripe span.type.Visa { background: url(../img/visa.png) no-repeat; }
+#payment_form_cryozonic_stripe span.type.American.Express { background: url(../img/amex.png) no-repeat; }
+#payment_form_cryozonic_stripe span.type.MasterCard { background: url(../img/mastercard.png) no-repeat; }
+#payment_form_cryozonic_stripe span.type.Discover { background: url(../img/discover.png) no-repeat; }
+#payment_form_cryozonic_stripe span.type.Diners { background: url(../img/diners.png) no-repeat; }
+#payment_form_cryozonic_stripe span.type.JCB { background: url(../img/jcb.png) no-repeat; }
+
+#payment_form_cryozonic_stripe span.type.Visa,
+#payment_form_cryozonic_stripe span.type.American.Express,
+#payment_form_cryozonic_stripe span.type.MasterCard,
+#payment_form_cryozonic_stripe span.type.Discover,
+#payment_form_cryozonic_stripe span.type.Diners,
+#payment_form_cryozonic_stripe span.type.JCB {
+    padding-left: 30px;
+    background-position-y: -3px;
+    background-size: 24px;
+}
+
+/* Apple Pay */
+ul#payment_form_cryozonic_stripe li#apple-pay-section #apple-pay-button {
+    background-color: black;
+    background-image: -webkit-named-image(apple-pay-logo-white);
+    background-size: 100% 24px;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 0;
+    border-radius: 10px;
+}
+ul#payment_form_cryozonic_stripe li#apple-pay-section {
+    display: none;
+    text-align: center;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-supported li#apple-pay-section {
+    display: block;
+}
+ul#payment_form_cryozonic_stripe li#apple-pay-section label {
+    font-weight: bold;
+    margin: 10px 0;
+    float: none;
+    display: block;
+}
+
+/* Authorized Apple Pay Result */
+.form-list #apple-pay-result label {
+    display: inline-block;
+    float: none;
+}
+ul#payment_form_cryozonic_stripe li#apple-pay-result {
+    text-align: center;
+    font-size: 1.1em;
+    display: none;
+}
+#apple-pay-result > div {
+    display: block;
+    margin: 5px 0;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-success li#apple-pay-result {
+    display: block;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-supported.apple-pay-success li#apple-pay-section {
+    display: none;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-supported.apple-pay-success.stripe-new li.stripe-new {
+    display: none;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-supported.apple-pay-success.stripe-new li#cryozonic_stripe_cc_save_div.stripe-new {
+    display: block;
+}
+ul#payment_form_cryozonic_stripe.apple-pay-success ul#saved-cards {
+    display: none;
+}

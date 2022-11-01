@@ -1,0 +1,275 @@
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+//echo '<pre>';
+//print_r($customerData);
+$customerId = $customerData->getId();
+$customeremail=$customerData->getEmail();
+//$galerycity=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerycity')->getSource()->getAllOptions(false);
+//$galerycountry=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerycountry')->getSource()->getAllOptions(false);
+//$galerystate=Mage::getResourceSingleton('customer/customer')->getAttribute('gallerystate')->getSource()->getAllOptions(false);
+$galerypro=Mage::getResourceSingleton('customer/customer')->getAttribute('galprorepresent')->getSource()->getAllOptions(false);
+$galerystyle=Mage::getResourceSingleton('customer/customer')->getAttribute('galstylrepresent')->getSource()->getAllOptions(false);
+ ?>
+
+<?php 
+
+ $prorepresent=$customerData->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($customerData);
+//echo gettype($prorepresent);
+//$prorep=explode(",",$prorepresent);
+//print_r($prorep);
+//$prorep=array("ewrt","painting");
+$stylerepresent=$customerData->getResource()->getAttribute('galstylrepresent')->getFrontend()->getValue($customerData);
+//$stylerep=explode(",",$stylerepresent);
+//print_r($stylerep);
+
+
+ ?>
+
+
+<div class="page-title"><h3>Gallery Settings</h3></div>
+<form action="<?php echo Mage::getBaseUrl() ?>customer/account/gallerprofilesave" method="post" autocomplete="off" id="galform" enctype="multipart/form-data">
+<input type="hidden" value="<?php echo $customerId;?>" name="customerid">
+<input type="hidden" value="<?php echo $customeremail;?>" name="customeremail">
+<div class="promoter-pro-outer">
+	<div class="outer-pro-img">
+	<div class="promo-image">
+			<ul class="form-list">
+				<li  class="right-image">
+				
+					<?php if ($customerData->getSstechProfileimage()){ ?> 
+							<div class="profileimage-wrapper">
+								<img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$customerData->getSstechProfileimage();?>"/>
+							</div>
+					<?php } else{ ?>
+					<img id="preview"/>
+					<?php } ?>
+				</li> 
+				<li  class="left-file"> 
+					<p>Upload a Square Image or it will be distorted <br/>400×400px at dpi Recommended</p>
+					<div class="img-choosefile-outer">
+						<span class="img-choosefile">Choose File</span>
+						<input type="file" name="profileimage-file" id="file" onChange="readURL(this);"><br>
+					</div>
+				</li>   
+			</ul>
+	</div>
+	<div class="make-chngs">Make Changes</div>
+	<div class="promo-add">
+		<ul>
+			<li>
+				<label class="required">Gallery Name</label>
+				<input type="text" name="galeryname" class="required-entry" value="<?php echo $customerData->getGaleryname();?>"/>
+			</li>
+			<li>
+				<label class="required">Gallery Phone</label>
+				<input type="text" name="galleryphone" class="required-entry" value="<?php echo $customerData->getGalleryphone();?>"/>
+			</li>
+			<li>
+				<label class="required">Gallery Email</label>
+				<input type="text" name="galleryemail" class="required-entry" value="<?php echo  $customerData->getGalleryemail();?>"/>
+			</li>
+			<li>
+				<label class="required">Gallery Website</label>
+				<input type="text" name="gallerywebsite" class="required-entry" value="<?php echo $customerData->getGallerywebsite();?>"/>
+			</li>
+			<li>
+				<label class="required">Gallery Address</label>
+				<input type="text" name="galleryaddress" class="required-entry" value="<?php echo $customerData->getAddress();?>"/>
+			</li>
+			
+				<li>
+				<label class="required">Gallery Country</label>
+				<span id="country-selected" class="gla-select validate-select"><?php echo $customerData->getCountry();?></span>
+				<?php $countryList =Mage::getResourceModel('directory/country_collection')->loadData()->toOptionArray(false);
+	
+	//echo '<pre>';
+	//print_r( $countryList);
+	//exit;
+	?>
+
+				<select name="country" id="country" onchange="javascript:document.getElementById('country-selected').innerHTML=this.options[this.selectedIndex].text;">
+
+				<?php foreach($countryList as $_country): ?>
+					<option value="<?php  echo $_country['label'] ?>" <?php if($customerData->getCountry()==$_country['label']){ ?>selected<?php } ?>>
+						<?php echo $_country['label'] ?>
+					</option>
+				<?php endforeach; ?>
+				</select>
+				
+				
+			</li>
+			<li>
+				<label class="required">Gallery State / Province</label>
+				<input type="text" name="state" class="required-entry" value="<?php echo $customerData->getState();?>"/>
+			</li>
+			<li>
+				<label class="required">Gallery City</label>
+				<input type="text" name="city" class="required-entry" value="<?php echo $customerData->getCity();?>"/>
+			</li>
+			
+			<li>
+				<label class="required">Gallery Zip / Postal Code</label>
+				<input type="text" name="galleryzip" class="required-entry" value="<?php echo $customerData->getGalleryzip();?>"/>
+			</li>
+		
+			
+			
+			
+		</ul>
+	</div>	
+	</div>
+	<div class="promo-des">
+		<label>Gallery Description:</label>
+		<textarea name="description" class="required-entry"><?php echo $customerData->getGalerydescription();?></textarea>
+	</div>
+	<div class="pro-repsnt">
+		<ul>
+			<li>
+			
+				<label class="required">Types of Work your Gallery Deals (multiple selections)</label>
+					<div class="multiple-slect-chk-outer">
+					<?php foreach ($galerypro as $option5):?>
+				<?php // echo strpos($prorepresent,$option5['label']); ?>
+					<span class="multiple-slect-chk">
+						<input type="checkbox" name="productrepresent[]" value="<?php echo $option5['value'] ?>" <?php if(strpos($prorepresent,$option5['label'])!== false){ ?> checked <?php } ?>>
+						<label for="<?php echo $option5['value'] ?>"><?php echo $option5['label'] ?></label>
+					</span>
+                     <?php endforeach;?>
+					</div>
+			</li>
+			<li>
+				<label class="required">Styles Your Gallery Represents (multiple selections)</label>
+					<div class="multiple-slect-chk-outer">
+					<?php foreach ($galerystyle as $option6):?>
+					<span class="multiple-slect-chk">
+                     	<input type="checkbox" name="productstylerepresent[]" value="<?php echo $option6['value']; ?>" <?php if(strpos($stylerepresent,$option6['label'])!== false){ ?> checked <?php } ?> >
+						<label for="<?php echo $option6['value']; ?>"><?php echo $option6['label'] ?></label>
+					</span>
+                     <?php endforeach;?>
+					 </div>
+				
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="acnt-button-outer">
+<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+</div>
+</form>
+
+<div class="questions">
+<?php
+ $tableName= Mage::getSingleton('core/resource')->getTableName('galery_qaadd');
+ $answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa');
+$sqlPaymentSystem1="SELECT * FROM ".$tableName;
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+	<div class="qes-title"><?php echo count($result) ?> questions-profile page<a id="mckchange">Make Changes</a></div>
+<form action="<?php echo Mage::getBaseUrl() ?>customer/account/galleryqa" method="post" id="qaform" autocomplete="off"  enctype="multipart/form-data">
+<?php $i=0; ?>
+	<?php foreach($result as $res){ $i++; ?>
+	
+	<?php
+	$sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE title='".$res['id']."' AND galeryid='".$customerId."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			foreach($resultnew as $resd){
+				$answer=$resd['answer'];
+				
+			}
+			?>
+		
+	<input type="hidden" value="<?php echo $customerId;?>" name="customerid">
+	
+	<input type="hidden" name="question[]" value="<?php echo $res['id']; ?>"/>
+	<input type="hidden" name="questext-<?php echo $i; ?>" value="<?php echo $res['question']; ?>">
+	<div class="qes-box">
+	<?php echo $res['question'];  ?>
+	<?php
+	if($answer!=""){
+		$disabled="disabled";
+		
+	} ?>
+	<textarea name="answer-<?php echo $i; ?>" class="area required-entry" placeholder="Type here..." <?php echo $disabled; ?>><?php echo $answer; ?></textarea>
+	</div>
+    <?php } ?>
+	<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>	
+	</form>
+</div>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+		var city = <?php echo $customerData->getGallerycity();?>;
+	var state = <?php echo $customerData->getGallerystate();?>;
+	var country = <?php echo $customerData->getGallerycountry();?>;
+	//alert(city);
+	jQuery("#city option").filter(function() {
+          return this.value == city; 
+   }).prop('selected', true);
+jQuery("#state option").filter(function() {
+          return this.value == state; 
+   }).prop('selected', true);
+jQuery("#country option").filter(function() {
+          return this.value == country; 
+   }).prop('selected', true);
+var product = [];
+var style = [];
+	  product = "<?php echo $customerData->getGalprorepresent();?>";
+	  style = "<?php echo $customerData->getGalstylrepresent();?>";
+
+jQuery("#productrepresent").val(product.split(','));
+jQuery("#productstylerepresent").val(style.split(','));
+
+
+});
+</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $j('#preview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	jQuery("#mckchange").click(function(){
+		
+		jQuery(".area").removeAttr("disabled");
+	});
+	
+});
+
+
+</script>
+
+<script type="text/javascript">
+    //< ![CDATA[
+        var customForm = new VarienForm('galform');
+    //]]>
+</script>
+<script type="text/javascript">
+    //< ![CDATA[
+        var customForm = new VarienForm('qaform');
+    //]]>
+</script>

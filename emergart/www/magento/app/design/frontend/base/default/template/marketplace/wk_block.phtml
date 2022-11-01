@@ -1,0 +1,225 @@
+<?php 
+$helper=Mage::helper('marketplace');
+$_product=Mage::registry('current_product');
+$productowner=Mage::getModel('marketplace/product')->isCustomerProduct($_product['entity_id']);
+if($productowner['userid']!=""){
+	$captchenable = Mage::getStoreConfig('marketplace/marketplace_options/captcha',Mage::app()->getStore());
+	$rowsocial=Mage::getModel('marketplace/userprofile')->getPartnerProfileById($productowner['userid']);
+	$seller_id = $productowner['userid'];
+	$shoptitle = $rowsocial['shoptitle'];
+	$seller = Mage::getModel('customer/customer')->load($seller_id);	
+	if(!$shoptitle){
+		$shoptitle = $seller->getName();
+	}
+	$feeds=$helper->getFeed($seller_id);
+	?>
+	<div class="wk_seller_block wk-block" id="mp_wk_block"  style="display: none;">
+		<div>
+		  	<span class="wk_block_font_bold_up"><?php echo $helper->__('Sold By')?></span> <br/>
+		  	<span class="wk_block_title_css">
+				<a href="<?php echo $helper->getRewriteUrl('marketplace/seller/profile/'.$rowsocial['profileurl']);?>" title="<?php echo $helper->__('Visit Shop') ?>" id="profileconnect"><?php echo $shoptitle; ?></a>
+			</span>
+			<br/>
+			<span class="wk_block_rating">
+			    <?php echo $helper->getSelleRating($seller_id); ?> / 5
+			</span>
+			<div class="wk_seller_rating wk_mp_design_inner">
+				<div style="padding: 5px 0;">
+					<span>
+						<?php 
+						$review_percentage = (($helper->getSelleRating($seller_id)*100)/5);
+						echo $review_percentage."% ".$helper->__('positive feedback')." (".$helper->__('%s ratings',number_format($feeds['feedcount'])).") ";
+						?>
+					</span>
+				</div>
+				<div class="row">				    
+				    <div class="mpfeedback">
+						<div class="price">
+							<span class="wk_ordertitle_label"><?php echo $helper->__('Price') ?> </span><span>:</span>
+							<div class="ratingslider-box">
+								<div class="rating" style="width:<?php echo ceil($feeds['price']);?>%;"></div>
+							</div>
+							<span>&nbsp;(<?php echo round(($feeds['price']/20), 1, PHP_ROUND_HALF_UP) ?>/5)</span>
+							<div class="clear"></div>
+						</div>
+						<div class="value">
+							<span class="wk_ordertitle_label"><?php echo $helper->__('Value') ?> </span><span>:</span>
+							<div class="ratingslider-box" >
+								<div class="rating" style="width:<?php echo ceil($feeds['value']);?>%;"></div>								
+							</div>
+							<span>&nbsp;(<?php echo round(($feeds['value']/20), 1, PHP_ROUND_HALF_UP)?>/5)</span>
+							<div class="clear"></div>
+						</div>
+						<div class="quality">
+							<span class="wk_ordertitle_label"><?php echo $helper->__('Quality') ?> </span><span>:</span>
+							<div class="ratingslider-box">
+								<div class="rating" style="width:<?php echo ceil($feeds['quality']);?>%;"></div>
+							</div>
+							<span>&nbsp;(<?php echo round(($feeds['quality']/20), 1, PHP_ROUND_HALF_UP)?>/5)</span>
+							<div class="wk_clear"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="">
+			<div class="ask_que">
+				<a id="askque"><?php echo $helper->__('Contact Us') ?></a>				
+			</div>								
+			<?php echo $this->getChildHtml();?>
+		</div>	
+	</div>
+	<ul>      
+		<li class="ask_que">
+			<div id="ask_data">
+				<div class="modal_header">
+					<h4 class="modal-title"><?php echo $helper->__('Contact Seller') ?></h4>
+					<span  class="wk_close" >x</span>
+					<span  class="wk_clear" ></span>
+				</div>
+				<?php
+				if(Mage::helper('customer')->isLoggedIn()){
+					$buyer_name = Mage::getSingleton('customer/session')->getCustomer()->getName();
+					$buyer_email = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+					$readonly = "readonly='readonly'";
+				}else{				
+					$buyer_email = '';
+					$buyer_name = '';
+					$readonly = '';
+				}
+				?>
+				<form id="ask_form" method="post" action="#">
+					<div class="modal-body form-list">
+						<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Name') ?> :</label>
+						<input type="text" name="name" class="queryemail wk_contact_input_fields required-entry" value="<?php echo $buyer_name?>" <?php echo $readonly?>/>
+						<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Email') ?> :</label>
+						<input type="text" name="email" class="queryemail required-entry validate-email wk_contact_input_fields" value="<?php echo $buyer_email?>" <?php echo $readonly?>/>
+						<label for="name" class="required"><em>*</em><?php echo $helper->__('Subject') ?> :</label>
+						<input type="text" name="subject" class="wk_contact_input_fields required-entry"/>
+						<label for="name" class="required"><em>*</em><?php echo $helper->__('Your Query') ?> :</label>
+						<textarea  name="ask" class="queryquestion wk_contact_input_fields required-entry" style="width:100%;"></textarea>
+						<input type="hidden" name="product-id" value="<?php echo $_product['entity_id'];?>" />
+						<input type="hidden" name="seller-id" value="<?php echo $seller_id;?>"/>
+						<?php 
+						if($captchenable){?>
+							<div>
+								<span>
+									<label for="wk_mp_captcha"><span id="wk_mp_captchalable1"><?php echo rand(1,20)?></span> + <span id="wk_mp_captchalable2"><?php echo rand(1,20)?></span> =</label>
+								</span>
+								<input type="text" class="required-entry wk_contact_input_fields" name="wk_mp_captcha" id="wk_mp_captcha" />
+							</div>
+						<?php
+						}?>
+					</div>
+					<div class="modal_footer">
+						<span class="error"></span>
+						<span class="errormail"></span>
+						<input type="reset" value="<?php echo $helper->__('Reset') ?>" id="resetbtn" class="wk_btn wk_btn_default"/>
+						<input type="submit" value="<?php echo $helper->__('Submit') ?>" id="askbtn" class="wk_btn wk_btn_primary clickask"/>
+						<span class="wk_clear"></span>
+					</div>
+				</form>
+			</div>
+		</li> 
+	</ul>
+	<script type="text/javascript">
+		if (typeof jQuery == 'undefined'){
+		    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+	</script>
+	<script>
+		$wk_jq=jQuery.noConflict();
+		$wk_jq('document').ready(function(){
+			if ( $wk_jq( ".add-to-cart" ).length ) {
+		        $wk_jq('.add-to-cart').after($wk_jq('#mp_wk_block'));
+		    }else{
+		        $wk_jq('.out-of-stock').after($wk_jq('#mp_wk_block'));
+		    }
+		    if ( $wk_jq( ".add-to-cart" ).length || $wk_jq( ".out-of-stock" ).length ) {
+	        	$wk_jq('#mp_wk_block').show();
+	        }else{
+	        	$wk_jq('#product_addtocart_form').after($wk_jq('#mp_wk_block'));
+	        	$wk_jq('#mp_wk_block').show();
+	        }
+	    });
+	    var ask_form = new VarienForm('ask_form', true);
+		(function($wk_jq){
+			$wk_jq(function(){
+				$wk_jq('.wrapper').append($wk_jq('#ask_data'));
+
+				$wk_jq( ".wk_block_rating" ).mouseover(function() {
+				  	$wk_jq( ".wk_seller_rating" ).show();
+				}).mouseout(function() {
+				    $wk_jq( ".wk_seller_rating" ).hide();
+			  	});
+
+				$wk_jq('.ask_que').click(function(){
+					$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+					$wk_jq('.page').css('opacity','0.4');
+					$wk_jq('#ask_data').show();
+				});
+
+				$wk_jq('.wk_close').click(function(){
+					$wk_jq('.page').css('opacity','1');
+					$wk_jq('#resetbtn').trigger('click');
+					$wk_jq('#ask_data').hide();
+				});
+				
+				$wk_jq('#askbtn').click(function(){
+					if(ask_form.validator.validate()!=false){
+						var thisthis = $wk_jq(this);
+						if(thisthis.hasClass("clickask")){	
+							<?php 
+							if($captchenable){?>
+								var total = parseInt($wk_jq('#wk_mp_captchalable1').text()) + parseInt($wk_jq('#wk_mp_captchalable2').text());
+								var wk_mp_captcha = $wk_jq('#wk_mp_captcha').val();
+								if(total != wk_mp_captcha){
+									$wk_jq('#wk_mp_captchalable1').text(Math.floor((Math.random()*10)+1));
+									$wk_jq('#wk_mp_captchalable2').text(Math.floor((Math.random()*100)+1));
+									$wk_jq('#wk_mp_captcha').val('');
+									$wk_jq('#wk_mp_captcha').addClass('error_border');
+									$wk_jq(this).addClass('error_border');
+									$wk_jq('#ask_form .errormail').text("<?php echo $helper->__(' Wrong varification number. ') ?>").slideDown('slow').delay(2000).slideUp('slow');
+								}else{
+									thisthis.removeClass('clickask');
+									$wk_jq('#ask_data').addClass('mail_procss');
+									$wk_jq.ajax({
+										url:'<?php echo Mage::getBaseUrl();?>marketplace/seller/sendmail',
+										data:$wk_jq('#ask_form').serialize(),
+										type:'post',
+										dataType:'json',
+										success:function(d){
+											thisthis.addClass('clickask');
+											$wk_jq('#ask_data').removeClass('mail_procss')
+											alert("<?php echo $helper->__(' Mail Send ') ?>..");
+											$wk_jq('.wk_close,#resetbtn').trigger('click');
+										}
+									});
+								}
+							<?php 
+							}else{?>
+								thisthis.removeClass('clickask');
+									$wk_jq('#ask_data').addClass('mail_procss');
+									$wk_jq.ajax({
+										url:'<?php echo Mage::getBaseUrl();?>marketplace/seller/sendmail',
+										data:$wk_jq('#ask_form').serialize(),
+										type:'post',
+										dataType:'json',
+										success:function(d){
+											thisthis.addClass('clickask');
+											$wk_jq('#ask_data').removeClass('mail_procss')
+											alert("<?php echo $helper->__(' Mail Send ') ?>..");
+											$wk_jq('.wk_close,#resetbtn').trigger('click');
+										}
+									});
+								<?php 
+							}?>
+						}
+						return false;
+					}
+				});
+			});
+		})($wk_jq);
+	</script>
+<?php 
+} ?>

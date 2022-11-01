@@ -1,0 +1,1708 @@
+
+
+<link rel="stylesheet" href="/skin/frontend/default/emergart/css/bootstrap.min.css"/>
+
+
+<script type="text/javascript">
+    var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>";
+	$j = jQuery.noConflict();
+
+	function validateArtworkDetails(){
+		var isStyleValid = false;
+		var isCategoryValid = false;
+		var isMediumValid = false;
+		var isImageValid = false;
+		var isMediumDescriptionValid = false;
+		var isArtworkTitleValid = false;
+		var isArtworkDescriptionValid = false;
+		var isArtworkYearValid = false;
+		var isArtworkDimensionsValid = false;
+		var isDimensionUnitValid = false;
+		var isArtworkWeightValid = false;
+		var isWeightUnitValid = false;
+		var isPriceValid = false;
+		//category
+		var categorySelected = $j('#category option:selected').val();
+		if(categorySelected == 0){
+			$j('#category-error').css('display','block');
+			//removing gap for error message
+			$j('#category-li').css('margin-bottom','0px');
+		}else{
+			$j('#category-error').css('display','none');
+			//setting gap as original if no error
+			$j('#category-li').css('margin-bottom','20px');
+			isCategoryValid = true;
+		}
+
+		//style
+		var styleSelected = 0;
+		$j('[id^=med_]').each(function( index ) {
+		   if($j(this).is(':checked')){
+				styleSelected++;
+		   }
+		});
+
+		if(styleSelected < 1){
+			$j('#style-error').css('display','block');
+		}else{
+			$j('#style-error').css('display','none');
+			isStyleValid = true;
+		}
+
+		//medium
+		var mediumSelected = 0;
+		$j('[id^=medt_]').each(function( index ) {
+		   if($j(this).is(':checked')){
+				mediumSelected++;
+		   }
+		});
+
+		if(mediumSelected < 1){
+			$j('#medium-error').css('display','block');
+		}else{
+			$j('#medium-error').css('display','none');
+			isMediumValid = true;
+		}
+
+		//images
+		var imageCount = 0
+		for (i = 1; i <= 6; i++) {
+			if($j.type($j('#preview' + i).attr('src')) !== "undefined" && $j('#preview' + i).attr('src').indexOf("data") == 0){
+				imageCount++;
+			}
+		}
+
+		if(imageCount < 1){
+			$j('#image-error').css('display','block');
+		}else{
+			$j('#image-error').css('display','none');
+			isImageValid = true;
+		}
+	
+		isMediumDescriptionValid = Validation.validate(document.getElementById('medium'));
+		isArtworkTitleValid = Validation.validate(document.getElementById('name'));
+		isArtworkDescriptionValid = Validation.validate(document.getElementById('description'));
+		isArtworkYearValid = Validation.validate(document.getElementById('yearmade'));
+		isPriceValid = Validation.validate(document.getElementById('price-input'));
+		
+		isArtworkDimensionsValid = Validation.validate(document.getElementById('height-input'));
+		if(isArtworkDimensionsValid){
+			isArtworkDimensionsValid = Validation.validate(document.getElementById('width-input'));
+		}
+		if(isArtworkDimensionsValid){
+			isArtworkDimensionsValid = Validation.validate(document.getElementById('length-input'));
+		}
+		
+		if(isArtworkDimensionsValid){
+			$j('#li-artwork-weight').css("margin-top","0%");
+		}else{
+			$j('#advice-required-entry-height').css('position','absolute');
+			$j('#advice-required-entry-width').css('position','absolute');
+			$j('#advice-required-entry-length').css('position','absolute');
+			$j('#li-artwork-weight').css("margin-top","4%");
+		}
+		
+		isDimensionUnitValid = Validation.validate(document.getElementById('dimension-unit-cm'));
+		
+		isArtworkWeightValid = Validation.validate(document.getElementById('weight-input'));
+		
+		isWeightUnitValid = Validation.validate(document.getElementById('weight-unit-kilos'));
+		
+		
+		//Handle scroll
+		if(!isCategoryValid){
+			$j(window).scrollTop($j('#wk_bodymain').offset().top);
+		}else if(!isStyleValid){
+			$j(window).scrollTop($j('.select-style-art').offset().top);
+		}else if(!isMediumValid){
+			$j(window).scrollTop($j('.select-medium').offset().top);
+		}else if(!isMediumDescriptionValid){
+			$j(window).scrollTop($j('#li-medium-description').offset().top);
+		}else if(!isArtworkTitleValid){
+			$j(window).scrollTop($j('#li-artwork-title').offset().top);
+		}else if(!isArtworkDescriptionValid){
+			$j(window).scrollTop($j('#li-artwork-description').offset().top);
+		}else if(!isPriceValid){
+			$j(window).scrollTop($j('#li-price').offset().top);
+		}else if(!isImageValid){
+			$j(window).scrollTop($j('#image-li').offset().top);
+		}else if(!isArtworkYearValid){
+			$j(window).scrollTop($j('#li-yearmade').offset().top);
+		}else if(!isArtworkDimensionsValid){
+			$j(window).scrollTop($j('#li-artwork-dimensions').offset().top);
+		}else if(!isArtworkWeightValid){
+			$j(window).scrollTop($j('#li-artwork-weight').offset().top);
+		}
+		
+		
+
+		if(isStyleValid && isCategoryValid && isMediumValid && isImageValid && isMediumDescriptionValid && isArtworkTitleValid && isArtworkDescriptionValid && isArtworkYearValid && isArtworkDimensionsValid && isArtworkWeightValid && isPriceValid && isDimensionUnitValid && isWeightUnitValid){
+			
+			return true;
+		}else{
+			return false;
+		}
+
+	}
+
+	function setDefaultImage(){
+            if ($j("#dim1").is(":checked")) {
+                var strs=$j("#rad1").val().split('\\').pop();
+                $j("#dim1").val(strs);
+            }else if ($j("#dim2").is(":checked")) {
+                var strs=$j("#rad2").val().split('\\').pop();
+                $j("#dim2").val(strs);
+            }else if ($j("#dim3").is(":checked")) {
+                var strs=$j("#rad3").val().split('\\').pop();
+                $j("#dim3").val(strs);
+            }else if ($j("#dim4").is(":checked")) {
+                var strs=$j("#rad4").val().split('\\').pop();
+                $j("#dim4").val(strs);
+            }else if ($j("#dim5").is(":checked")) {
+                var strs=$j("#rad5").val().split('\\').pop();
+                $j("#dim5").val(strs);
+            }else if ($j("#dim6").is(":checked")) {
+                var strs=$j("#rad6").val().split('\\').pop();
+                $j("#dim6").val(strs);
+            }
+        }
+	$j(document).ready(function () {
+
+		function isFileValid(fileName, fileSize){
+			var isFileValid = true;
+			var numberOfDotsInFilename = fileName.split('.').length - 1;
+
+			if(numberOfDotsInFilename > 1 ){
+				isFileValid = false;
+				alert('File name cannot have Dot (.) within the name, please rename your file and upload');
+			}
+			//size in KB
+			fileSize = fileSize*1;
+			if(fileSize > 2048){
+				isFileValid = false;
+				alert('File size must be less than 2MB. Please optimize your file - See Help/ Image Sizes');
+			}
+
+			return isFileValid;
+		}
+		resizeImageFn = function(id){
+						$j(id).css('visibility','hidden');
+						setTimeout(function(){
+							$j(id).removeAttr('style');
+							$j(id).css({'vertical-align':'middle','display':'inline-block','margin-bottom':0,'border':0});
+							if($j(id).height() > 264){
+								$j(id).css({'display':'block','max-height':264,'margin':'auto'});
+								$j(id).width('auto');
+							}else if($j(id).width() > 264){
+								$j(id).css('max-width',264);
+								$j(id).height('auto');
+							}
+							$j(id).css('visibility','visible');
+						},100);
+		}
+		$j('#rad1').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview1').parent().html($j('#preview1').parent().children());
+							$j('#preview1').attr('src', e.target.result);
+							//$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview1');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+
+		$j('#rad2').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview2').parent().html($j('#preview2').parent().children());
+							$j('#preview2').attr('src', e.target.result);
+							//$j('#preview2').height("auto");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview2');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+
+		$j('#rad3').on('change', function() {
+
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview3').parent().html($j('#preview3').parent().children());
+							$j('#preview3').attr('src', e.target.result);
+							//$j('#preview3').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview3');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+
+		$j('#rad4').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview4').parent().html($j('#preview4').parent().children());
+							$j('#preview4').attr('src', e.target.result);
+							//$j('#preview4').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview4');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+
+		$j('#rad5').on('change', function() {
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview5').parent().html($j('#preview5').parent().children());
+							$j('#preview5').attr('src', e.target.result);
+							//$j('#preview5').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview5');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+		});
+
+		$j('#rad6').on('change', function() {
+
+				if (this.files && this.files[0]) {
+					var fileSize = parseFloat(this.files[0].size / 1024).toFixed(2);
+					if(isFileValid(this.value, fileSize)){
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$j('#preview6').parent().html($j('#preview6').parent().children());
+							$j('#preview6').attr('src', e.target.result);
+							//$j('#preview6').height("auto");
+							$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+						}
+						reader.onloadend  = function(e){
+							resizeImageFn('#preview6');
+						}
+						reader.readAsDataURL(this.files[0]);
+					}
+				}
+
+		});
+
+	});
+
+
+</script>
+<div id="loader" style="display:none"></div>
+<?php
+$helper=Mage::helper('marketplace');
+$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+$product_hint_status = Mage::helper('marketplace')->getProductHintStatus();
+if($isPartner==1){ ?>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/simpleproduct') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-new">
+		<input type="hidden" name="artist_name" id="artist_name" value="<?php echo Mage::getSingleton('customer/session')->getCustomer()->getName() ?>" />
+		<input type="hidden" name="artist_id" id="artist_id" value="<?php echo Mage::getSingleton('customer/session')->getCustomer()->getId() ?>" />
+		<input type="hidden" name="set" value="4"/>
+		<input type="hidden" name="type" value="simple"/>
+		<input type="hidden" name="status" value="1"/>
+		<input type="hidden" name="sku" value="<?php echo $customerid;?>-<?php echo time(); ?>"/>
+		<input type="hidden" name="vendorid" value="<?php echo $customerid;  ?>"/>
+		<div class="page-title">
+			<h1 style="float:left;"><?php echo $helper->__('New Portfolio Listing') ?></h1>
+
+		</div>
+		<div class="wk_mp_design">
+
+			<div class="fieldset wk_mp_fieldset">
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+				<input type="hidden" name="attribute_set_id" id="attribute_set_id" value="<?php echo $this->getRequest()->getParam('set')!=''? $this->getRequest()->getParam('set'):4;  ?>" />
+				<input type="hidden" name="type_id" id="producttype" value="simple" />
+				<input type="hidden"  name="wstoreids" id="wstoreids" value="<?php echo Mage::app()->getStore()->getStoreId(); ?>" title="wstoreids" class="" />
+				<ul class="form-list" id="wk_bodymain">
+					<li style="display:none">
+						<label><?php echo $helper->__('Product Category') ?>:</label>
+						<?php
+						if($product_hint_status && Mage::helper('marketplace')->getProductCategoryHint()){?>
+							<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductCategoryHint() ?>"/>
+						<?php
+						} ?>
+						<div class="wk_field wk_category">
+							<div class="wk_for_validation">
+								<div id="wk_category_label"><?php echo $helper->__("CATEGORIES"); ?></div>
+		            			<?php
+		            			if(Mage::helper('marketplace')->getAllowedCategoryIds()){
+		            				$storeconfig_catids = explode(',',trim(Mage::helper('marketplace')->getAllowedCategoryIds()));
+		            				foreach($storeconfig_catids as $storeconfig_catid)	{
+		            					$cat_model = Mage::getModel("catalog/category")->load($storeconfig_catid);
+		            					if(isset($cat_model["entity_id"]) && $cat_model["entity_id"]){
+			            					?>
+											<div class="wk_cat_container">
+												</span><span class="wk_foldersign"></span>
+												<span class="wk_elements wk_cat_name"><?php echo $cat_model->getName() ?></span>
+												<input class="wk_elements" type="checkbox" name="category[]" value='<?php echo $cat_model['entity_id'] ?>'/>
+											</div>
+									   		<?php
+									   	}
+		            				}
+		            			}else{
+			            			$count = 0;
+									$category_helper = Mage::helper("catalog/category");
+									$category_model = Mage::getModel("catalog/category");
+									$_categories = $category_helper->getStoreCategories();
+									foreach($_categories as $_category)	{
+										$count++;
+									 	if(count($category_model->getResource()->getAllChildren($category_model->load($_category['entity_id'])))-1 > 0){ ?>
+											<div class="wk_cat_container" style="margin-left:0px;">
+												<span class="wk_plus">
+												</span><span class="wk_foldersign"></span>
+												<span class="wk_elements wk_cat_name"><?php echo $_category->getName() ?></span>
+												<input class="wk_elements" type="checkbox" name="category[]" value='<?php echo $_category['entity_id'] ?>'/>
+											</div>
+											<?php
+										}else { ?>
+											<div class="wk_cat_container">
+												</span><span class="wk_foldersign"></span>
+												<span class="wk_elements wk_cat_name"><?php echo $_category->getName() ?></span>
+												<input class="wk_elements" type="checkbox" name="category[]" value='<?php echo $_category['entity_id'] ?>'/>
+											</div>
+									   		<?php
+										}
+								    }
+							    }?>
+							</div>
+						</div>
+					</li>
+
+					<?php $collections= Mage::getModel('catalog/category')->getCollection()->addAttributeToSelect('*')->addAttributeToFilter('is_active',1)->addAttributeToFilter('parent_id',2)->addOrderField('position'); ?>
+
+					<div class="bootstrap-accordian">
+
+						
+						<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingOne">
+									<h4 class="panel-title heading-artwork-details panel-title-highlight">
+										<a role="button"  data-parent="#accordion" href="javascript:void(0)" aria-expanded="true" aria-controls="collapse-artwork-details" class="accordian-anchor">
+											<!--<i class="more-less glyphicon glyphicon-triangle-bottom"></i>-->
+											Artwork Details
+										</a>
+									</h4>
+								</div>
+								<div id="collapse-artwork-details" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+								
+									<div class="panel-body">
+											<ul>
+												<li id="category-li" class="category-li">
+													 <label class="required">Select the main category for this Artwork:</label>
+													 <span id="main-catagory-selected" class="gla-select">Please select</span>
+													 <select id="category" class="sel-cat" name="parentcat" onchange="javascript:document.getElementById('main-catagory-selected').innerHTML=this.options[this.selectedIndex].text;" style="line-height:50px">
+													<option value="0">Please select</option>
+													 <?php foreach($collections as $subcat){ ?>
+													 <option value= "<?php echo $subcat->getId(); ?>"><?php echo $subcat->getName(); ?> </option>
+													 <?php } ?>
+													 </select>
+
+												</li>
+												<div class="validation-advice" id="category-error" style="display:none;margin-bottom:20px">Please select a category for the artwork.</div>
+												
+												<li class="load-sub">
+													<div id="load-now" style="display:none;"><img src="<?php echo $this->getskinUrl() ?>images/opc-ajax-loader.gif"/></div>
+													<div class="select-style-art">
+														<label class="required">Select the styles this Artwork:</label>
+														<div id="subcat" class="sub-cat multisub"></div>
+														<div class="validation-advice" id="style-error" style="display:none">Please select at least one Style</div>
+													</div>
+
+													<div class="select-medium">
+														<label class="required"><?php echo $helper->__('Medium') ?></label>
+														<div id="div-medium" class="sub-cat multisub"></div>
+														<div class="validation-advice" id="medium-error" style="display:none">Please select at least one Medium</div>
+													</div>
+												</li>
+												
+											<li id="li-medium-description">
+												<label class="required"><em>*</em><?php echo $helper->__('Medium Description') ?>:</label>
+												<div class="input-box">
+													<input type="text" class="required-entry input-text" name="medium" id="medium" />
+												</div>
+											</li>
+											
+											<li class="enter-title" id="li-artwork-title">
+												<label class="required"><em>*</em><?php echo $helper->__('Enter the title for this Artwork') ?>:</label>
+												<?php
+												if($product_hint_status && Mage::helper('marketplace')->getProductNameHint()){?>
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductNameHint() ?>"/>
+												<?php
+												} ?>
+												<div class="input-box">
+													<input type="text" class="required-entry input-text" name="name" id="name" oninput="fillMetaTitle(this.value)" />
+												</div>
+											</li>
+											
+											<li id="li-artwork-description">
+												<label class="required"><?php echo $helper->__('Enter a brief Description for this artwork. Character limit 250') ?>:</label>
+												<?php
+												if($product_hint_status && Mage::helper('marketplace')->getProductDescHint()){?>
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductDescHint() ?>"/>
+												<?php
+												} ?>
+												<div class="input-box">
+													<textarea name="description" id="description" maxlength="250" class="input-text required-entry"  rows="5" cols="75" ></textarea>
+													<input type="hidden" name="short_description" id="short_description" value=""/>
+													<input type="hidden" name="stock" id="stock" value="1"/>
+													<input type="hidden" name="is_in_stock" value="1"/>
+													
+												</div>
+											</li>
+										<li style="display:none;">
+
+											<label class="required"><em>*</em><?php echo $helper->__('Weight') ?>:</label>
+											<?php
+											if($product_hint_status && Mage::helper('marketplace')->getProductWeightHint()){?>
+												<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductWeightHint() ?>"/>
+											<?php
+											} ?>
+											<div class="input-box">
+												<input type="text" class="required-entry validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999 input-text" value="1" name="weight" id="weight-not-used"/>
+											</div>
+										</li>
+										<li style="display:none;">
+                                                <label class="required"><em>*</em><?php echo $helper->__('Tax Class') ?>:</label>
+                                                <?php
+                                                if($product_hint_status && Mage::helper('marketplace')->getProductTaxHint()){?>
+                                                        <img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductTaxHint() ?>"/>
+                                                <?php
+                                                } ?>
+                                                <div class="input-box">
+                                                        <select id="tax_class_id" class=" required-entry required-entry select" name="tax_class_id">
+                                                                <option value=""><?php echo $helper->__('Please Select')?></option>
+                                                                <option value="0" selected="selected";><?php echo $helper->__('None')?></option>
+                                                                <?php
+                                                                $taxes=Mage::getModel('tax/class')->getCollection()
+                                                                                        ->addFieldToFilter('class_type',array('eq'=>'PRODUCT'));
+                                                                foreach($taxes as $tax){
+                                                                        ?>
+                                                                        <option value="<?php echo $tax->getId() ?>"><?php echo $tax->getClassName()?></option>
+                                                                <?php
+                                                                } ?>
+                                                        </select>
+                                                </div>
+                                        </li>
+										
+										<li id="li-price">
+												<label class="required"><em>*</em><?php echo $helper->__('Price of the Artwork (USD $) - Don\'t include shipping price') ?>:</label>
+												<div class="input-box">
+													<input type="number" class="required-entry validate-greater-than-zero input-text" name="price-input" id="price-input" oninput="fillArtistShare(this.value)"/>
+												</div>
+										</li>
+										<li id="li-price">
+												<label class="required"><em>*</em><?php echo $helper->__('You will receive 80% of the Artwork price (USD $)') ?>:</label>
+												<div class="input-box">
+													<input type="number" class="required-entry validate-zero-or-greater input-text" name="your-share" id="your-share" readonly/>
+												</div>
+										</li>
+										
+										<li id="image-li">
+														<label class="required" style="margin-bottom: 0.8em;">Upload up to 6 images of the Same Work: 2MB max. File extensions: .jpeg .jpg .png - Files cannot have a dot (.) within the name</label>
+														<?php
+														if($product_hint_status && Mage::helper('marketplace')->getProductImageHint()){?>
+															<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductImageHint() ?>"/>
+														<?php
+														} ?>
+														<div class="out-custom-img">
+															<div id="otherimages">
+														<div id='childDiv1'>
+															<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px; ">
+																<div style="width: 100%;height: 264px;line-height: 264px; text-align:center">Upload an Image
+																	<img id="preview1" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0" ></img>
+																</div>
+															</div>
+															<div class="otimg">
+																<div class="img-choosefile" style="width: auto;margin-right: 20px;background: none;position: relative;top: -5px;">
+																<label for="rad1" style="cursor: pointer;width: auto;">Upload</label>
+																<input type="file" accept=".png,.jpg,.jpeg" id="rad1"  name="images[]" class='wk_imagevalidate'  style="display: none"/></div>
+																<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl1(this);"><?php echo $helper->__('Remove'); ?></a></div>
+															</div>
+															<div class="mchoose">
+															<input type="radio" value='' id="dim1" class='defaultimage margin-top-0-percent' name="defaultimage">
+															<span class='defaultimageset'><?php echo $helper->__("Use as Main Image"); ?></span>
+															</div>
+
+
+
+														</div>
+
+												<div id='childDiv2'>
+												<!--<img id="preview2" height="264px" width="264px"></img>-->
+													<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px">
+														<div style="width: 100%;height: 264px;line-height: 264px; text-align:center">Upload an Image
+															<img id="preview2" class='removeAltBorder'  style="vertical-align: middle;display: inline-block;border:0"></img>
+														</div>
+													</div>
+
+												<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px; background: none; position: relative;top: -5px;">
+												<label for="rad2" style="cursor: pointer;width: auto;">Upload</label>
+												<input type='file' name='images[]' accept=".png,.jpg,.jpeg" id="rad2" class='wk_imagevalidate' style="display: none"/></div>
+												<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl2(this);"><?php echo $helper->__('Remove'); ?></a></div>
+												</div>
+												<div class="mchoose">
+												<input type='radio' id="dim2" value='' class='defaultimage margin-top-0-percent' name='defaultimage'>
+												<span class='defaultimageset'>
+													<?php echo $helper->__('Use as Main Image'); ?>
+												</span>
+												</div>
+
+											</div>
+
+											<div id='childDiv3'>
+											<!--<img id="preview3" height="264px" width="264px"></img>-->
+													<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px">
+														<div style="width: 100%;height: 264px;line-height: 264px;text-align:center">Upload an Image
+															<img id="preview3" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0"></img>
+														</div>
+													</div>
+											<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px; background: none;position: relative;top: -5px;">
+												<label for="rad3" style="cursor: pointer;width: auto;">Upload</label>
+												<input type='file' accept=".png,.jpg,.jpeg" id="rad3" name='images[]' class='wk_imagevalidate'  style="display: none"/></div>
+												<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl3(this);"><?php echo $helper->__('Remove'); ?></a></div>
+
+												</div>
+												<div class="mchoose">
+												<input type='radio' id="dim3"   value=''  class='defaultimage margin-top-0-percent' name='defaultimage'>
+
+												<span class='defaultimageset'>
+													<?php echo $helper->__('Use as Main Image'); ?>
+												</span>
+												</div>
+
+											</div>
+
+											<div id='childDiv4'>
+											<!--<img id="preview4" height="264px" width="264px"></img>-->
+													<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver;margin-bottom:20px">
+														<div style="width: 100%;height: 264px;line-height: 264px;text-align:center">Upload an Image
+															<img id="preview4" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0"></img>
+														</div>
+													</div>
+											<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px; background: none;position: relative;top: -5px;">
+												<label for="rad4" style="cursor: pointer;width: auto;">Upload</label>
+												<input type='file' accept=".png,.jpg,.jpeg" id="rad4" name='images[]' class='wk_imagevalidate'  style="display: none"/></div>
+												<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl4(this);"><?php echo $helper->__('Remove'); ?></a></div>
+												</div>
+												<div class="mchoose">
+												<input type='radio'    value='' id="dim4" class='defaultimage margin-top-0-percent' name='defaultimage'>
+												<span class='defaultimageset'>
+													<?php echo $helper->__('Use as Main Image'); ?>
+												</span>
+												</div>
+											</div>
+
+											<div id='childDiv5'>
+											<!--<img id="preview5" height="264px" width="264px"></img>-->
+													<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver; margin-bottom:20px">
+														<div style="width: 100%;height: 264px;line-height: 264px;text-align:center">Upload an Image
+															<img id="preview5" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0"></img>
+														</div>
+													</div>
+											<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px; background: none;position: relative;top: -5px;">
+												<label for="rad5" style="cursor: pointer;width: auto;">Upload</label>
+												<input type='file' accept=".png,.jpg,.jpeg" id="rad5" name='images[]' class='wk_imagevalidate'  style="display: none"/></div>
+													<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl5(this);"><?php echo $helper->__('Remove'); ?></a></div>
+													</div>
+													<div class="mchoose">
+												<input type='radio'    value='' id="dim5" class='defaultimage margin-top-0-percent' name='defaultimage'>
+												<span class='defaultimageset'>
+													<?php echo $helper->__('Use as Main Image'); ?>
+												</span>
+												</div>
+
+											</div>
+
+											<div id='childDiv6'>
+											<!--<img id="preview6" height="264px" width="264px"></img>-->
+													<div height="264px" width="264px" max-height="264px" style="border: 1px solid silver; margin-bottom:20px">
+														<div style="width: 100%;height: 264px;line-height: 264px;text-align:center">Upload an Image
+															<img id="preview6" class='removeAltBorder' style="vertical-align: middle;display: inline-block;border:0"></img>
+														</div>
+													</div>
+												<div class="otimg">
+												<div class="img-choosefile" style="width: auto;margin-right: 20px; background: none;position: relative;top: -5px;">
+												<label for="rad6" style="cursor: pointer;width: auto;">Upload</label>
+												<input type='file' accept=".png,.jpg,.jpeg" id="rad6" name='images[]' class='wk_imagevalidate'  style="display: none"/></div>
+													<div class="rmvimg"><a href="javascript:void(0)" onclick="removeUrl6(this);"><?php echo $helper->__('Remove'); ?></a></div>
+													</div>
+													<div class="mchoose">
+												<input type='radio'   value='' id="dim6" class='defaultimage margin-top-0-percent' name='defaultimage'>
+												<span class='defaultimageset'>
+													<?php echo $helper->__('Use as Main Image'); ?>
+												</span>
+												</div>
+											</div>
+											</div>
+											<div class="validation-advice" id="image-error" style="display:none">Please upload at least one Image</div>
+											</div>
+										</li>
+										<?php echo $this->getChildHtml(); ?>
+										
+										<li id="li-yearmade">
+										<label class="required"><?php echo $helper->__('Year Created') ?></label>
+										<div class="input-box">
+										<input type="text" class="required-entry validate-integer input-text" name="yearmade" id="yearmade" value="" placeholder="e.g. 2017"/>
+										</div>
+
+										</li>
+										
+														
+
+										<li id="li-artwork-dimensions">
+										<table class="table-dimensions-of-artwork">
+											<tr>
+												<td><label class="required"><?php echo $helper->__('Height of Artwork') ?></label></td>
+												<td><label class="required"><?php echo $helper->__('Width of Artwork') ?></label></td>
+												<td><label class="required"><?php echo $helper->__('Depth of Artwork') ?></label></td>
+												
+												<td></td>
+											</tr>
+											<tr>
+												<td>
+													<div class="input-box">
+													<input type="number" required name="height-input" id="height-input" class="required-entry input-text input-artwork-dimension" value=""  placeholder=""/>
+													<input type="hidden" name="height" id="height" value=""/>
+													</div>
+												</td>
+												<td>
+													<div class="input-box">
+														<input type="number" required name="width-input" id="width-input" class="required-entry  input-text input-artwork-dimension" value="" placeholder=""/>
+														<input type="hidden" name="width" id="width" value=""/>
+													</div>
+												</td>
+												<td>
+													<div class="input-box">
+														<input type="number" required name="length-input" id="length-input" class="required-entry  input-text  input-artwork-dimension" value="" placeholder=""/>
+														<input type="hidden" name="length" id="length" value=""/>
+													</div>
+												</td>
+												
+												<td>
+													 <input type="radio" name="dimension-metric-unit" value="inch" class="input-radio"> Inches<br>
+													 <input type="radio" name="dimension-metric-unit" id="dimension-unit-cm" value="cm" class="input-radio validate-one-required"> cm<br>
+												</td>
+											</tr>
+										</table>
+										
+										
+
+										</li>
+
+										<li id="li-artwork-weight">
+											<table style="width: 60%;">
+												<tr>
+													<td colspan="2"><label class="required"><?php echo $helper->__('Weight of the Artwork:') ?></label></td>
+												</tr>
+												<tr>
+													<td>
+														<div class="input-box">
+															<input type="number" required name="weight-input" id="weight-input" class="required-entry  input-text input-artwork-dimension" value="" placeholder=""/>
+															<input type="hidden" name="weight" id="weight" value=""/>
+														</div>
+													</td>
+													<td>
+														<input type="radio" name="weight-metric-unit" value="pounds" class="input-radio"> pounds<br>
+														<input type="radio" name="weight-metric-unit" id="weight-unit-kilos" value="kilos" class="input-radio validate-one-required"> kilos<br>
+													</td>
+												</tr>
+											</table>
+										</li>
+										
+										<button type="button" class="btn btn-info pull-right panel-button margin-top-bottom-3-percent" onclick="openTab('seo-details','next')">Next</button>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="heading-seo">
+									<h4 class="panel-title heading-seo-details">
+										<a class="collapsed accordian-anchor" role="button"  data-parent="#accordion" href="javascript:void(0)" aria-expanded="false" aria-controls="collapse-seo-details">
+											<!-- <i class="more-less glyphicon glyphicon-triangle-bottom"></i> -->
+											Search Engine Details
+										</a>
+									</h4>
+								</div>
+								<div id="collapse-seo-details" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-seo">
+									<div class="panel-body">
+										<input type="hidden" name="meta_title" id="meta_title" value=""/>
+										<ul>	
+											<li id="li-meta-tag-seo">
+												<label class="required"><?php echo $helper->__('Meta Tags for Search Engines: (e.g. red, kite, sky, clouds, string, landscape, painting) Separate with a comma.') ?>:</label>
+												<?php
+												if($product_hint_status && Mage::helper('marketplace')->getProductDescHint()){?>
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductDescHint() ?>"/>
+												<?php
+												} ?>
+												<div class="input-box">
+													<textarea name="meta_keyword" id="meta_keyword" maxlength="250" class="input-text required-entry"  rows="5" cols="75" ></textarea>
+												</div>
+											</li>
+											
+											<li id="li-meta-description-seo">
+												<label class="required"><?php echo $helper->__('Description for Search Engines: (e.g. impressionist landscape painting with a red kite on a string in a cloudy sky)') ?>:</label>
+												<?php
+												if($product_hint_status && Mage::helper('marketplace')->getProductDescHint()){?>
+													<img src="<?php echo $this->getSkinUrl('marketplace/images/quest.png'); ?>" class='questimg' title="<?php echo Mage::helper('marketplace')->getProductDescHint() ?>"/>
+												<?php
+												} ?>
+												<div class="input-box">
+													<textarea name="meta_description" id="meta_description" maxlength="250" class="input-text required-entry"  rows="5" cols="75" ></textarea>
+												</div>
+											</li>
+											
+										</ul>	
+											
+											<button type="button" class="btn basic-button panel-button margin-top-bottom-3-percent" onclick="openTab('artwork-details','back')">Back</button>
+											<button type="button" class="btn btn-info pull-right panel-button margin-top-bottom-3-percent" onclick="openTab('shipping-details','next')">Next</button>	
+									</div>
+								</div>
+							</div>
+							
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingTwo">
+									<h4 class="panel-title heading-shipping-details">
+										<a class="collapsed accordian-anchor" role="button"  data-parent="#accordion" href="javascript:void(0)" aria-expanded="false" aria-controls="collapse-shipping-details">
+											<!-- <i class="more-less glyphicon glyphicon-triangle-bottom"></i> -->
+											Shipping Details
+										</a>
+									</h4>
+								</div>
+								<div id="collapse-shipping-details" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" style="width: 107%;">
+									<div class="panel-body">
+											
+											<li id="li-ship-with-frame" class="li-ship-with-frame">
+												<label class="required"><?php echo $helper->__('Is the Artwork framed?') ?></label>
+												<input type="hidden" name="artwork_frame" id="artwork_frame" value="0"/>
+												<div class="sub-cat shipping-with-frame">
+													<div class="cust-med">
+														<input id="checkbox-framing-frame" type="checkbox" name="checkbox-frame-option" value="framed">
+														<label for="checkbox-framing-frame">Framed<label></label></label>
+													</div>
+													<div class="cust-med">
+														<input id="checkbox-framing-unframe" type="checkbox" name="checkbox-frame-option" value="not-framed">
+														<label for="checkbox-framing-unframe">Unframed<label></label></label>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="validation-advice" id="packaging-frame-error" class="display-none">Select how will you ship the artwork.</div>
+											</li>
+											
+											
+											
+											<label class="required margin-top-5-percent" id="li-select-package"><?php echo $helper->__('Click and select one of options which you would use to pack the artwork.') ?>:</label>
+											
+											<ul class="packaging-type-list">
+											  <li><input type="checkbox" id="check-box-tube" name="packaging-type" value="tube"/>
+												<label class="shipping-check-label" for="check-box-tube"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/ea_tube.jpg" alt="Tube" class="height-width-200"/></label>
+												<div class="package-details">Flat Art under 47X47 inches<br/> e.g. rolled up drawings/prints/originals</div>
+												<div class="package-feedback display-none" id="satisfy-condition-tube">
+													<span class="glyphicon glyphicon-remove"></span>
+													<a href="#" class="display-inline-block why-links" data-toggle="tooltip-package-type-error" title="Doesn't qualify by weight or dimension limits.">Why?</a>
+												</div>
+											  </li>
+											  <li><input type="checkbox" id="check-box-cardboardbox" name="packaging-type" value="box"/>
+												<label class="shipping-check-label" for="check-box-cardboardbox"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/ea_cardboardbox.jpg" alt="Cardboard Box" class="height-width-200"/></label>
+												<div class="package-details">Art under 47X47 inches<br/> e.g. small canvas/sculptures</div>
+												<div class="package-feedback display-none" id="satisfy-condition-box">
+													<span class="glyphicon glyphicon-remove"></span>
+													<a href="#" class="display-inline-block why-links" data-toggle="tooltip-package-type-error" title="Doesn't qualify by weight or dimension limits.">Why?</a>
+												</div>
+											  </li>
+											  <li><input type="checkbox" id="check-box-crate" name="packaging-type" value="crate"/>
+												<label class="shipping-check-label" for="check-box-crate"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/ea_crate.jpg" alt="crate" class="height-width-200"/></label>
+												<div class="package-details">Art over 48X48 inches (1500 lb. max.)<br/>e.g. large canvas/sculpture</div>
+												<div class="package-feedback display-none" id="satisfy-condition-crate">
+													<span class="glyphicon glyphicon-remove"></span>
+													<a href="#" class="display-inline-block why-links" data-toggle="tooltip-package-type-error" title="Doesn't qualify by weight or dimension limits.">Why?</a>
+												</div>
+
+												<input type="hidden" name="shipped_in" id="shipped_in" value="" />
+											  </li>
+											  
+												
+											</ul>
+											
+											<div class="validation-advice validation-error-packaging-type" id="packaging-type-error" class="display-none">Select packaging type by clicking on an image above. If all of the packaging types are disabled above, please contact us from help section.</div>
+											  
+											<ul>
+											<li id="li-package-dimensions" class="margin-top-3-percent">
+												<label class="required margin-top-4-percent display-inline-block padding-right-10px" style="">Size of the Package (In which Artwork will be shipped)</label><a href="#" onclick="showDimensionHelp(event)"><label id="label-show-dimension-help" class="font-color-blue display-inline-block cursor-pointer">How to fill dimensions?</label></a>
+												<table class="packages-dimensions-help display-none" id="table-packages-dimensions-help">
+													<tr>
+														<td>
+															<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/tube-dimensions.png" alt="tube-dimensions" class="height-width-220"/>
+														</td>
+														<td>
+															<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/box-dimensions.png" alt="box-dimensions" class="height-width-220"/>
+														</td>
+														<td>
+															<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>images/crate-dimensions.png" alt="crate-dimensions" class="height-width-220"/>
+														</td>
+													</tr>
+												</table>
+
+												<table class="table-package-dimensions">
+													<tr>
+														<td><label class="required"><?php echo $helper->__('Height of Package') ?></label></td>
+														<td><label class="required"><?php echo $helper->__('Width of Package') ?></label></td>
+														<td><label class="required"><?php echo $helper->__('Depth of Package') ?></label></td>
+														
+														<td></td>
+													</tr>
+													<tr>
+														<td>
+															<div class="input-box">
+															<input type="number" required name="height-input-package" id="height-input-package" class="required-entry input-text input-artwork-dimension" value=""  placeholder="" />
+															<input type="hidden" name="height_including_package" id="height_including_package" value=""/>
+															</div>
+														</td>
+														<td>
+															<div class="input-box">
+																<input type="number" required name="width-input-package" id="width-input-package" class="required-entry  input-text input-artwork-dimension" value="" placeholder="" />
+																<input type="hidden" name="width_including_package" id="width_including_package" value=""/>
+															</div>
+														</td>
+														<td>
+															<div class="input-box">
+																<input type="number" required name="length-input-package" id="length-input-package" class="required-entry  input-text  input-artwork-dimension" value="" placeholder="" />
+																<input type="hidden" name="depth_including_package" id="depth_including_package" value=""/>
+															</div>
+														</td>
+														
+														<td>
+															 <input type="radio" name="dimension-unit-package" value="inch" class="input-radio"> Inches<br>
+															 <input type="radio" name="dimension-unit-package" id="package-dimension-unit-cm" value="cm" class="input-radio validate-one-required"> cm<br>
+														</td>
+													</tr>
+												</table>
+											</li>
+											
+											<li id="li-package-weight" class="margin-top-4-percent margin-bottom-6-percent">
+												<label class="required"><?php echo "Total Weight (Package Weight + Artwork Weight)" ?></label>
+												<table class="margin-top-2-percent">
+													<tr>
+														<td>
+															<div class="input-box">
+																<input type="number" required name="weight-input-package" id="weight-input-package" class="required-entry  input-text input-artwork-dimension" value="" placeholder=""/>
+																<input type="hidden" name="weight_including_package" id="weight_including_package" value=""/>
+															</div>
+														</td>
+														<td>
+															<input type="radio" name="weight-unit-package" value="pounds" class="input-radio"> pounds<br>
+															<input type="radio" name="weight-unit-package" id="package-weight-unit-kilos" value="kilos" class="input-radio validate-one-required"> kilos<br>
+														</td>
+													</tr>
+												</table>
+											</li>
+										
+										
+											</ul>
+											<button type="button" class="btn basic-button panel-button margin-bottom-3-percent" onclick="openTab('seo-details','back')">Back</button>
+											<button type="button" class="btn btn-info pull-right panel-button margin-bottom-3-percent" style="margin-right: 5%;" onclick="openTab('pricing-details','next')">Next</button>
+											
+										
+
+									</div>
+								</div>
+							</div>
+
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingThree">
+									<h4 class="panel-title heading-pricing-details">
+										<a class="collapsed accordian-anchor" role="button"  data-parent="#accordion" href="javascript:void(0)" aria-expanded="false" aria-controls="collapse-pricing-details">
+											<!--<i class="more-less glyphicon glyphicon-triangle-bottom"></i> -->
+											Pricing Review
+										</a>
+									</h4>
+								</div>
+								<div id="collapse-pricing-details" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+									<div class="panel-body">
+										<ul>
+											<li>
+												<label class="required"><em>*</em><?php echo $helper->__('Price of the Artwork (USD $):') ?></label>
+												<div class="input-box">
+													<input type="text" class="required-entry validate-zero-or-greater input-text" name="price_again" id="price_again" readonly/>
+												</div>
+											</li>
+											<li>
+												<label class="required"><em>*</em><?php echo $helper->__('Your Payment - 80% of the Artwork Price (USD $):') ?>:</label>
+												<div class="input-box">
+													<input type="text" class="required-entry validate-zero-or-greater input-text" name="price_artist_share" id="price_artist_share" readonly/>
+												</div>
+											</li>
+											<li>
+												<label class="required"><em>*</em><?php echo $helper->__('Shipping and Handling (USD $):') ?>:</label>
+												<div class="input-box">
+													<input type="text" class="required-entry validate-zero-or-greater input-text" name="price_shipping_handling" id="price_shipping_handling" readonly/>
+												</div>
+											</li>
+											<li>
+												<label class="required"><em>*</em><?php echo $helper->__('Price the buyer will see (USD $):') ?>:</label>
+												<div class="input-box">
+													<input type="text" class="required-entry validate-zero-or-greater input-text" name="price" id="price" readonly/>
+												</div>
+											</li>
+											
+											<li>
+												<button type="button" class="btn basic-button panel-button margin-top-bottom-3-percent" onclick="openTab('shipping-details','back')">Back</button>
+												<button class="btn btn-info pull-right panel-button margin-top-bottom-3-percent" title="<?php echo $helper->__('Save') ?>" type="button" id="save_butn" style="">
+													<span><span><?php echo $helper->__('Create Portfolio Listing') ?></span></span>
+												</button>
+											</li>
+											
+											
+											
+										</ul>
+									</div>
+								</div>
+							</div>
+
+						</div><!-- panel-group -->
+						
+						
+					</div><!-- container -->
+
+
+						
+					
+					
+					
+
+
+					
+					
+
+
+					
+					
+					
+					
+					
+
+					
+
+
+
+					
+				</ul>
+			</div>
+		</div>
+
+			
+	</form>
+
+	<div class="buttons-set">
+	<!--	<p class="required">* <?php echo $helper->__('Required Fields') ?></p>		-->
+		<p class="back-link">
+			<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+		</p>
+	</div>
+	<?php
+	$allowed_images = $helper->getAllowedImageExtension();
+	?>
+	<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+	</script>
+	<script src="<?php echo $this->getSkinUrl('marketplace/js/jquery.tmpl.min.js') ?>" type="text/javascript"></script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS).'tiny_mce/tiny_mce.js' ?>"></script>
+
+	<script type="text/javascript">
+	var $wk_jq=jQuery.noConflict();
+
+	var newCustomerProductForm = new VarienForm('form-customer-product-new', true);
+
+	$wk_jq( "#special_from_date").datepicker({'dateFormat':'yy:mm:dd'});
+	$wk_jq( "#special_to_date" ).datepicker({'dateFormat':'yy:mm:dd'});
+
+	var i=2;
+
+	function showOtherImage(){
+		$wk_jq("#imageTemplate").tmpl([{'index':i}]).appendTo("#otherimages");
+		i++;
+	}
+	function removeEvent(divNum){
+		var d = document.getElementById('otherimages');
+		var olddiv = document.getElementById(divNum);
+		d.removeChild(olddiv);
+		i--;
+	}
+
+	(function($wq_jq){
+
+		$wk_jq('#save_butn').click(function(e){
+            var magentoFormValidationStatus = newCustomerProductForm.validator.validate();
+			var formValidationStatus = validateArtworkDetails();
+            
+            jQuery.ajax({
+                      url: "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>" + 'ajax/checkProductRamdomiserLock.php',
+                      type: 'post',
+                      data:{},
+                      success: function(response)
+                      {
+                        response = jQuery.trim(response);
+                        if (response) {
+                            alert("We are running a backend process currently. We recommend you to save the work after " + response + " EST");
+                        }else{
+                            if(magentoFormValidationStatus!=false && formValidationStatus){
+                                //var user_response = confirm("Make sure the information is accurate. If a Gallery you have submitted to, endorses this item, you will not be able to edit.");
+                                //if (user_response == true) {
+                                document.getElementById("loader").style.display = "block";
+                                    $wk_jq('#save_butn span span').text('<?php echo $helper->__("Saving")?>..');
+                                    $wk_jq('.button').css('opacity','0.7');
+                                    $wk_jq('.button').css('cursor','default');
+                                    $wk_jq('.button').attr('disabled','disabled');
+                                    $wk_jq.ajax({
+                                        url:setDefaultImage(),
+                                        success:function(){
+                                            $wk_jq('#form-customer-product-new').submit();
+                                        }
+                                    });
+				                //}
+			                 }
+                        }
+                      }
+            });
+		});
+
+		$wk_jq('.input-text').change(function(){
+			var validt = $wk_jq(this).val();
+			var regex = /(<([^>]+)>)/ig;
+			var mainvald = validt .replace(regex, "");
+			$wk_jq(this).val(mainvald);
+	    });
+
+	    $wk_jq("body").delegate('.wk_imagevalidate',"change",function(){
+			//$wk_jq( ".defaultimage" ).prop( "checked",false);
+			var ext = $wk_jq(this).val().split('.').pop().toLowerCase();
+			if($wk_jq.inArray(ext, [<?php echo $allowed_images ?>]) == -1) {
+				$wk_jq(this).val('');
+				alert('<?php echo $helper->__("Invalid extension! Please Upload an image")?>');
+			}
+		});
+
+		$wk_jq('input#sku').change(function(){
+			var len=$wk_jq('input#sku').val();
+			var len2=len.length;
+			if(len2==0){
+				alert('<?php echo $helper->__("SKU can\'t be left empty")?>');
+				$wk_jq('div#skuavail').css('display','none');
+				$wk_jq('div#skunotavail').css('display','none');
+			}
+			else{
+				$wk_jq.ajax({
+					url: "<?php echo Mage::getUrl('marketplace/marketplaceaccount/verifysku');?>",
+					type: "POST",
+					data: {sku:$wk_jq('input#sku').val()},
+					dataType: 'html',
+					success:function($data){
+						$data=JSON.parse($data);
+						if($data.avl==1){
+							$wk_jq('div#skuavail').css('display','block');
+							$wk_jq('div#skunotavail').css('display','none');
+						}
+						else{
+							$wk_jq('div#skunotavail').css('display','block');
+							$wk_jq('div#skuavail').css('display','none');
+							$wk_jq("input#sku").attr('value','');
+						}
+					}
+				});
+			}
+		});
+
+		$wk_jq("#wk_bodymain").delegate('.wk_plus ,.wk_plusend,.wk_minus, .wk_minusend ',"click",function(){
+			var thisthis=$wk_jq(this);
+			if(thisthis.hasClass("wk_plus") || thisthis.hasClass("wk_plusend")){
+				if(thisthis.hasClass("wk_plus"))
+					thisthis.removeClass('wk_plus').addClass('wk_plus_click');
+				if(thisthis.hasClass("wk_plusend"))
+					thisthis.removeClass('wk_plusend').addClass('wk_plusend_click');
+				thisthis.prepend("<span class='wk_node_loader'></span>");
+				$wk_jq.ajax({
+					url  	:   "<?php echo $this->getUrl('marketplace/marketplaceaccount/categorytree/');?>",
+					type 	:   "POST",
+					data 	:   {CID:thisthis.siblings("input").val(),
+								ML:thisthis.parent(".wk_cat_container").css("margin-left").replace("px","")},
+					dataType:   "html",
+					success :   function(content){
+						var newdata=  $wk_jq.parseJSON(content);
+						len= newdata.length;
+						var pxl= parseInt(thisthis.parent(".wk_cat_container").css("margin-left").replace("px",""))+20;
+						thisthis.find(".wk_node_loader").remove();
+						if(thisthis.attr("class") == "wk_plus")
+						thisthis.attr("class","wk_minus");
+						if(thisthis.attr("class") == "wk_plusend")
+							thisthis.attr("class","wk_minusend");
+						if(thisthis.attr("class") == "wk_plus_click")
+							thisthis.attr("class","wk_minus");
+						if(thisthis.attr("class") == "wk_plusend_click")
+							thisthis.attr("class","wk_minusend");
+					    for(i=0;i<len; i++){
+							id=newdata[i].id;
+							nam=newdata[i].name;
+							if(newdata[i].counting ==0){
+								thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_no"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" name="category[]" value='+ id +'></div>');
+							}else{
+								thisthis.parent(".wk_cat_container").after('<div class="wk_removable wk_cat_container" style="display:none;margin-left:'+pxl+'px;"><span  class="wk_plusend"></span><span class="wk_foldersign"></span><span class="wk_elements wk_cat_name">'+ nam +'</span><input class="wk_elements" type="checkbox" name="category[]" value='+ id +'></div>');
+							}
+						}
+						thisthis.parent(".wk_cat_container").nextAll().slideDown(300);
+					}
+				});
+			}
+			if(thisthis.hasClass("wk_minus") || thisthis.hasClass("wk_minusend")){
+				if(thisthis.attr("class") == "wk_minus")
+					thisthis.attr("class","wk_plus");
+				if(thisthis.attr("class") == "wk_minusend")
+					thisthis.attr("class","wk_plusend");
+				var thiscategory = thisthis.parent(".wk_cat_container");
+				var marg= parseInt(thiscategory.css("margin-left").replace("px",""));
+				while(thiscategory.next().hasClass("wk_removable")){
+
+				if(parseInt(thiscategory.next().css("margin-left").replace("px",""))>marg)
+					thiscategory.next().slideUp("slow",function(){$wk_jq(this).remove();});
+					thiscategory = thiscategory.next();
+					if(typeof thiscategory.next().css("margin-left")!= "undefined"){
+						if( marg==thiscategory.next().css("margin-left").replace("px",""))
+						{
+						  break;
+						}
+					}
+				}
+			}
+		});
+	})($wk_jq);
+	</script>
+<?php
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('[data-toggle="tooltip-package-type-error"]').tooltip();  
+		
+		
+
+
+ jQuery( ".sel-cat" ).change(function() {
+	 jQuery("#load-now").show();
+ var catid=jQuery( "#category" ).val();
+
+
+
+       jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/subcat',
+	  type:        'post',
+	  data:{'catid':catid },
+	  success: function(msg)
+	   {
+		if (msg) {
+			 jQuery("#load-now").hide();
+		  // alert(msg);
+		   jQuery('#subcat').removeAttr('disabled');
+                   jQuery("#subcat").html(msg);
+
+		}
+	   }
+	});
+
+     });
+
+	 jQuery( ".sel-cat" ).change(function() {
+ var catid=jQuery( "#category" ).val();
+
+
+
+       jQuery.ajax({
+	  url: BaseUrl+'marketplace/marketplaceaccount/medium',
+	  type:        'post',
+	  data:{'catid':catid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		  // alert(msg);
+		   jQuery('#div-medium').removeAttr('disabled');
+                   jQuery("#div-medium").html(msg);
+
+		}
+	   }
+	});
+
+     });
+	});
+	
+	</script>
+
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+	var checkAltTextExists = function(id){
+		if ($j(id).html().indexOf('Upload an Image')!=-1){
+			//alert("already have it");
+		}
+		else {
+			$j(id).prepend("Upload an Image");
+		}
+	}
+    function removeUrl1() {
+		checkAltTextExists($j('#preview1').parent());
+        $j('#preview1').removeAttr('src');
+		$j('#rad1').val('');
+    }
+	 function removeUrl2() {
+		checkAltTextExists($j('#preview2').parent());
+        $j('#preview2').removeAttr('src');
+		$j('#rad2').val('');
+    }
+
+	function removeUrl3() {
+		checkAltTextExists($j('#preview3').parent());
+        $j('#preview3').removeAttr('src');
+		$j('#rad3').val('');
+    }
+
+	function removeUrl4() {
+		checkAltTextExists($j('#preview4').parent());
+        $j('#preview4').removeAttr('src');
+		$j('#rad4').val('');
+    }
+
+	function removeUrl5() {
+		checkAltTextExists($j('#preview5').parent());
+        $j('#preview5').removeAttr('src');
+     	$j('#rad5').val('');
+    }
+
+	function removeUrl6() {
+		checkAltTextExists($j('#preview6').parent());
+        $j('#preview6').removeAttr('src');
+		$j('#rad6').val('');
+    }
+
+</script>
+<!-- Bootstrap Tabs -->
+<script>
+	function openTab(open_tab_name,panel_movement){
+		
+		if(panel_movement == 'back'){
+			toggleTab(open_tab_name);
+		}else{
+				//Else is for next buttons
+				
+				var form_validated;
+		
+				if(open_tab_name == 'seo-details'){
+					form_validated = validateArtworkDetails();
+					if(form_validated){
+						jQuery('#short_description').val(jQuery('#description').val());
+						dimensionUnitChange();
+						weightUnitChange();
+					}
+				}else if(open_tab_name == 'shipping-details'){
+					form_validated = validateSEOPanelFields();
+					//disablePackagingOptions();
+					hideFrameSection();
+				}else if(open_tab_name == 'pricing-details'){
+					form_validated = validateShippingPanelFields();
+					if(form_validated){
+						
+						//Convert one dimension to anotther
+						dimensionUnitChangeOfPackage();
+						weightUnitChangeOfPackage();
+						//artwork_frame
+						var frameOptionSelected = jQuery("input[name='checkbox-frame-option']:checked").val();
+						if(frameOptionSelected == "framed"){
+							jQuery('#artwork_frame').val('1');
+						}else{
+							jQuery('#artwork_frame').val('0');
+						}
+						
+						//Packaging type
+						var packagingType = jQuery("input[name='packaging-type']:checked").val();
+						if (packagingType == 'tube') {
+							jQuery('#shipped_in').val('248');
+						} else if (packagingType == 'box') {
+						   jQuery('#shipped_in').val('247');
+						} else if (packagingType == 'crate') {
+						   jQuery('#shipped_in').val('246');
+						}
+						
+						
+						
+						jQuery('#loader').show();
+						jQuery.ajax({
+						  url: BaseUrl + 'ajax/getShippingPrice.php',
+						  type: 'post',
+						  data:{'height':jQuery('#height_including_package').val(),'width':jQuery('#width_including_package').val(),'depth':jQuery('#depth_including_package').val(), 'weight':jQuery('#weight_including_package').val(), 'price':jQuery('#price-input').val(), 'packageType': packagingType},
+						  success: function(msg)
+						   {
+							msg = jQuery.trim(msg);
+							if (msg) {
+								if(msg == 'error' || msg.indexOf("error") >= 0 || msg.indexOf("Error") >= 0 || msg.indexOf("ERROR") >= 0 || msg.length==0 || msg.toUpperCase().indexOf("SQL") >= 0){
+									jQuery('#loader').hide();
+									alert('We could not fetch shipping price with entered dimensions and packaging type. Please verify package dimensions and Shipped-In container in Shipping Section. If you are still facing problems or need any help, don\'t hesitate to contact us from help section.');
+								}else{
+									jQuery('#loader').hide();
+									//alert(msg);
+									jQuery('#price_again').val(jQuery('#price-input').val());
+									jQuery('#price_artist_share').val(jQuery('#your-share').val());
+									jQuery('#price_shipping_handling').val(msg);
+									jQuery('#price').val((msg*1) + (jQuery('#price-input').val()*1));
+									
+									toggleTab(open_tab_name);
+									
+								}
+
+							}
+						   },
+							error: function (jqXHR, exception) {
+								console.log(jqXHR);
+								alert('We are sorry we could not find shipping rule for this artwork. Please report the issue to us from contact us section.');
+							}
+						});
+					}					
+				}
+
+				if(form_validated && open_tab_name != 'pricing-details'){
+					toggleTab(open_tab_name);
+				}
+		}
+				  
+	}
+	
+	function disablePackagingOptions(){
+		height=jQuery('#height').val();
+		width=jQuery('#width').val();
+		depth=jQuery('#length').val();
+		weight=jQuery('#weight').val();
+		
+		//Tube
+		if(height <= 72 && width <= 4 && depth <= 4 && weight <= 100){
+			jQuery('#check-box-tube').prop('disabled', false);
+			jQuery('#satisfy-condition-tube').addClass('display-none');
+		}else{
+			jQuery('#check-box-tube').prop('disabled', true );
+			jQuery('#satisfy-condition-tube').removeClass('display-none');
+		}
+		
+		//Box
+		if(height <= 44 && width <= 44 && depth <= 5 && weight <= 150){
+			jQuery('#check-box-cardboardbox').prop('disabled', false);
+			jQuery('#satisfy-condition-box').addClass('display-none');
+		}else{
+			jQuery('#check-box-cardboardbox').prop('disabled', true );
+			jQuery('#satisfy-condition-box').removeClass('display-none');
+		}
+		
+		//Crate
+		if(height >= 45 && width >=45 && depth >= 6 && weight <= 1500){
+			jQuery('#check-box-crate').prop('disabled', false);
+			jQuery('#satisfy-condition-crate').addClass('display-none');
+		}else{
+			jQuery('#check-box-crate').prop('disabled', true );
+			jQuery('#satisfy-condition-crate').removeClass('display-none');
+		}
+		
+		
+		
+		
+	}
+	
+	function validateShippingPanelFields(){
+		var catid=jQuery( "#category" ).val();
+		var isFrameOptionValid = false;
+		var isPackagingTypeSelected = false;
+		var isPackageDimensionsValid = false;
+		var isDimensionUnitValid = false;
+		var isPackageWeightValid = false;
+		var isWeightUnitValid = false;
+		
+		//Check if frame or un-frame is selected in case of non-scultpture category
+		if(catid == "6"){
+			isFrameOptionValid = true;
+		}else{
+			var numberOfOptionSelected = 0;
+			$j('[id^=checkbox-framing-]').each(function( index ) {
+			   if($j(this).is(':checked')){
+				 numberOfOptionSelected++;
+			   }
+			});
+			
+			if(numberOfOptionSelected > 0){
+				isFrameOptionValid = true;
+				$j('#packaging-frame-error').removeClass('display-block');
+			}else{
+				$j('#packaging-frame-error').addClass('display-block');
+			}
+		}
+		
+		if((jQuery('#check-box-tube').is(':checked')) || (jQuery('#check-box-cardboardbox').is(':checked')) || (jQuery('#check-box-crate').is(':checked'))){
+			isPackagingTypeSelected = true;
+			$j('#packaging-type-error').removeClass('display-block');
+		}else{
+			$j('#packaging-type-error').addClass('display-block');
+			
+		}
+		
+		//Dimension
+		isPackageDimensionsValid = Validation.validate(document.getElementById('height-input-package'));
+		if(isPackageDimensionsValid){
+			isPackageDimensionsValid = Validation.validate(document.getElementById('width-input-package'));
+		}
+		if(isPackageDimensionsValid){
+			isPackageDimensionsValid = Validation.validate(document.getElementById('length-input-package'));
+		}
+		
+		isDimensionUnitValid = Validation.validate(document.getElementById('package-dimension-unit-cm'));
+		
+		//Weight
+		isPackageWeightValid = Validation.validate(document.getElementById('weight-input-package'));
+		
+		isWeightUnitValid = Validation.validate(document.getElementById('package-weight-unit-kilos'));
+		
+		if(!isFrameOptionValid){
+			$j(window).scrollTop($j('#li-ship-with-frame').offset().top);
+		}else if(!isPackagingTypeSelected){
+			$j(window).scrollTop($j('#li-select-package').offset().top);
+		}else if(!isPackageDimensionsValid){
+			$j(window).scrollTop($j('#li-package-dimensions').offset().top);
+		}else if(!isPackageWeightValid){
+			$j(window).scrollTop($j('#li-package-weight').offset().top);
+		}
+		
+		
+		if(isFrameOptionValid && isPackagingTypeSelected && isPackageDimensionsValid && isPackageWeightValid && isDimensionUnitValid && isWeightUnitValid){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	
+	function hideFrameSection(){
+		var catid=jQuery( "#category" ).val();
+		if(catid == "6"){
+			   jQuery('#li-ship-with-frame').hide();
+		}else{
+			jQuery('#li-ship-with-frame').show();
+		}
+	}
+	
+	function validateSEOPanelFields(){
+		var isSEOPanelValid = true;
+		
+		
+		
+		if(!Validation.validate(document.getElementById('meta_description'))){
+			isSEOPanelValid = false;	
+			$j(window).scrollTop($j('#li-meta-description-seo').offset().top);	
+		}
+		
+		
+		if(!Validation.validate(document.getElementById('meta_keyword'))){
+				isSEOPanelValid = false;
+				$j(window).scrollTop($j('#li-meta-tag-seo').offset().top);
+		}
+		
+		
+		return isSEOPanelValid;
+	}
+	
+	function toggleTab(open_tab_name){
+		//close all panels
+		jQuery('.panel-collapse').collapse('hide');
+		//open specific panel
+		jQuery('#collapse-' + open_tab_name).collapse('toggle');
+		//Un-Highlight all tabs
+		jQuery('.panel-title').removeClass('panel-title-highlight');
+		//Highlight Specific tab
+		jQuery('.heading-' + open_tab_name).addClass('panel-title-highlight');
+		//Scroll to section
+		 jQuery('html, body').animate({
+                    scrollTop: jQuery(".heading-" + open_tab_name).offset().top
+          }, 0);
+	}
+	
+$j(document).ready(function () {
+	//jQuery('.panel-group').on('hidden.bs.collapse', toggleIcon);
+	//jQuery('.panel-group').on('shown.bs.collapse', toggleIcon);
+	jQuery('#collapse-artwork-details').collapse('toggle');
+	
+	jQuery("input[name='packaging-type']").on('click', function() {
+	  // in the handler, 'this' refers to the box clicked on
+	  var $box = jQuery(this);
+	  if ($box.is(":checked")) {
+		// the name of the box is retrieved using the .attr() method
+		// as it is assumed and expected to be immutable
+		var group = "input:checkbox[name='" + $box.attr("name") + "']";
+		// the checked state of the group/box on the other hand will change
+		// and the current value is retrieved using .prop() method
+		jQuery(group).prop("checked", false);
+		$box.prop("checked", true);
+	  } else {
+		$box.prop("checked", false);
+	  }
+	});
+
+
+/*	jQuery('#openShippingDetails').click(function() {
+		jQuery('#collapseOne').hide();
+		jQuery('#collapseTwo').collapse('toggle');
+		jQuery('.panel-title').removeClass('panel-title-highlight');
+		jQuery('.heading-shipping-section').addClass('panel-title-highlight');
+	});
+	jQuery('#openPricingDetails').click(function() {
+			jQuery('#collapseTwo').collapse('toggle');
+			jQuery('#collapseThree').collapse('toggle');
+			jQuery('.panel-title').removeClass('panel-title-highlight');
+		    jQuery('.heading-pricing-section').addClass('panel-title-highlight');
+	});
+	jQuery('#backToShippingFromPricing').click(function() {
+			jQuery('#collapseTwo').collapse('toggle');
+			jQuery('#collapseThree').collapse('toggle');
+			jQuery('.panel-title').removeClass('panel-title-highlight');
+		    jQuery('.heading-shipping-section').addClass('panel-title-highlight');
+	});
+	jQuery('#backToArtworkDetailsFromShipping').click(function() {
+			jQuery('#collapseOne').show();
+			jQuery('#collapseTwo').collapse('toggle');
+			jQuery('.panel-title').removeClass('panel-title-highlight');
+		    jQuery('.heading-artwork-section').addClass('panel-title-highlight');
+	});
+	*/
+
+});
+/*
+function toggleIcon(e) {
+jQuery(e.target)
+        .prev('.panel-heading')
+        .find(".more-less")
+        .toggleClass('glyphicon-triangle-bottom glyphicon-triangle-top');
+}
+*/
+//Select only one out of Frame/Un-frame
+jQuery('input[id^="checkbox-framing-"]').on('change', function() {
+   jQuery('input[id^="checkbox-framing-"]').not(this).prop('checked', false);
+});
+function fillArtistShare(artworkPrice){
+	var artistShare = artworkPrice*0.8;
+    jQuery('#your-share').val(artistShare.toFixed(2));
+}
+function fillMetaTitle(artworkTitle){
+   var categoryName = $j('#category option:selected').text();
+   var catid=jQuery( "#category" ).val();
+   var artistName=jQuery( "#artist_name" ).val();
+   if(catid == "4"){
+	   categoryName = "Drawings";
+   }
+   jQuery('#meta_title').val(artworkTitle + ": Beautiful & Original " + categoryName + " By " + artistName + " | Emergart");
+}
+
+
+function dimensionUnitChange(){
+	dimensionUnit = jQuery('input[name=dimension-metric-unit]:checked').val();
+	if(dimensionUnit == 'inch'){
+		jQuery('#height').val(Math.ceil(jQuery('#height-input').val()));
+		jQuery('#width').val(Math.ceil(jQuery('#width-input').val()));
+		jQuery('#length').val(Math.ceil(jQuery('#length-input').val()));
+	}else{
+		jQuery('#height').val(Math.ceil((jQuery('#height-input').val()*0.39370)));
+		jQuery('#width').val(Math.ceil((jQuery('#width-input').val()*0.39370)));
+		jQuery('#length').val(Math.ceil((jQuery('#length-input').val()*0.39370)));
+	}
+}
+
+function dimensionUnitChangeOfPackage(){
+	dimensionUnit = jQuery('input[name=dimension-unit-package]:checked').val();
+	if(dimensionUnit == 'inch'){
+		jQuery('#height_including_package').val(Math.ceil(jQuery('#height-input-package').val()));
+		jQuery('#width_including_package').val(Math.ceil(jQuery('#width-input-package').val()));
+		jQuery('#depth_including_package').val(Math.ceil(jQuery('#length-input-package').val()));
+	}else{
+		jQuery('#height_including_package').val(Math.ceil((jQuery('#height-input-package').val()*0.39370)));
+		jQuery('#width_including_package').val(Math.ceil((jQuery('#width-input-package').val()*0.39370)));
+		jQuery('#depth_including_package').val(Math.ceil((jQuery('#length-input-package').val()*0.39370)));
+	}
+}
+
+function weightUnitChange(){
+	weightUnit = jQuery('input[name=weight-metric-unit]:checked').val();
+	if(weightUnit == 'pounds'){
+		jQuery('#weight').val(Math.ceil(jQuery('#weight-input').val()));
+	}else{
+		jQuery('#weight').val(Math.ceil((jQuery('#weight-input').val()*2.2046)));
+	}
+}
+
+function weightUnitChangeOfPackage(){
+	weightUnit = jQuery('input[name=weight-unit-package]:checked').val();
+	if(weightUnit == 'pounds'){
+		jQuery('#weight_including_package').val(Math.ceil(jQuery('#weight-input-package').val()));
+	}else{
+		jQuery('#weight_including_package').val(Math.ceil((jQuery('#weight-input-package').val()*2.2046)));
+	}
+}
+
+function showDimensionHelp(event){
+	event.preventDefault();
+	if(jQuery('#table-packages-dimensions-help').hasClass('display-none')){
+		jQuery('#table-packages-dimensions-help').removeClass('display-none');
+		jQuery('#label-show-dimension-help').text('How to fill dimensions? - Hide');
+	}else{
+		jQuery('#table-packages-dimensions-help').addClass('display-none');
+		jQuery('#label-show-dimension-help').text('How to fill dimensions?');
+	}
+}
+
+</script>
+
+<script src="/skin/frontend/default/emergart/js/tether.min.js"></script>
+<script src="/skin/frontend/default/emergart/js/bootstrap.min.js" />

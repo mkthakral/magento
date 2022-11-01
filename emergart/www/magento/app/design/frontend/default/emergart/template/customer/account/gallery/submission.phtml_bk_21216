@@ -1,0 +1,247 @@
+<?php
+$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$tableName1= Mage::getSingleton('core/resource')->getTableName('artis_submit');
+	
+		    $sqlPaymentSystem1="SELECT * FROM ".$tableName1." WHERE gallery_id='".$customerId."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+
+ ?>
+
+
+   
+
+
+ 
+<div class="gla-mng-sub-outer">
+	<div class="sortby">
+		<div class="sort">Sort by :</div>
+		<div class="name-outer">
+			<span>Name</span>/<span>Submission date</span>
+		</div>
+	</div>
+	 <?php foreach($result as $res){ ?>
+	 <?php $artisid=$res['artist_id']; ?>
+	<?php $productowner=Mage::getModel('marketplace/product')->getCollection();?>
+	<?php// print_r($productowner); ?>
+ 
+ <?php  $artisdata = Mage::getModel('customer/customer')->load($artisid); ?>
+ <?php $artisname=$artisdata->getName();  ?>
+	 
+	 
+	<div class="gla-mngsub-tab-outer">
+		<div class="submisson-tab-top" id="<?php echo $artisid;  ?>">
+			<div class="submision-date"><?php echo $res['created_date']; ?></div>
+			<div class="artis-name"><?php echo $artisname; ?></div>
+			<div class="sold-outer">
+				<ul>
+					<li><span>Sold:</span><span>2</span></li>
+					<li><span>Endorsed:</span><span>2</span></li>
+					<li><span>Followers:</span><span>25</span></li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	<div class="total-sec" id="tab_<?php echo $artisid;?>" style="display:none;">
+	<ul class="tab-top">
+					<li class="tab-button tab-protfolio" id="<?php echo $artisid; ?>">Portfolio</li>
+					<li class="tab-button tab-about">About</li>
+					<li class="tab-button tab-massage">Message</li>
+					<li class="tab-button tab-delect">Delect</li>
+				</ul>
+				
+					<ul class="prot-tab" id="port_<?php echo $artisid;  ?>" style="display:none;">
+						<li class="tab-button recent-upload" id="<?php echo $artisid; ?>">Recent Uploads</li>
+						<li class="tab-button ensord-art" id="<?php echo $artisid; ?>">Endorsed Artwork</li>
+						<li class="tab-button sold-art" id="<?php echo $artisid; ?>">Sold Artwork</li>
+					</ul>
+				
+	
+	 <?php 
+	 $sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$artisid."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+	<div class="resent-upload-pro" id="recent_<?php echo $artisid;?>" style="display:none;">
+		<div class="upload-pro">
+		<ul>
+					<?php foreach($result1 as $res1){ ?>
+					<?php //echo $res1['mageproductid']; ?>
+					<?php 
+					$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+					$procode=$product->getGalcode();
+					$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+					$qty=number_format($stock->getQty(),0);
+					
+					if($procode==""){?>
+					
+										
+												<li>
+													<a  id="<?php  echo  $product->getId(); ?>" class="up-image clickimg"><img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/></a>
+													<p><span class="pro-title"><?php echo $product->getName();  ?></span><span class="pro-like"><a href="#">61 likes</a></span></p>
+													<div class="details-pro" id="pro_<?php echo  $product->getId(); ?>" style="display:none;">
+													<input type="hidden" value="<?php echo $customerId; ?>" class="galid">
+														<?php $price = $product->getPrice(); ?>
+														<span class="price"><?php echo Mage::helper('core')->currency($price, true, false); ?></span>
+														<a class="like" id="<?php echo $product->getId();  ?>">Like this artwork</a>
+														<a class="endorse" id="<?php echo $product->getId();  ?>">Endorse this artwork</a>
+													</div>
+												
+												</li>
+
+												
+												
+											
+										
+					<?php }} ?>	
+	</ul>
+	 </div>
+	</div>
+	
+<div class="tab-ensord-artwork" id="endorse_<?php echo $artisid;  ?>" style="display:none;">
+<div class="upload-pro">
+<ul>
+		<?php foreach($result1 as $res1){ ?>
+							<?php //echo $res1['mageproductid']; ?>
+							<?php 
+							$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+							$procode=$product->getGalcode();
+							$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+							$qty=number_format($stock->getQty(),0);
+							
+							if($procode!=""&&$qty==1){?>
+							
+												
+														<li>
+															<a href="#" class="up-image"><img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/></a>
+															<p><span class="pro-title"><?php echo $product->getName();  ?></span><span class="pro-like"><a href="#">61 likes</a></span></p>
+														</li>
+														
+													
+												
+							<?php }} ?>	
+	
+</ul>
+</div>
+</div>		
+
+<div class="tab-sold-artwork" id="sold_<?php echo $artisid;  ?>" style="display:none;">
+<div class="upload-pro">
+<ul>	
+	<?php foreach($result1 as $res1){ ?>
+								<?php //echo $res1['mageproductid']; ?>
+								<?php 
+								$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+								$procode=$product->getGalcode();
+								$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+								$qty=number_format($stock->getQty(),0);
+								
+								if($qty==0){?>
+								
+													
+															<li>
+																<a href="#" class="up-image"><img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/></a>
+																<p><span class="pro-title"><?php echo $product->getName();  ?></span><span class="pro-like"><a href="#">61 likes</a></span></p>
+															</li>
+															
+														
+													
+								
+								
+	<?php }} ?>	
+
+</ul>
+</div>
+</div>			
+					
+</div>	
+<?php } ?>
+</div>
+
+
+<script type="text/javascript">
+		jQuery(document).ready(function(){
+		var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+		jQuery(".submisson-tab-top").click(function(){
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	   jQuery("#tab_"+id).toggle();
+    });
+	
+	jQuery(".tab-protfolio").click(function(){
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	   jQuery("#port_"+id).toggle();
+	   jQuery("#recent_"+id).show();
+    });
+	jQuery(".ensord-art").click(function(){
+       var id=jQuery(this).attr('id');
+	   
+	   jQuery("#endorse_"+id).show();
+	    jQuery("#recent_"+id).hide();
+		 jQuery("#sold_"+id).hide();
+    });
+	
+	jQuery(".recent-upload").click(function(){
+       var id=jQuery(this).attr('id');
+	   
+	   jQuery("#endorse_"+id).hide();
+	    jQuery("#recent_"+id).show();
+		 jQuery("#sold_"+id).hide();
+    });
+	
+	jQuery(".sold-art").click(function(){
+       var id=jQuery(this).attr('id');
+	   
+	  
+		 jQuery("#sold_"+id).show();
+		  jQuery("#endorse_"+id).hide();
+	    jQuery("#recent_"+id).hide();
+    });
+	
+	jQuery(".clickimg").click(function(){
+		
+	var proid=jQuery(this).attr("id");
+    jQuery("#pro_"+proid).toggle();	
+		
+	});
+	jQuery(".endorse").click(function(){
+		
+		var id=jQuery(this).attr("id");
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/endorse.php',
+	  type:        'post',
+	  data:{'proid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert("endorsed Successfully");
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+								
+	});
+		
+	</script>

@@ -1,0 +1,14 @@
+<?php if ($this->stripe->isStripeJsEnabled()): ?>
+<script type="text/javascript">
+    avs_enabled = <?php echo ($this->stripe->store->getConfig('payment/cryozonic_stripe/avs') ? 'true' : 'false') ?>;
+    <?php if ($this->hasBillingAddress()): ?>
+    // These are intentionally global variables
+    avs_address_line1 = '<?php echo $this->address_line1; ?>';
+    avs_address_zip = '<?php echo $this->address_zip; ?>';
+    <?php endif; ?>
+    params3DSecure = <?php echo $this->stripe->get3DSecureParams(); ?>;
+    paramsApplePay = <?php echo $this->stripe->getApplePayParams(); ?>;
+    initStripe('<?php echo $this->getPublishableKey(); ?>');
+</script>
+<div id="three_d_secure_container"></div>
+<?php endif; ?>

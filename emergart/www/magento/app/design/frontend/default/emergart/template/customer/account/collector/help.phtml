@@ -1,0 +1,96 @@
+<?php
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+//echo '<pre>';
+//print_r($customerData);
+$customerId = $customerData->getId();
+$customeremail=$customerData->getEmail();
+$customergGroupId=Mage::getSingleton('customer/session')->getCustomerGroupId();
+?>
+<div id="loader" style="display:none"></div>
+<div class="page-title"><h3>Help</h3></div>
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('colectorhelp')->toHtml(); ?> 
+<h2 id="helpcontact" class="title">Contact Us</h2>
+<div class="help-cntnt helpcontact-add">
+<input type="hidden" name="email" class="email" value="<?php echo $customeremail;  ?>">
+<input type="hidden" name="adminemail" class="adminemail" value="<?php echo Mage::getStoreConfig('trans_email/ident_custom1/email'); ?>">
+<input type="hidden" id="cust-group" value="<?php echo Mage::getModel('customer/group')->load($customergGroupId)->getCustomerGroupCode(); ?>"/>
+
+<ul>
+<li>Please select from the following ...</li>
+<li><select id="state" name="state">
+<option>I&rsquo;m Having Technical Issues</option>
+<option>I Need to Make a Return</option>
+<option>I Have a Suggestion</option>
+<option>I Have Another Issue</option>
+</select></li>
+<li><textarea name="briefdescription" class="descp" placeholder="Brief Description"></textarea></li>
+<li>
+<div class="buttons-set"><button class="button" id="sendmsg"  title="Save" type="submit"><span><span>Send</span></span></button></div>
+</li>
+</ul>
+</div>
+<div class="dshbrd-cntnt-bottom" style="padding-top: 40px;">
+<div class="stay-informed">
+<h1 style="padding-bottom: 13px;margin-bottom: 37px;">Stay Connected</h1>
+<div class="infrmed-outer">
+	<div class="infrme-cnt"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('collector-stay-connected')->toHtml(); ?></div>
+	<div class="infrmed-socialicon">
+		<ul>
+			<li class="facebook"><a href="#">facebook</a></li>
+			<li class="twiter"><a href="#">twiter</a></li>
+			<li class="instragrm"><a href="#">instragrme</a></li>
+			<li class="msg"><a href="#">massage</a></li>
+			<li class="msg-text">Tell a friend</li>
+		</ul>
+	</div>
+</div>
+</div>
+	<div class="dash-paypal-banner">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('dashpaypal')->toHtml(); ?>
+	</div>
+	
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+		jQuery(document).ready(function(){
+		var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+		
+	jQuery("#sendmsg").click(function(){
+		//alert("hello");
+		//var id=jQuery(this).attr("id");
+		jQuery("#loader").css({"display":"block"});
+		var customeremail=jQuery(".email").val();
+        	var adminemail=jQuery(".adminemail").val();
+		var ques=jQuery("#state option:selected").text();
+	        var msg=jQuery(".descp").val();
+		var custGroup = jQuery("#cust-group").val();
+		
+		
+		if(msg==""){
+			jQuery("#loader").css({"display":"none"});
+			alert("Please enter Brief Description");
+		}
+		else{
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/helpmsg.php',
+	  type:        'post',
+	  data:{'email':customeremail,'adminemail':adminemail,'ques':ques,'msg':msg,'custGroup':custGroup},
+	  success: function(msg)
+	   {
+		if (msg) {
+		   jQuery("#loader").css({"display":"none"});
+		   alert("Message Sent, Thank You!");
+		 // jQuery(".loader-img").hide();
+		 //  window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		}
+	});
+								
+	});
+		
+	</script>

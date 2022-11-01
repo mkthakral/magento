@@ -1,0 +1,344 @@
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')
+ ->load($id);
+     ?>
+	 <div class="artis-viewpro-outer">
+		 <div class="artis-view-left">
+			<div class="title"><?php echo  $collection->getName(); ?></div>
+			<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+		  </div>
+		  <div class="artis-view-right">
+			<div class="artis-tab">
+				<ul>
+					<li class="abt-artis">About the Artist</li>
+					<li class="view-prot active">View Portfolio</li>
+				</ul>
+			</div>
+			<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/home?status=vvvvvvvvv+http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Findex.php%2Fdrawings%2Fvvvvvvvvv.html&amp;p[images][0]=http%3A%2F%2Fdigitalmate.in%2Fmagento%2Femergart%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2Fp%2Fa%2Fpaint-img-4.png&amp;p[title]=vvvvvvvvv&amp;p[summary]=%3Cp%3Etest%3C%2Fp%3E" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="http://digitalmate.in/magento/emergart/index.php/sendfriend/product/send/id/13/cat_id/4/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">share this page</a></li>
+					</ul>
+
+				</div>
+		  </div>
+		</div>
+		<div class="gallery-work-outer">
+			<div class="gallery-work">
+				<div class="gla-title">Gallery Endorsed Work</div>
+				<ul class="products-grid">
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-1.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							<p class="end">Art Endorsed By</p>
+							<p>shoubhik gel123456</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-2.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							<p class="end">Art Endorsed By</p>
+							<p>shoubhik gel123456</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-3.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							<p class="end">Art Endorsed By</p>
+							<p>shoubhik gel123456</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+				</ul>
+			</div>
+			
+			
+			<div class="gallery-work">
+				<div class="gla-title">Un-Endorsed Work</div>
+				<ul class="products-grid">
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-1.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-2.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-3.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three">
+									<div class="price-box">
+										<span class="regular-price" id="product-price-13">
+												<span class="price">$30.00</span>            
+										</span>
+							
+									</div>
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+				</ul>
+			</div>
+			
+			
+			<div class="gallery-work">
+				<div class="gla-title">SOLD Work</div>
+				<ul class="products-grid">
+					<li>
+						<a href="#"><img src="<?php echo $this->getskinUrl ("images/gla-ensord-img-1.png") ?>" alt=""/></a>
+						<div class="product-info" style="padding-bottom: 94px; min-height: 216px;">
+							<div class="pro-detls">
+							<ul>
+								<li class="one">1</li>
+								<li class="two">1</li>
+								<li class="three sold">
+									SOLD
+
+								</li>
+							</ul>
+							<p>artist artis</p>
+							</div>
+											
+							<div class="actions" style="display: none;">
+									<button type="button" title="Add to Cart" class="button btn-cart" onclick="setLocation('http://digitalmate.in/magento/emergart/index.php/checkout/cart/add/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/product/13/form_key/vdM0oficzN83hm3t/')"><span><span>Add to Cart</span></span></button>
+										<ul class="add-to-links">
+											<li><a href="http://digitalmate.in/magento/emergart/index.php/wishlist/index/add/product/13/form_key/vdM0oficzN83hm3t/" class="link-wishlist">Add to Wishlist</a></li>
+											 <li><span class="separator">|</span> <a href="http://digitalmate.in/magento/emergart/index.php/catalog/product_compare/add/product/13/uenc/aHR0cDovL2RpZ2l0YWxtYXRlLmluL21hZ2VudG8vZW1lcmdhcnQvaW5kZXgucGhwL2RyYXdpbmdzLmh0bWw,/form_key/vdM0oficzN83hm3t/" class="link-compare">Add to Compare</a></li>
+										</ul>
+							</div>
+					</div>
+					</li>
+					
+				</ul>
+			</div>
+		
+		</div>
+		
+		<div class="abt-artis-outer">
+			<div class="about-artis">
+				<div class="title">About the Artist</div>
+				<div class="abt-content">
+					<div class="con">
+						<p>Mission Statement:</p>
+						<p>A student of human behavior coupled with a desire to record everything he sees, Smith has been called the next artist to watch from Modern Art Magazine. The human
+						experience is at the heart of what Smith is interested in and how people relate to each other.</p>
+					</div>
+					<div class="con">
+						<p>Education:</p>
+						<p>Smith studied at Parsons, NY for two years but is self taught otherwise. A full life experience from living on the street has propelled Smith to work with fascinating subjects
+							such as soup kitchens, homeless people and the disparaged. Smith was invited to participate at Parsons through the recommendation of the director when he was
+							discovered on the streets of New York painting in the subway and selling his work for $10.00 a painting. Smith is currently living in upstate New York in an artist colony
+							and has been accepted full time at NYU’s art department.</p>
+					</div>
+					<div class="con">
+						<p>Awards:</p>
+						<p>Smith has received numerous awards including the prestigious National Youth Award and Artists to watch 2015.</p>
+					</div>
+				</div>
+			</div>
+			
+			<div class="about-artis">
+				<div class="title">Q & A</div>
+				<div class="abt-content">
+					<div class="con">
+						<p>Question 1:</p>
+						<p>A student of human behavior coupled with a desire to record everything he sees, Smith has been called the next artist to watch from Modern Art Magazine. The human
+							experience is at the heart of what Smith is interested in and how people relate to each other.</p>
+					</div>
+					<div class="con">
+						<p>Question 2:</p>
+						<p>Smith studied at Parsons, NY for two years but is self taught otherwise. A full life experience from living on the street has propelled Smith to work with fascinating subjects
+							such as soup kitchens, homeless people and the disparaged. Smith was invited to participate at Parsons through the recommendation of the director when he was
+							discovered on the streets of New York painting in the subway and selling his work for $10.00 a painting. Smith is currently living in upstate New York in an artist colony
+							and has been accepted full time at NYU’s art department.</p>
+					</div>
+					<div class="con">
+						<p>Question 3:</p>
+						<p>Smith has received numerous awards including the prestigious National Youth Award and Artists to watch 2015.</p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+     
+    <?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE galeryid='".$id."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			
+			?>
+      
+<?php foreach($resultnew as $res){ ?>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u18">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u18_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u19">
+          <p class="qes"><span><?php echo $res['question']; ?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u20">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u20_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u21">
+          <p><span><?php echo $res['answer'];  ?></span></p>
+        </div>
+      </div>
+<?php } ?>
+      <!-- Unnamed (Image) -->
+      
+    </div>

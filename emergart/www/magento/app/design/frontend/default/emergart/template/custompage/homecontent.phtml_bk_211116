@@ -1,0 +1,166 @@
+
+<div class="home-content">
+<div class="banner-section">
+
+ <?php $bannerCollection = Mage::getModel("banner/banner")->getCollection()->addFieldToFilter("status",1); ?>
+        
+        <?php if(count($bannerCollection)): ?>
+            <ul class="bxslider">
+                <?php foreach($bannerCollection as $banner): ?>
+                    
+                    <li>
+					<a href="<?php echo $banner->getContent();  ?>" target="_blank">
+					<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$banner->getFilename(); ?>" title="<?php echo $banner->getTitle() ?>" alt="<?php echo $banner->getTitle() ?>"/>
+					</a>
+					</li>
+                    
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+<div class="banner-shadow">&nbsp;</div>
+<div class="banner-con-outer">
+<div class="con">
+<p>Nothing says more about You than the Artwork You choose to Collect</p>
+</div>
+<div class="botton"><span>How it works</span></div>
+</div>
+</div>
+<div class="gallery-con">
+<ul>
+<?php $collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);?>
+        <?php $i=0;
+        foreach($collection as $_collection):$i++?>
+<?php if($i<8):?>
+<li><?php echo $_collection->getGaleryname();?></li>
+<?php endif;?>
+<?php endforeach;?>
+
+</ul>
+</div>
+<div class="blog-outer container">
+<div class="blog-1">
+<h2 class="title">View by Price</h2>
+<div class="blog-img">
+<ul>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-1.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-2.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-3.jpg" /></li>
+</ul>
+</div>
+</div>
+<div class="blog-1">
+<h2 class="title">View by Style</h2>
+<div class="blog-img">
+<ul>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-4.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-5.jpg"</li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-6.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-7.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-8.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-9.jpg" /></li>
+</ul>
+</div>
+</div>
+<div class="met-gallery">
+<h2>Meet the Gallery Owners - <a href="<?php echo $this->getUrl('custom/index/index')?>"><span>more...</span></a></h2>
+<ul>
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+        $i=0;
+		//echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+			$i++;
+			?>
+			<?php if($i<5):?>
+			<li>
+			<?php //echo $customer->getentityId();?>
+			<p><?php echo $customer->getGaleryname();?></p>
+			<span><a href="<?php echo $this->getUrl('custom/index/details/id/'.$customer->getentityId()); ?>"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></a></span>
+			
+			<p class="name"><?php echo $customer->getFirstname(); ?>  <?php echo $customer->getLastname(); ?></p>
+			</li>
+		<?php endif;?>
+		<?php } ?>
+
+<ul>
+
+</div>
+<div class="catagory-product-outer">
+<h2>Recently Sold</h2>
+<ul class="products-grid">
+<?php
+
+$visibility = array(
+
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+	Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+
+	);
+
+	 
+
+	$_productCollection = Mage::getResourceModel('reports/product_collection')
+
+							->addAttributeToSelect('*')
+
+							->addOrderedQty()
+
+							->addAttributeToFilter('visibility', $visibility)
+
+							->setOrder('main_table.created_at','desc');?>
+<?php $i = 0;?>
+							<?php foreach($_productCollection as $_product){?>
+
+								
+			<?php $i++;if($i<5)	{	?>		
+<li><a href="<?php echo $_product->getProductUrl(); ?>" title="View <?php echo $_product->getName(); ?>"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(223,222); ?>" alt="Product image"  class="shadow" rel="black" /></a>
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three"><?php $finalPrice =  $_product->getPrice();echo $formattedPrice = Mage::helper('core')->currency($finalPrice, true, false);?></li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+<?php }?>
+<?php }?>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+		
+        
+        jQuery(".bxslider").bxSlider({
+            
+            auto : true,
+            pager: true,
+            nextSelector: ".cls-next",
+	    prevSelector: ".cls-prev",
+            
+        });
+		
+		
+		
+		
+		
+        
+    });
+</script>

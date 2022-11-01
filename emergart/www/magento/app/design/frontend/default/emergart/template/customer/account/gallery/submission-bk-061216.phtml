@@ -1,0 +1,296 @@
+<?php
+$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$tableName1= Mage::getSingleton('core/resource')->getTableName('artis_submit');
+$deltable=Mage::getSingleton('core/resource')->getTableName('delete_artis');
+	
+		    $sqlPaymentSystem1="SELECT * FROM ".$tableName1." WHERE gallery_id='".$customerId."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+
+ ?>
+
+
+   
+
+
+ 
+<div class="gla-mng-sub-outer">
+	<div class="sortby">
+		<div class="sort">Sort by :</div>
+		<div class="name-outer">
+			<span>Name</span>/<span>Submission date</span>
+		</div>
+	</div>
+	 <?php foreach($result as $res){ ?>
+	 <?php $artisid=$res['artist_id']; ?>
+	<?php $productowner=Mage::getModel('marketplace/product')->getCollection();?>
+	<?php  
+			    $sqlcheck="SELECT * FROM ".$deltable." WHERE galid='".$customerId."' AND artist_id='".$artisid."'";
+
+	try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlcheck);
+				$resultchk= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+$cnt=count($resultchk);
+	?>
+ 
+ <?php  $artisdata = Mage::getModel('customer/customer')->load($artisid); ?>
+ <?php $artisname=$artisdata->getName();  ?>
+	 
+	<?php if($cnt==0){ ?>
+	<div class="gla-mngsub-tab-outer">
+		<div class="submisson-tab-top" id="<?php echo $artisid;  ?>">
+			<div class="submision-date"><?php echo $res['created_date']; ?></div>
+			<div class="artis-name"><?php echo $artisname; ?></div>
+			<div class="sold-outer">
+				<ul>
+					<li><span>Sold:</span><span>2</span></li>
+					<li><span>Endorsed:</span><span>2</span></li>
+					<li><span>Followers:</span><span>25</span></li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	<?php } ?>
+	 
+	<div class="total-sec" id="tab_<?php echo $artisid;?>" style="display:none;">
+	<ul class="tab-top">
+					<li class="tab-button tab-protfolio" id="<?php echo $artisid; ?>">Portfolio</li>
+					<li class="tab-button tab-about" id="<?php echo $artisid;?>">About</li>
+					<li class="tab-button tab-massage" id="<?php echo $artisid;?>">Message Artist</li>
+					<li class="tab-button tab-delect"  id="<?php echo $artisid;?>">Delete this artist</li>
+					<li class="tab-button tab-watch"   id="<?php echo $artisid;?>">Watch this artist</li>
+				</ul>
+				
+					
+				
+	
+	 <?php 
+	 $sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$artisid."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+	<div class="resent-upload-pro" id="recent_<?php echo $artisid;?>" style="display:none;">
+		<div class="upload-pro">
+		<ul>
+					<?php foreach($result1 as $res1){ ?>
+					<?php //echo $res1['mageproductid']; ?>
+					<?php 
+					$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+					$procode=$product->getGalcode();
+					$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+					$qty=number_format($stock->getQty(),0);
+                    ?>
+					
+										
+												<li>
+													<a  id="<?php  echo  $product->getId(); ?>" class="up-image clickimg"><img src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/></a>
+													<p><span class="pro-title"><?php echo $product->getName();  ?></span><span class="pro-like"><a href="#">61 likes</a></span></p>
+													<div class="details-pro" id="pro_<?php echo  $product->getId(); ?>" style="display:block;">
+													<input type="hidden" value="<?php echo $customerId; ?>" class="galid">
+														<?php $price = $product->getPrice(); ?>
+														<span class="price"><?php echo Mage::helper('core')->currency($price, true, false); ?></span>
+														<a class="like" id="<?php echo $product->getId();  ?>">Like this artwork</a>
+														
+														
+														<?php if($procode==""){ ?>
+														<a class="endorse" id="<?php echo $product->getId();  ?>">Endorse this artwork</a>
+														<?php } ?>
+														<?php if($procode!=""&&$qty==1){?>
+														<a class="alreadyendorse" id="<?php echo $product->getId();  ?>">Endorsed</a>
+														<?php } ?>
+														<?php if($qty==0){?>
+														<a class="sold" id="<?php echo $product->getId();  ?>">Sold</a>
+														<?php } ?>
+													</div>
+												
+												</li>
+
+												
+												
+											
+										
+					<?php } ?>	
+	</ul>
+	 </div>
+	</div>
+	
+	<div class="artis-descp" style="display:none;" id="about_<?php echo $artisid;  ?>">
+	<?php  $artiscollection=Mage::getModel('customer/customer')->load($artisid); ?>
+	<div class="images"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo  $artiscollection->getAvatar();?>" class="img " id="u42_img"></div>
+	
+	</div>
+	<div class="artis-message" style="display:none;" id="message_<?php echo $artisid;  ?>">
+	<span>Send the artist a one way message-they will not be able to reply,it is read only</span>
+	<textarea name="artmessage" class="sendmsg"></textarea>
+	<button type="button" name="button" class="sendartmsg">Send</button>
+	</div>
+	
+	
+
+		
+					
+</div>	
+<?php } ?>
+</div>
+
+
+<script type="text/javascript">
+		jQuery(document).ready(function(){
+		var BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+		jQuery(".submisson-tab-top").click(function(){
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	   jQuery("#tab_"+id).toggle();
+    });
+	
+	jQuery(".tab-protfolio").click(function(){
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	   jQuery("#recent_"+id).toggle();
+	  // jQuery("#recent_"+id).show();
+    });
+	
+	jQuery(".tab-about").click(function(){
+		//alert("hello");
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	  
+	   jQuery("#recent_"+id).hide();
+	    jQuery("#about_"+id).show();
+	   //jQuery("#about_"+id).toggle();
+    });
+	
+	jQuery(".tab-massage").click(function(){
+		//alert("hello");
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	  
+	   jQuery("#recent_"+id).hide();
+	    jQuery("#about_"+id).hide();
+	   jQuery("#message_"+id).show();
+    });
+	jQuery(".tab-delect").click(function(){
+		 var id=jQuery(this).attr('id');
+		 var galid=jQuery(".galid").val();
+		
+    if (confirm("Are you sure you want to delete this artist?")) {
+       
+	   
+	   
+	   jQuery.ajax({
+	  url: BaseUrl+'ajax/remove.php',
+	  type:        'post',
+	  data:{'artistid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert(msg);
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+    }
+	 else{
+        return false;
+    }
+});
+		
+		
+	
+	
+	
+	
+	
+	jQuery(".endorse").click(function(){
+		
+		var id=jQuery(this).attr("id");
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/endorse.php',
+	  type:        'post',
+	  data:{'proid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert("endorsed Successfully");
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+	
+	jQuery(".like").click(function(){
+		
+		var id=jQuery(this).attr("id");
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/like.php',
+	  type:        'post',
+	  data:{'proid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert(msg);
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+	jQuery(".tab-watch").click(function(){
+		
+		var id=jQuery(this).attr("id");
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/follow.php',
+	  type:        'post',
+	  data:{'artistid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert(msg);
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+								
+	});
+		
+	</script>

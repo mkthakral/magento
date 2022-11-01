@@ -1,0 +1,20 @@
+@media only screen and (max-width: 599px) {
+    .col1-layout .col-main {
+        padding-left: 4% !important;
+        padding-right: 4% !important;
+        text-align: justify;
+    }
+}
+.cms-page-view .page-title {
+   text-align: left !important;
+   background: #ffffff !important;
+   padding-top: 3% !important;
+}
+
+.page-title h1 {
+    text-transform: capitalize !important;   
+    font-weight: normal !important;
+    color: #ef5526 !important;
+    font-size: 1.4em !important;
+}
+

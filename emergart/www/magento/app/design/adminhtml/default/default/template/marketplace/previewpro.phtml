@@ -1,0 +1,203 @@
+<style>
+.box
+{
+	background-position: center center;
+    background-repeat: no-repeat;
+    border: 5px solid #CCCCCC;
+    border-radius: 10px 10px 10px 10px;
+    height: 50%;
+    left: 30%;
+    position: fixed;
+    top: 20%;
+    width: 50%;
+    z-index: 9;
+	background-image:url('<?php echo Mage::getDesign()->getSkinUrl();?>/images/ajax-loader-tr.gif');
+}
+.box .product-shop
+{
+	float: left;
+    height: 100%;
+    min-height: 100px;
+    width: 48%;
+}
+.box .product-img-box
+{
+	float: left;
+    height: 100%;
+    margin-right: 2%;
+    min-height: 100px;
+    width: 48%;
+}
+.product-img-box img
+{
+	height:100%;
+	width:100%;
+}
+.box .product-essential
+{
+	background-color: #FFFFFF;
+    height: 100%;
+}
+.btn {
+	 -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #F5F5F5;
+    background-image: linear-gradient(to bottom, #FFFFFF, #E6E6E6);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #A2A2A2;
+    border-image: none;
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    left: 97%;
+    line-height: 20px;
+    margin-bottom: 0;
+    padding: 4px 12px;
+    position: relative;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    top: -102%;
+    vertical-align: middle;
+	font-weight:600;
+}
+
+.btn:hover
+{
+	border-color: rgba(82, 168, 236, 0.8);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+	outline: 0 none;
+	color:#ff0000;
+}
+.box .product-name{font-size: 1.2em;font-weight: 600;padding: 3px 0;}
+.box .short-description{height: 30%;overflow: auto;margin-bottom:5px;padding:0px}
+.box .description{height: 55%;overflow: auto;}
+.prev{cursor:pointer;left:0px;}
+a.productlink-fix
+{
+	float:right;
+	margin-right:30px;
+}
+</style>
+<?php
+$helper=Mage::helper('marketplace');
+?>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('marketplace/css/style.css');?>">
+<div id="ask_data"> 
+	<div class="modal_header">
+		<h4 class="modal-title"><?php echo $helper->__('What is the reason to deny this product?') ?></h4>
+		<span  class="wk_close" >x</span>
+		<span  class="clear" ></span>
+	</div>
+	
+	<form id="ask_form" method="get" enctype="multipart/form-data" action="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/marketplace_products/deny/')?>">
+		<div class="modal-body">
+			<div class="bootbox-body">
+				<textarea class="bootbox-input bootbox-input-text form-control required-entry" name="product_deny_reason"></textarea>
+				<input type="hidden" name="productid" id="productid" value=""/>			
+				<input type="hidden" name="sellerid" id="sellerid" value=""/>			
+			</div>
+		</div>
+		<div class="modal_footer">
+			<span class="error"></span>
+			<input type="reset" value="<?php echo $helper->__('Cancel') ?>" id="" class="wk_btn wk_btn_default"/>
+			<input type="submit" value="<?php echo $helper->__('Deny') ?>" id="" class="wk_btn wk_btn_primary"/>
+			<span class="clear"></span>
+		</div>
+	</form>
+</div>
+<script>
+var wk=jQuery.noConflict();
+var newCustomerProductForm = new varienForm('ask_form', true);
+(function($wk_jq){
+	$wk_jq(function(){
+		$wk_jq('#html-body').delegate('.prev','click',function(){
+			var obj=$wk_jq('<div class="box"/>');
+			$wk_jq('#html-body').prepend(obj);
+			$wk_jq('.wrapper').css('opacity','.2');
+			$currency='<?php echo  Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?>';
+			$wk_jq(this).attr('data');
+			$wk_jq.ajax({
+				url:$wk_jq(this).attr('data'),
+				data:{customerid:$wk_jq(this).attr('customer-id')},
+				dataType:'json',
+				type: 'POST',
+				success:function(data){
+					var alt="",downlink="";
+					if(data.url.split('/').length<2)
+					{
+						alt=data.url;
+					}
+					downlink1="";
+					var tempobj=$wk_jq('<div/>').addClass('product-essential')
+											    .append($wk_jq('<div/>').addClass('product-img-box')
+																	    .append($wk_jq('<img/>').attr('src',data.url)
+																							    .attr('alt',alt)	
+																			   )
+													   )
+											   .append($wk_jq('<div/>').addClass('product-shop')
+																	   .append($wk_jq('<div/>').addClass('product-name')
+																							   .text(data.name)
+																							   .append(downlink1)
+																				)
+																		.append($wk_jq('<div/>').addClass('price-box')
+																								.text('Price :'+$currency+' '+data.price)
+																					)
+																		.append($wk_jq('<div/>').addClass('short-description')
+																								.html(data.short_description)
+																				)
+																		.append($wk_jq('<div/>').addClass('description')
+																								.html(data.description)
+																				)
+														)
+												.append($wk_jq('<span />').text('X')
+																		  .addClass('btn')
+																		  .attr('id','close-prev')
+														);
+					obj.append(tempobj);					
+				},
+				error:function(){
+					alert('error');
+					$wk_jq('.box').remove();
+					$wk_jq('.wrapper').css('opacity','1');
+				}
+			});
+		});
+		
+		$wk_jq('#html-body').delegate('#close-prev','click',function(){
+			$wk_jq('.box').remove();
+			$wk_jq('.wrapper').css('opacity','1');
+		});
+
+		$wk_jq('body').append($wk_jq('#ask_data'));	
+
+		$wk_jq('#html-body').delegate('.wk_denyproduct','click',function(){
+			$wk_jq('#sellerid').val($wk_jq(this).attr('customer-id'));
+			$wk_jq('#productid').val($wk_jq(this).attr('product-id'));
+			$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+			$wk_jq('.wrapper').css('pointer-events','none');
+			$wk_jq('.wrapper').css('opacity','0.4');
+			$wk_jq('#ask_data').show();
+			$wk_jq('.form-control').focus();
+		});
+		
+		$wk_jq('#html-body').delegate('.wk_close','click',function(){
+			$wk_jq('.wrapper').css('pointer-events','auto');
+			$wk_jq('.wrapper').css('opacity','1');
+			$wk_jq('.wk_btn_default').trigger('click');
+			$wk_jq('#ask_data').hide();			
+		});
+	});
+})(wk);
+</script>

@@ -1,0 +1,88 @@
+<?php $this->getLayout()->getBlock('head')->setDescription('Myrr description'); ?>
+
+<?php 
+ $id = $this->getRequest()->getParam('id');
+ $collection = Mage::getModel('customer/customer')->load($id);
+  $currentUrl=$this->helper('core/url')->getCurrentUrl();    
+       // echo '<pre>';print_r($collection->getData());
+   //echo $collection->getEmail();die;?>
+<div class="" id="base">
+	<div class="gallery-details-top">
+	<div class="top-gal">Meet Gallery Owner, <?php echo $collection->getName();  ?>, <?php echo $collection->getGaleryname();?> </div>
+      <!-- Unnamed (Image) -->
+      <div class="ax_image" id="u0">
+	    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $collection->getAvatar();?>" class="img " id="u42_img">
+        <?php if ($collection->getSstechProfileimage()): ?> 
+            
+         <img id="preview" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'customer'.$collection->getSstechProfileimage();?>" class="img " id="u0_img"/>
+          
+        <?php endif ?>
+        <!-- Unnamed () -->
+        <div class="text" id="u1" style="top: 100px; transform-origin: 98px 0px 0px;">
+          <p><span></span></p>
+        </div>
+      </div>
+	   
+  
+	  <div class="artis-view-right">
+		<div class="sharing-outer">
+					<ul class="sharing-links">
+						<li class="twiter">
+							<a href="http://twitter.com/share?text=<?php echo $collection->getGaleryname(); ?>&url=" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+						</li>
+						<li class="facebook">
+							<a href="http://www.facebook.com/sharer.php?u=<?php echo $currentUrl; ?>&p[title]=<?php echo  $collection->getGaleryname(); ?>" target="_blank" title="Share on Facebook" class="link-facebook">
+							Share Facebook </a>
+						</li>
+						<li class="email"><a href="mailto:?subject=<?php echo $collection->getGaleryname()  ?> on Emergart&amp;body=Check out this site <?php echo $currentUrl;  ?>"
+   title="Share by Email" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>	
+						<li class="share"><a href="#">share this page</a></li>
+					</ul>
+
+		</div>
+	  </div>
+	 
+     </div>
+	<div class="gallery-details-bottom">
+	<div class="gla-title">About the Gallery</div>
+	  
+	<div class="description"><?php echo nl2br($collection->getGalerydescription()); ?></div>
+	  
+
+    <?php  
+	$answertable= Mage::getSingleton('core/resource')->getTableName('galery_qa'); 
+    $sqlPaymentSystem="SELECT * FROM ".$answertable." WHERE galeryid='".$id."' order by ABS(title)";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem);
+				$resultnew=$chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			$count=count($resultnew);
+			?>
+<?php if($count!=0){ ?>
+<div class="gla-title"><span>Q & A</span></div>      
+<?php foreach($resultnew as $res){ ?>
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u18">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u18_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u19">
+          <p class="qes"><span><?php echo $res['question']; ?></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Shape) -->
+      <div class="ax_paragraph" id="u20">
+        <img src="http://d1h0x9w88ijkiq.cloudfront.net/3190/images/transparent.gif" class="img " id="u20_img">
+        <!-- Unnamed () -->
+        <div class="text" id="u21">
+          <p><span><?php echo nl2br($res['answer']);  ?></span></p>
+        </div>
+      </div>
+<?php }} ?>
+      <!-- Unnamed (Image) -->
+      
+    </div>
+	</div>

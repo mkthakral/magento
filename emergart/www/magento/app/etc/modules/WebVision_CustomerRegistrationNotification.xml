@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <WebVision_CustomerRegistrationNotification>
+            <active>true</active>
+            <codePool>community</codePool>
+        </WebVision_CustomerRegistrationNotification>
+    </modules>
+</config>

@@ -1,0 +1,116 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+$customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$avtar=$customer->getAvatar(); 
+?>
+ <?php if($customerGroupId==1){ ?>
+<div class="block block-account">
+    <div class="block-title">
+	<?php if($avtar==""){ ?>
+	<span><img src="<?php echo $this->getskinUrl()?>images/no-pro-img.png" height="125px"; width="125px" /></span>
+	<?php } else { ?>
+	   <span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+	<?php } ?>
+	<strong><span><?php echo $customer->getFirstname();  ?>  <?php echo $customer->getLastname(); ?></span></strong>
+    </div>
+    <div class="block-content">
+	
+	
+	
+        <ul>
+            <?php $_links = $this->getLinks(); ?>
+            <?php $_index = 1; ?>
+            <?php $_count = count($_links);  unset($_links['tags']); unset($_links['OAuth Customer Tokens']); unset($_links['newsletter']); unset($_links['downloadable_products']); unset($_links['billing_agreements']); 
+
+unset($_links['recurring_profiles']); unset($_links['reviews']); unset($_links['wishlist']);?>
+            <?php foreach ($_links as $_link): ?>
+                <?php $_last = ($_index++ >= $_count); ?>
+                <?php if ($this->isActive($_link)): ?>
+                    <li class="current<?php echo ($_last ? ' last' : '') ?>"><a href="<?php echo $_link->getUrl() ?>"><strong><?php echo $_link->getLabel() ?></strong></a></li>
+                <?php else: ?>
+                    <li<?php echo ($_last ? ' class="last"' : '') ?>><a href="<?php echo $_link->getUrl() ?>"><?php echo $_link->getLabel() ?></a></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+			<li><a href="#">Help</a></li>
+        </ul>
+    </div>
+</div>
+ <?php } ?>
+ 
+  <?php if($customerGroupId==2){ ?>
+  <div class="block block-account gallery-account">
+   <div class="block-title">
+   <?php if($avtar==""){ ?>
+	<span><img src="<?php echo $this->getskinUrl()?>images/no-pro-img.png" height="125px"; width="125px" /></span>
+	<?php } else { ?>
+	   <span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+	<?php } ?>
+        <strong><span><?php echo $customer->getFirstname();  ?>  <?php echo $customer->getLastname(); ?></span></strong>
+    </div>
+	<ul>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account">Dashboard</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account/edit">Profile Settings</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account/galleryprofile">Gallery Settings</a></li>
+    <li><a href="<?php echo $this->getUrl() ?>customer/account/submission">Manage Submissions</li>
+    <li><a href="<?php echo $this->getUrl() ?>sales/order/history">My Orders</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account/galleryhelp">Help</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>custom/index/details/id/<?php echo $customer->getId(); ?>">View Profile</a></li>
+	
+	</ul>
+  
+  </div>
+  <?php } ?>
+  
+  <?php if($customerGroupId==3){ ?>
+  <div class="block block-account artist-account">
+  <div class="block-title">
+  <?php if($avtar==""){ ?>
+	<span><img src="<?php echo $this->getskinUrl()?>images/no-pro-img.png" height="125px"; width="125px" /></span>
+	<?php } else { ?>
+	   <span><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+	<?php } ?>
+        <strong><span><?php echo $customer->getFirstname();  ?>  <?php echo $customer->getLastname(); ?></span></strong>
+    </div>
+	<ul>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account">Dashboard</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>customer/account/edit">profile Settings</li>
+	<li><a href="<?php echo $this->getUrl() ?>marketplace/marketplaceaccount/myproductslist">My Portfolio</a></li>
+    <li><a href="<?php echo $this->getUrl() ?>customer/account/gallersubmit">Submit to Galleries</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>marketplace/order/history">Fullfill Orders</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>sales/order/history">My Orders</a></li>
+    <li><a href="<?php echo $this->getUrl() ?>customer/account/artisthelp">Help</a></li>
+	<li><a href="<?php echo $this->getUrl() ?>custom/index/artist/id/<?php echo $customer->getId(); ?>">View Profile</a></li>
+	
+	
+	</ul>
+  
+  </div>
+  <?php } ?>

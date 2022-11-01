@@ -1,0 +1,251 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+$customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$isapproved=$customerData['isapproved'];
+
+?>
+
+<?php 
+$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+$sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$customerId."'";
+try {
+$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+$resultportcheck= $chkSystem->fetchall();
+}
+catch (Exception $e){
+echo $e->getMessage();
+}
+
+?>
+<?php
+$customer=Mage::getModel('customer/customer')->load($customerId);
+$customerAddressId =$customer->getDefaultShipping();
+$misionstatement=$customer->getArtdescription();
+$biography=$customer->getBiography();
+?>
+<?php if($customerGroupId==3 && $customerAddressId==""){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==3 && $misionstatement==""){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==3 && $biography=="" ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==3 && $customer->getAvatar()=="" ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==3 && count($resultportcheck)==0 ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+
+
+<?php if($customerGroupId==2 && $customerAddressId==""){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==2 && $customer->getGaleryname()=="" ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==2 && $customer->getSstechProfileimage()=="" ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+<?php if($customerGroupId==2 && $customer->getAvatar()=="" ){ ?>
+<?php $notification=1; ?>
+<?php } ?>
+
+<?php //  echo "id". $notification; ?>
+
+<div class="dashboard">
+<div class="page-title">
+    <h1><?php echo $this->__('Dashboard') ?></h1>
+</div>
+<?php if($customerGroupId==3 && $notification==1){ ?>
+<div class="notification-msg">
+<span>Your Profile Settings are incomplete</span>
+</div>
+<?php } ?>
+
+<?php if($customerGroupId==2 && $notification==1){ ?>
+<div class="notification-msg">
+<span>Your Profile Settings or Gallery settings are incomplete</span>
+</div>
+<?php } ?>
+
+<?php if($customerData->getIssendrequest()!=1){ ?>
+<form class="rst-approval rst-approval-browser" action="<?php echo Mage::getBaseUrl() ?>customer/account/sendrequest" method="post" autocomplete="off">
+<input type="hidden" name="email" value="<?php echo  $customerData->getEmail();  ?>"/>
+<input type="hidden" name="name" value="<?php echo  $customerData->getName();  ?>"/>
+<input type="hidden" name="customerid" value="<?php echo $customerData->getName();  ?>">
+<?php if($customerGroupId==2){ ?>
+<input type="hidden" name="type" value="<?php echo  "Galery Owner";  ?>"/>
+<?php } ?>
+<?php if($customerGroupId==3){ ?>
+<input type="hidden" name="type" value="<?php echo  "Artist";  ?>"/>
+<?php } ?>
+<?php if($isapproved==0&& $customerGroupId==2){ ?>
+ <?php if($notification==1){?> 
+ <span class="submitmsg" id="msggal">Submit for Review</span>
+ <?php } else { ?>
+ <button type="submit">Submit for Review</button>
+
+ <?php }} ?>
+<?php if($isapproved==0&& $customerGroupId==3){ ?>
+<?php if($notification==1){?> 
+ <span class="submitmsg" id="msgart">Submit Portfolio Review for Review</span>
+ <?php } else { ?>
+ <button type="submit">Submit Portfolio Review for Review</button>
+<?php }} ?>
+</form>
+<?php } ?>
+
+<div class="dshbrd-cntnt-top">   
+	<div class="dshbrd-cnt-left">
+   <div class="dash-name">
+   <span>Hello </span><span><?php echo $customer->getName();  ?>,</span>
+   </div>
+   <div>
+  
+   </div>
+   <div class="dash-msg">
+   	<?php if($customerGroupId==1){ ?>
+            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('collector-dashboard-message')->toHtml(); ?>
+         <?php } ?>
+         <?php if($customerGroupId==3){ ?>
+            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist-dashboard-message')->toHtml(); ?>
+         <?php } ?>
+         <?php if($customerGroupId==2){ ?>
+            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('gallery-dashboard-message')->toHtml(); ?>
+         <?php } ?>
+   </div>
+	
+	<?php if($customerData->getIssendrequest()!=1){ ?>
+		<form class="rst-approval rst-approval-mob" action="<?php echo Mage::getBaseUrl() ?>customer/account/sendrequest" method="post" autocomplete="off">
+		<input type="hidden" name="email" value="<?php echo  $customerData->getEmail();  ?>"/>
+		<input type="hidden" name="name" value="<?php echo  $customerData->getName();  ?>"/>
+		<input type="hidden" name="customerid" value="<?php echo $customerData->getName();  ?>">
+		<?php if($customerGroupId==2){ ?>
+		<input type="hidden" name="type" value="<?php echo  "Galery Owner";  ?>"/>
+		<?php } ?>
+		<?php if($customerGroupId==3){ ?>
+		<input type="hidden" name="type" value="<?php echo  "Artist";  ?>"/>
+		<?php } ?>
+		<?php if($isapproved==0&&($customerGroupId==2||$customerGroupId==3)){ ?>
+		 <button type="submit" <?php if($notification==1){?> class="error-submit" <?php } ?>>Submit Portfolio Profile for Review</button>
+		<?php } ?>
+		 </form>
+	<?php } ?>
+	
+	</div>
+	
+<div class="dash-video">
+<?php if($customerGroupId==1){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('collector-video')->toHtml(); ?>
+<?php } ?>
+
+<?php if($customerGroupId==2){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('galery-video')->toHtml(); ?>
+<?php } ?>
+
+
+<?php if($customerGroupId==3){ ?>
+ <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artis-video')->toHtml(); ?>
+<?php } ?>
+</div>	
+</div>
+<?php if($customerGroupId==2||$customerGroupId==3){ ?>
+<div class="dshbrd-cntnt-bottom guide">
+	<div class="stay-informed">
+		<h1>Guidelines</h1>
+		<div class="guide-outer">
+		  <?php if($customerGroupId==2){ ?>
+                      <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('gallery-guidelines')->toHtml(); ?>
+                  <?php } ?>
+                  <?php if($customerGroupId==3){ ?>
+                      <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist-guidelines')->toHtml(); ?>
+                  <?php } ?>
+		</div>
+	</div>
+</div>
+<?php } ?>
+<div class="dshbrd-cntnt-bottom">
+<div class="stay-informed">
+<h1>Stay Connected</h1>
+<div class="infrmed-outer">
+	<div class="infrme-cnt">
+	      <?php if($customerGroupId==1){ ?>
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('collector-stay-connected')->toHtml(); ?>
+              <?php } ?>
+              <?php if($customerGroupId==2){ ?>
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('gallery-stay-connected')->toHtml(); ?>
+              <?php } ?>
+              <?php if($customerGroupId==3){ ?>
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist-stay-connected')->toHtml(); ?>
+              <?php } ?>
+	</div>
+	<div class="infrmed-socialicon">
+		<ul>
+			<li class="facebook"><a href="#">facebook</a></li>
+			<li class="twiter"><a href="#">twiter</a></li>
+			<li class="instragrm"><a href="#">instragrme</a></li>
+			<li class="msg"><a href="#">massage</a></li>
+			<li class="msg-text">Tell a friend</li>
+		</ul>
+	</div>
+</div>
+</div>
+	<div class="dash-paypal-banner">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('dashpaypal')->toHtml(); ?>
+	</div>
+	<div class="dash-gla-banner">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('acnt-gla-banr')->toHtml(); ?>
+	</div>
+	
+</div>
+</div>
+
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	
+	jQuery("#msggal").click(function(){
+		
+		alert("Your Profile Settings or gallery settings  are incomplete");
+	});
+	
+	jQuery("#msgart").click(function(){
+		
+		alert("Your Profile Settings or minimum portfolio items are incomplete");
+	});
+});
+
+</script>
+
+

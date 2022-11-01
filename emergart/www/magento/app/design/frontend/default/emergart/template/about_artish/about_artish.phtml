@@ -1,0 +1,52 @@
+<?php $currentUrl=$this->helper('core/url')->getCurrentUrl(); ?>
+<div class="home-content">
+<div class="about-banner-section <?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>logedvideo<?php } ?>">
+	<div class="container">
+		<div class="abt-ban-left">
+			<div class="abt-vedio"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('aboutustopvedio')->toHtml(); ?></div>
+		</div>
+		<?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+		<div class="abt-ban-right">
+			<div class="abt-signin">
+				<div class="sign-title">Sign In or <a href="<?php echo $this->getUrl() ?>customer/account/create"class="rigstr">Register</a></div>
+				<div class="outer-signin">
+					<?php echo $this->getLayout()->createBlock('customer/form_login')->setTemplate('persistent/customer/form/aboutlogin.phtml')->toHtml(); ?>
+				</div>
+				 
+
+				<div class="abt-join-outer">
+					<div class="join-title">
+						<span>join with</span>
+					</div>
+					<div class="join-con">
+						<ul>
+							<li class="facebook"><a href="javascript:void(0)">Facebook</a></li>
+							<li class="twiter"><a href="javascript:void(0)">Twitter</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+	</div>
+</div>
+<div class="about-page-label">
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about-page-label')->toHtml(); ?>
+</div>
+<div class="home-horizontal-rule">
+<hr/>
+</div>
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about-us-users')->toHtml(); ?>
+<div class="testimoniyel">
+    <?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('thanks-to-artists')->toHtml(); ?>
+</div>
+
+<div class="">
+  <?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('nothing-says-more')->toHtml(); ?>
+</div>
+<div class="font-style-normal">
+  <?php echo  $this->getLayout()->createBlock('nwdrevslider/revslider')->setAlias('secure-shipping-guarantee')->toHtml(); ?>
+</div>
+<div id="about-us-part5" class="about-us-part5">
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('about_us_part_5')->toHtml(); ?>
+</div>

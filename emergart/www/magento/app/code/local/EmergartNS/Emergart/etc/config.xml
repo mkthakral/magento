@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config>
+   <modules>
+	<EmergartNS_Emergart>
+		<version>0.1.0</version>
+	</EmergartNS_Emergart>
+   </modules>
+    <frontend>
+        <routers>
+            <customer>
+                <use>standard</use>
+                <args>
+                    <modules>
+                        <EmergartNS_Emergart before="Mage_Customer">EmergartNS_Emergart</EmergartNS_Emergart>
+                    </modules>
+                </args>
+            </customer>
+        </routers>
+    </frontend>
+</config>

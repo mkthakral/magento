@@ -1,0 +1,32 @@
+<div class="gallery-pro">
+<div class="met-gallery">
+
+<ul>
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 2);
+        //$i=0;
+	//	echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+		
+			?>
+			
+			<li>
+			<a href="<?php echo $this->getUrl('custom/index/details/id/'.$customer->getentityId()); ?>">
+			<span class="gla-profile-img"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+			<div class="gla-profile-con">
+				<p><?php echo $customer->getGaleryname();?></p>
+				<p class="name"><?php echo $customer->getFirstname(); ?>  <?php echo $customer->getLastname(); ?></p>
+			</div>
+			</a>
+			</li>
+		
+		<?php } ?>
+
+<ul>
+
+</div>
+</div>

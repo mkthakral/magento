@@ -1,0 +1,328 @@
+<?php 
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner(); 
+$helper= Mage::helper('marketplace');
+if($isPartner==1){
+	$filter_orderid = '';
+    $filter_orderstatus = '';
+    $filter_data_to = '';
+    $filter_data_frm = '';
+
+    if(isset($_GET['s'])){
+        $filter_orderid = $_GET['s'] != ""?$_GET['s']:"";
+    }
+    if(isset($_GET['orderstatus'])){
+        $filter_orderstatus = $_GET['orderstatus'] != ""?$_GET['orderstatus']:"";
+    }
+    if(isset($_GET['from_date'])){
+        $filter_data_frm = $_GET['from_date'] != ""?$_GET['from_date']:"";
+    }
+    if(isset($_GET['to_date'])){
+        $filter_data_to = $_GET['to_date'] != ""?$_GET['to_date']:"";
+    } ?>
+	<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+	    document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+	</script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<div class="page-title">
+		<h1 style="float:left;">Fulfill Orders</h1>
+		<button class="button" type="button" style="float:right; margin-top: 15px;margin-right: 6px;display:none;" id="shiplightboxopen">
+			<span>
+				<span>
+					<?php echo $helper->__('Download All Shipping Slip');?>
+				</span>
+			</span>
+		</button>
+		<button class="button" type="button" style="float:right; margin-top: 15px;margin-right: 6px;display:none;" id="invoice_lightboxopen">
+			<span>
+				<span>
+					<?php echo $helper->__('Download All Invoice Slip');?>
+				</span>
+			</span>
+		</button>
+	</div>
+		<div class="wk_mp_design">
+			<div class="block block-account">	
+				<div class="block-title">	
+					
+				</div>
+			</div>
+			<div class="fieldset wk_mp_fieldset">
+				<div class="grid">
+					<div class="hor-scroll">
+						
+						<?php 
+						if(count($this->getCollection())==0){ ?>		
+							<div class="fieldset wk_mp_fieldset">
+								<div>
+								There are currently no orders to fulfill, you will be notified by email when an order has been placed, thanks!
+								</div>
+							</div>
+							<?php 
+						} else{ ?>
+						<div class="wk_orderbox">
+						<div>
+							<div class="wk_orderbox_content1">
+								<div class="wk_orderbox_head">
+									<div>ORDER ID</div>
+									<div>ARTWORK</div>
+									<div>STATUS</div>
+								</div>
+							<?php $i=0;
+							foreach($this->getCollection() as $res){
+								$order = Mage::getModel('sales/order')->load($res['mageorderid']);
+								$state=$order->getState();
+								$status=$order->getStatus();
+								$order_status = Mage::getModel('sales/order_status')->getResourceCollection()
+												->addFieldToFilter('status',array('eq'=>$status));
+								foreach ($order_status as $order_status_data) {
+									$status = $order_status_data->getLabel();
+								}
+								$name=$order->getCustomerName();
+								$tracking=Mage::getModel('marketplace/order')->getOrderinfo($res['mageorderid']);
+								if($tracking->getIsCanceled()){
+									$state='canceled';
+									$status='Canceled';
+								}   
+							?>
+							
+												<?php
+												if($res['mageorderid']>0){
+													$i++;
+												?>
+													
+										
+											
+												<div class="wk_orderbox_details">
+													<div class="color">
+														<span class="wk_ordertitle_label"><?php echo $helper->__('') ?></span> <span><?php echo $res['magerealorderid']; ?></span>
+													</div>
+													<div class="name">
+														<?php
+														echo str_replace(" X 1", "", Mage::getModel('marketplace/saleslist')->getpronamebyorder($res['mageorderid']));
+														?>
+													</div>
+													<div class="wk_dash_orderstatus">
+														<label for="name" class="wk_dash_label">
+								<div class="status <?php echo strtolower($state); ?>">
+								<?php
+									if(strcasecmp($state,'complete') == 0){
+									    $order_status = 'SHIPPED';				
+									}else if(strcasecmp($state,'processing') == 0){
+									    $order_status = 'NOT SHIPPED';
+									}else{
+									    $order_status = $state;
+									}
+								 ?>
+								<?php echo strtoupper($order_status); ?> </div>
+															</label> 
+													</div>
+													<div class="view-oder">
+													<a href="<?php echo $this->getUrl('marketplace/order/view',array('id'=>$res['mageorderid']))?>">
+														<button class="button" title="<?php echo $helper->__('View Order') ?>" type="button">
+															<span><span><span><?php echo $helper->__('View Order') ?></span></span></span>
+														</button>
+													</a>
+													</div>
+												</div>
+												
+											
+								
+												<?php } ?>
+									
+					<?php } 	?>
+					
+					</div>
+				</div>
+				</div>
+							<?php
+						}?>
+					</div>
+				</div>
+				<?php echo $this->getPagerHtml(); ?>		
+			</div>	
+			<div class="buttons-set">
+				<p class="back-link">
+					<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__('Back') ?></a>
+				</p>
+			</div>
+		</div>
+		
+		<div id="wk_ship_light" class="wk_ship_light">
+			<div class="prdouctbackground" style="padding: 7px 36px 36px;">
+				<h4 class="textcolor" style="margin-left:0;"><?php echo $helper->__('Select Date') ?></h4>
+				<label class="wk_ship_post-meta wk_ship_tags">
+					<span class="wk_shipbox_close" title="Close">
+						<span class="wk_ship_delete"></span>
+					</span>
+				</label>
+				<div class="wk_ship">	
+					<form action="<?php echo Mage::getUrl('marketplace/order_shipment/printall');?>" enctype="multipart/form-data" method="post" id="form-ship-print">					
+						<div class="wk_ship_row">
+							<div class="wk_ship_rowlabel">
+								<span class="wk_ship_Label">
+								<label for="#make" class="required"><em>*</em><?php echo $helper->__('Date From') ?></label>
+								</span>
+							</div>
+							<div class="wk_ship_rowfield">
+								<input type="text" id="editfromdatepicker" name="special_from_date" class="required-entry wk_ship_rowinput editdeal_fromdate" value=""/>
+							</div>
+						</div>
+						<div class="wk_ship_row">
+							<div class="wk_ship_rowlabel">
+								<span class="wk_ship_Label">
+								<label for="#make" class="required"><em>*</em><?php echo $helper->__('Date Untill') ?></label>
+								</span>
+							</div>
+							<div class="wk_rowfield">
+								<input type="text" id="edittodatepicker" name="special_to_date" class="required-entry wk_ship_rowinput" value=""/>
+							</div>
+						</div>
+						<div class="wk_ship_row">
+							<center>
+								<button class="button wk_shipslip" type="submit">
+									<span><span><?php echo $helper->__('Download') ?></span></span>
+								</button>
+								<button class="button" type="reset">
+									<span><span><?php echo $helper->__('Reset') ?></span></span>
+								</button>
+							</center>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="wk_ship_fade" class="wk_shipbox_close wk_ship_fade"></div>
+
+		<div id="wk_invoice_light" class="wk_ship_light">
+			<div class="prdouctbackground" style="padding: 7px 36px 36px;">
+				<h4 class="textcolor" style="margin-left:0;"><?php echo $helper->__('Select Date') ?></h4>
+				<label class="wk_ship_post-meta wk_ship_tags">
+					<span class="wk_invoice_box_close" title="Close">
+						<span class="wk_ship_delete"></span>
+					</span>
+				</label>
+				<div class="wk_ship">	
+					<form action="<?php echo Mage::getUrl('marketplace/order_invoice/printall');?>" enctype="multipart/form-data" method="post" id="form-invoice-print">					
+						<div class="wk_ship_row">
+							<div class="wk_ship_rowlabel">
+								<span class="wk_ship_Label">
+								<label for="#make" class="required"><em>*</em><?php echo $helper->__('Date From') ?></label>
+								</span>
+							</div>
+							<div class="wk_ship_rowfield">
+								<input type="text" id="invoice_editfromdatepicker" name="special_from_date" class="required-entry wk_ship_rowinput editdeal_fromdate" value=""/>
+							</div>
+						</div>
+						<div class="wk_ship_row">
+							<div class="wk_ship_rowlabel">
+								<span class="wk_ship_Label">
+								<label for="#make" class="required"><em>*</em><?php echo $helper->__('Date Untill') ?></label>
+								</span>
+							</div>
+							<div class="wk_rowfield">
+								<input type="text" id="invoice_edittodatepicker" name="special_to_date" class="required-entry wk_ship_rowinput" value=""/>
+							</div>
+						</div>
+						<div class="wk_ship_row">
+							<center>
+								<button class="button wk_invoice_slip" type="submit">
+									<span><span><?php echo $helper->__('Download') ?></span></span>
+								</button>
+								<button class="button" type="reset">
+									<span><span><?php echo $helper->__('Reset') ?></span></span>
+								</button>
+							</center>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="wk_invoice_fade" class="wk_invoice_box_close wk_ship_fade"></div>
+		
+		<script type="text/javascript">
+			jQuery.noConflict();
+
+			var newCustomerProductForm_ship = new VarienForm('form-ship-print', true);
+
+			var newCustomerProductForm_invoice = new VarienForm('form-invoice-print', true);
+
+			jQuery('#editfromdatepicker').datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				onClose: function( selectedDate ) {
+					jQuery( "#edittodatepicker" ).datepicker( "option", "minDate", selectedDate );
+				}
+		    });	
+			
+			jQuery('#edittodatepicker').datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				onClose: function( selectedDate ) {
+					jQuery( "#editfromdatepicker" ).datepicker( "option", "maxDate", selectedDate );
+				}
+		    });	
+			
+			jQuery('.wk_shipslip').click(function(){
+				if(newCustomerProductForm_ship.validator.validate()!=false){	
+					document.getElementById('wk_ship_light').style.display='none';
+					document.getElementById('wk_ship_fade').style.display='none';
+				}
+			});	
+			jQuery('#shiplightboxopen').click(function(){
+				jQuery('#wk_ship_light').css('display','block');
+				jQuery('#wk_ship_fade').css('display','block'); 
+			});
+			jQuery('.wk_shipbox_close').click(function(){
+				jQuery('#wk_ship_light').css('display','none');
+				jQuery('#wk_ship_fade').css('display','none');
+			});	
+
+			jQuery('#invoice_editfromdatepicker').datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				onClose: function( selectedDate ) {
+					jQuery( "#invoice_edittodatepicker" ).datepicker( "option", "minDate", selectedDate );
+				}
+		    });	
+			
+			jQuery('#invoice_edittodatepicker').datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				onClose: function( selectedDate ) {
+					jQuery( "#invoice_editfromdatepicker" ).datepicker( "option", "maxDate", selectedDate );
+				}
+		    });	
+			
+			jQuery('.wk_invoice_slip').click(function(){
+				if(newCustomerProductForm_invoice.validator.validate()!=false){	
+					document.getElementById('wk_invoice_light').style.display='none';
+					document.getElementById('wk_invoice_fade').style.display='none';
+				}
+			});	
+			jQuery('#invoice_lightboxopen').click(function(){
+				jQuery('#wk_invoice_light').css('display','block');
+				jQuery('#wk_invoice_fade').css('display','block'); 
+			});
+			jQuery('.wk_invoice_box_close').click(function(){
+				jQuery('#wk_invoice_light').css('display','none');
+				jQuery('#wk_invoice_fade').css('display','none');
+			});	
+		</script>
+
+		<script> 
+		var $wk_jq=jQuery.noConflict();
+		(function($wk_jq){
+			$wk_jq( "#special_from_date" ).datepicker({dateFormat: "yy-mm-dd"});
+			$wk_jq( "#special_to_date" ).datepicker({dateFormat: "yy-mm-dd"});			
+		})($wk_jq);
+		</script>
+		<?php 
+}else{ ?>
+	<h2 class="wk_mp_error_msg">
+		<?php echo $helper->__("To Become Seller Please Contact to Admin."); ?>
+	</h2>
+	<?php
+} ?>

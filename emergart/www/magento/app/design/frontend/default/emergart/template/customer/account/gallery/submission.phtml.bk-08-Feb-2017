@@ -1,0 +1,576 @@
+<div class="page-title"><h3>Manage Submissions</h3></div>
+<div class="gla-mng-sub-outer">
+	<div class="sortby">
+		<div class="sort">Sort by :</div>
+		<div class="name-outer">
+			<span><a href="<?php echo $this->getUrl() ?>customer/account/submission?filter=name">Name</a></span>/<span><a href="<?php echo $this->getUrl() ?>customer/account/submission?filter=date">Submission date</a></span>
+		</div>
+	</div>
+	
+	<?php
+$protable= Mage::getSingleton('core/resource')->getTableName('marketplace_product');
+$customerData = Mage::getSingleton('customer/session')->getCustomer();
+$customerId = $customerData->getId();
+$tableName1= Mage::getSingleton('core/resource')->getTableName('artis_submit');
+$deltable=Mage::getSingleton('core/resource')->getTableName('delete_artis');
+$sqlPaymentSystem1="SELECT * FROM ".$tableName1." WHERE gallery_id='".$customerId."' ORDER BY created_date DESC";
+if($_REQUEST['filter']=="date"){ 
+	
+		    $sqlPaymentSystem1="SELECT * FROM ".$tableName1." WHERE gallery_id='".$customerId."' ORDER BY created_date DESC";
+ } 
+if($_REQUEST['filter']=="name"){ 
+  $sqlPaymentSystem1="SELECT * FROM ".$tableName1." WHERE gallery_id='".$customerId."' ORDER BY name DESC";
+   } 
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+
+ ?>
+	 <?php foreach($result as $res){ ?>
+	 <?php $artisid=$res['artist_id']; ?>
+	<?php $productowner=Mage::getModel('marketplace/product')->getCollection();?>
+	<?php  
+			    $sqlcheck="SELECT * FROM ".$deltable." WHERE galid='".$customerId."' AND artist_id='".$artisid."'";
+
+	try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlcheck);
+				$resultchk= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+$cnt=count($resultchk);
+	?>
+
+ <?php  $artisdata = Mage::getModel('customer/customer')->load($artisid); ?>
+ <?php $artisname=$artisdata->getName();  ?>
+ 
+	 
+	<?php if($cnt==0 && $artisdata->getId()){ ?>
+	<div class="gla-mngsub-tab-outer">
+		<div class="submisson-tab-top" id="<?php echo $artisid;  ?>">
+			<div class="submision-date"><?php echo $res['created_date']; ?></div>
+			<div class="artis-name"><?php echo $artisname; ?></div>
+			<div class="sold-outer" style="display:none">
+				<ul>
+					<li><span>Sales:</span><span>2</span></li>
+					<li><span>Endorsements:</span><span>2</span></li>
+					<li><span>Galleries Watching:</span><span>25</span></li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	<?php } ?>
+	<?php
+	  $tableNamefollow= Mage::getSingleton('core/resource')->getTableName('follow_art');
+      $sqlPaymentSystem1="SELECT * FROM ".$tableNamefollow." WHERE galid='".$customerId."' AND artistid='".$artisid."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$resultfollow = $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+			?>
+			<?php // echo "count".count($resultfollow); ?>
+	<div class="total-sec" id="tab_<?php echo $artisid;?>" style="display:none;">
+	<ul class="tab-top">
+					<li class="tab-button tab-protfolio" id="<?php echo $artisid; ?>">Portfolio</li>
+					<li class="tab-button tab-about" title="About Artist" id="<?php echo $artisid;?>">About</li>
+					<li class="tab-button tab-massage" style="display:none" id="<?php echo $artisid;?>">Message Artist</li>
+					<li class="tab-button tab-delectextra"  title="Hide Artist request." id="<?php echo $artisid;?>">Hide this artist</li>
+					<?php if(count($resultfollow)==0){ ?>
+					<li class="tab-button tab-watch"  title="Get Updates of new artworks from this Artist."  id="watch_<?php echo $artisid;?>">Watch this artist</li>
+					<?php } else{ ?>
+					<li class="tab-button tab-unwatch" title="Stop new Artwork updates from this Artist."  id="watch_<?php echo $artisid;?>">Un-Watch this artist</li>
+					<?php } ?>
+				</ul>
+				
+					
+				
+	
+	 <?php 
+	 $sqlPaymentSystem1="SELECT * FROM ".$protable." WHERE userid='".$artisid."'";
+			try {
+				$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+				$result1= $chkSystem->fetchall();
+			}
+			catch (Exception $e){
+				 echo $e->getMessage();
+			}
+	?>
+	<div class="resent-upload-pro" id="recent_<?php echo $artisid;?>" style="display:none;">
+		<div class="upload-pro">
+		<ul>
+					<?php foreach($result1 as $res1){ ?>
+					<?php //echo $res1['mageproductid']; ?>
+					<?php 
+					$product=Mage::getModel('catalog/product')->load($res1['mageproductid']); 
+					$procode=$product->getGalcode();
+					$stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+					$qty=number_format($stock->getQty(),0);
+                    ?>
+					
+									<?php
+									$tableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+									$sqlPaymentSystem1="SELECT * FROM ".$tableName." WHERE  proid='".$product->getId()."'";
+									try {
+										$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+										$like = $chkSystem->fetchall();
+									}
+									catch (Exception $e){
+										 echo $e->getMessage();
+									}
+			                       ?>	
+								<?php
+
+								$liketableName= Mage::getSingleton('core/resource')->getTableName('like_art');
+								$sqlPaymentSystem1="SELECT * FROM ".$liketableName." WHERE galid='".$customerId."' AND proid='".$product->getId()."'";
+									try {
+									$chkSystem = Mage::getSingleton('core/resource')->getConnection('core_write')->query($sqlPaymentSystem1);
+									$resultlike = $chkSystem->fetchall();
+									}
+										catch (Exception $e){
+										echo $e->getMessage();
+										}
+
+								?>
+												<li>
+													<a  id="<?php  echo  $product->getId(); ?>" class="up-image clickimg"><img id="<?php echo $product->getId(); ?>" src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(250) ?>" alt=""/></a>
+													<img style="display:none" id="re_<?php echo $product->getId(); ?>" src="<?php echo Mage::helper('catalog/image')->init($product,'image')->resize(600) ?>"/>
+													<?php if($procode==$customerId){ ?><span id="rghtendorse" title="Endorsed by me."></span> <?php } ?>
+													<span class="rgtend_<?php echo $product->getId();  ?>" id="rghtendorse" style="display:none"></span>
+													<?php $price = $product->getPrice(); ?>
+													<p>
+													<?php if($qty==0){?>
+														<a class="sold" id="<?php echo $product->getId();  ?>">Sold</a>
+														<?php } else{ ?>
+													<span class="pro-title"><?php echo Mage::helper('core')->currency($price, true, false); ?></span>
+														<?php } ?>
+														<?php if($procode!=""){?>
+													<span class="pro-like"><a href="<?php echo $product->getProductUrl()  ?>" target="_blank">details</span>
+														<?php } ?>
+													</p>
+                                                    <div class="details-pro" id="pro_<?php echo  $product->getId(); ?>" style="display:block;">
+													<input type="hidden" value="<?php echo $customerId; ?>" class="galid">
+														
+														<span class="price"></span>
+														<div <?php if(count($resultlike)==1){ ?>title="Liked by me."<?php }?> ><a class="like <?php if(count($resultlike)==1){ ?>alreadyendorse<?php } ?>"  id="like_<?php echo $product->getId();  ?>">Like this artwork</a></div>
+														
+														
+														<?php if($procode==""){ ?>
+														<a class="endorse" id="end_<?php echo $product->getId();  ?>">Endorse this artwork</a>
+<input type="hidden" id="artist_product_id_<?php echo $product->getId();?>" value="<?php echo $artisid;?>"/>
+														<?php } ?>
+														<?php if($procode!=""){?>
+														<a class="alreadyendorse enable-tooltip" title="This Artwork has been endorsed." id="<?php echo $product->getId();  ?>">Endorsed</a>
+														<?php } ?>
+														<a class="alreadyendorse" style="display:none"; id="ald_<?php echo $product->getId();  ?>">Endorsed</a>
+														
+													</div>
+												<div class="loader" id="loadnow_<?php echo $product->getId();  ?>" style="display:none;"><img src="<?php echo $this->getskinUrl() ?>images/opc-ajax-loader.gif"/></div>
+                                                 <div class="blacklay" id="blacklay_<?php echo $product->getId();  ?>" style="display:none;"></div>												
+												</li>
+
+												<div class="preview-custom" id="preview_<?php echo $product->getId();  ?>"></div>
+												<div class="preview-black-overlay" id="black_<?php echo $product->getId();  ?>" style="display:none;"></div>
+												
+											
+										
+					<?php } ?>	
+	</ul>
+	 </div>
+	</div>
+	
+	<div class="artis-descp" style="display:none;" id="about_<?php echo $artisid;  ?>">
+	<?php  $artiscollection=Mage::getModel('customer/customer')->load($artisid); ?>
+	
+	<?php
+$customerAddressId =$artiscollection->getDefaultShipping();
+if ($customerAddressId){
+       $address = Mage::getModel('customer/address')->load($customerAddressId);
+
+//echo "<pre>"; print_r($address);echo "</pre>";
+$city=$address['city'];
+$street=$address['street'];
+$phone=$address['telephone'];
+$zip=$address['postcode'];
+$country=$address['country_id'];
+if($zip!=""){
+$state= $address->getRegion();
+}
+}
+
+
+?>
+		<div class="abt-tab-top">
+			<div class="abt-img-outer">
+				<div class="images"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo  $artiscollection->getAvatar();?>" class="img " id="u42_img"></div>
+				<div class="abt-img">
+					<p><?php echo $artiscollection->getName(); ?></p>
+					<p><?php echo $street; ?> <br/><?php echo $city; ?>, <?php echo $country; ?>, <?php echo $zip; ?></p>
+				</div>
+			</div>
+			<div class="abt-img-con">
+			<?php echo  nl2br($artiscollection->getArtdescription());  ?>
+			</div>
+		</div>
+		<div class="abt-tab-con">
+			<?php echo nl2br($artiscollection->getBiography());  ?>
+		</div>
+		
+	</div>
+	<div class="artis-message" style="display:none;" id="message_<?php echo $artisid;  ?>">
+	<?php $artiscollection=Mage::getModel('customer/customer')->load($artisid); ?>
+
+	<input type="hidden" class="artemail_<?php echo $artisid; ?>" value="<?php echo $artiscollection->getEmail(); ?>">
+	<input type="hidden" class="galemail_<?php echo $artisid; ?>"  value="<?php echo $customerData->getEmail();?>">
+	<span class="send-title">Send the artist a one way message-they will not be able to reply,it is read only</span>
+	<textarea name="artmessage" class="sendmsg" id="msg_<?php echo  $artisid;  ?>"></textarea>
+	<button type="button" id="<?php echo  $artisid; ?>" name="button" class="sendartmsg">Send</button>
+	</div>
+	
+	<div class="artis-hide" style="display:none;" id="hide_<?php echo $artisid;  ?>">
+	<p>Recommended only if the Artist has been abusive or has harassed you or your gallery. Once you Hide an Artist, they will not be able to Submit to you again in the future. Please use this function sparingly.</p>
+	<p>Yes, I understand.</p>
+
+	
+	<button type="button" id="<?php echo  $artisid; ?>"  name="button" class="tab-delect">Hide this Artist</button>
+	</div>
+	
+	
+
+		
+					
+</div>	
+<?php } ?>
+</div>
+
+
+<script type="text/javascript">
+ var BaseUrl;
+		jQuery(document).ready(function(){
+		BaseUrl = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>"; 
+		jQuery(".submisson-tab-top").click(function(){
+	        var id=jQuery(this).attr('id');
+      	        //alert(id);
+	   	jQuery("#tab_"+id).toggle();
+    });
+    });
+	
+	jQuery(".tab-protfolio").click(function(){
+       var id=jQuery(this).attr('id');
+	   jQuery(".tab-protfolio").addClass("active");
+	   jQuery(".tab-about").removeClass("active");
+		jQuery(".tab-delectextra").removeClass("active");
+		
+		
+	   //alert(id);
+	   jQuery("#recent_"+id).toggle();
+	   //jQuery("#recent_"+id).addClass("active");
+	  //  jQuery("#about_"+id).removeClass("active");
+		// jQuery("#hide_"+id).removeClass("active");
+	    jQuery("#about_"+id).hide();
+		 jQuery("#message_"+id).hide();
+	  // jQuery("#recent_"+id).show();
+	   jQuery("#hide_"+id).hide();
+    });
+	
+	jQuery(".tab-about").click(function(){
+		//alert("hello");
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	  
+	   jQuery("#recent_"+id).hide();
+	    jQuery("#about_"+id).show();
+		  jQuery(".tab-protfolio").removeClass("active");
+	   jQuery(".tab-about").addClass("active");
+		jQuery(".tab-delectextra").removeClass("active");
+		 jQuery("#message_"+id).hide();
+	    jQuery("#hide_"+id).hide();
+    });
+	
+	jQuery(".tab-massage").click(function(){
+		//alert("hello");
+       var id=jQuery(this).attr('id');
+	   //alert(id);
+	  
+	   jQuery("#recent_"+id).hide();
+	    jQuery("#about_"+id).hide();
+	   jQuery("#message_"+id).show();
+	   jQuery("#hide_"+id).hide();
+    });
+	
+	jQuery(".tab-delectextra").click(function(){
+		 var id=jQuery(this).attr('id');
+		
+		jQuery("#hide_"+id).show();
+			
+			  jQuery(".tab-protfolio").removeClass("active");
+	   jQuery(".tab-about").removeClass("active");
+		jQuery(".tab-delectextra").addClass("active");
+			
+		  jQuery("#recent_"+id).hide();
+	    jQuery("#about_"+id).hide();
+	   jQuery("#message_"+id).hide();
+	});
+	
+	jQuery(".tab-delect").click(function(){
+		 jQuery(".tab-protfolio").removeClass("active");
+	   jQuery(".tab-about").removeClass("active");
+		jQuery(".tab-delectextra").removeClass("active");
+			
+		 var id=jQuery(this).attr('id');
+		 var galid=jQuery(".galid").val();
+		
+    if (confirm("Are you sure you want to delete this artist?")) {
+       
+	   
+	   
+	   jQuery.ajax({
+	  url: BaseUrl+'ajax/remove.php',
+	  type:        'post',
+	  data:{'artistid':id,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert(msg);
+		 // jQuery(".loader-img").hide();
+		   window.location.reload(); 
+		   
+		} 
+	   }
+	});
+    }
+	 else{
+        return false;
+    }
+});
+		
+		
+	
+	
+	
+	
+	
+	jQuery(".endorse").click(function(){
+		
+		
+		
+		var id=jQuery(this).attr("id");
+		var nid=id.split("_");
+		var endid=nid[1];
+		//alert(endid);
+		var galid=jQuery(".galid").val();
+		//var artid=jQuery(".submisson-tab-top").attr("id");
+                var artid = jQuery('#artist_product_id_' + endid).val();
+
+		//alert(artid);
+		jQuery("#loadnow_"+endid).show();
+		jQuery("#blacklay_"+endid).show();
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/endorse.php',
+	  type:        'post',
+	  data:{'proid':endid,'galid':galid,'artid':artid},
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert("Art Endorsed Successfully!");
+		   jQuery("#loadnow_"+endid).hide();
+		   jQuery("#blacklay_"+endid).hide();
+		   jQuery("#end_"+endid).hide();
+		   jQuery("#ald_"+endid).show();
+		   jQuery(".rgtend_"+endid).show();
+		 // jQuery(".loader-img").hide();
+		   //window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+	
+	jQuery(".like").click(function(){
+		
+		var id=jQuery(this).attr("id");
+		var nid=id.split("_");
+		var endid=nid[1];
+		var galid=jQuery(".galid").val();
+		
+		jQuery("#loadnow_"+endid).show();
+		jQuery("#blacklay_"+endid).show();
+		
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/like.php',
+	  type:        'post',
+	  data:{'proid':endid,'galid':galid },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert("You Like This - Awesome!");
+		    jQuery("#loadnow_"+endid).hide();
+		   jQuery("#blacklay_"+endid).hide();
+		   jQuery("#like_"+endid).addClass("alreadyendorse");
+		   
+		 // jQuery(".loader-img").hide();
+		  // window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		
+	});
+	
+/*	jQuery(".tab-watch").click(function(){
+		
+		var id=jQuery(this).attr("id").replace('watch_', '');
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+		  url: BaseUrl+'ajax/follow.php',
+		  type:        'post',
+		  data:{'artistid':id,'galid':galid },
+		  success: function(msg)
+	   	  {
+			if (msg) {
+		 	 jQuery('#watch_' + id).addClass('tab-unwatch');
+			 jQuery('#watch_' + id).removeClass('tab-watch');
+			 jQuery('#watch_' + id).text('Un-Watch this artist');
+			 var existing_request = jQuery('#tab_' + id).html();
+			 jQuery('#tab_' + id).html(existing_request);
+		   
+		} 
+	   }
+	});
+		
+	});*/
+	jQuery(document).on('click','[id^=watch_]', function() {
+	     var id=jQuery(this).attr("id").replace('watch_', '');
+             var galid=jQuery(".galid").val();
+             var file_url;
+             var action;
+	
+	    if(jQuery(this).hasClass('tab-unwatch')){
+		//alert('tab-unwatch');
+		file_url = BaseUrl + 'ajax/unfollow.php';
+		action = 'un-follow-artist';
+   	    }else{
+		//alert('watch');
+		file_url = BaseUrl + 'ajax/follow.php';
+		action = 'follow-artist'
+	    }
+
+	    jQuery.ajax({
+                  url: file_url,
+                  type: 'post',
+                  data:{'artistid':id,'galid':galid },
+                  success: function(msg)
+                  {
+                        if (msg) {
+			 if(action == 'follow-artist'){
+			    jQuery('#watch_' + id).addClass('tab-unwatch');
+	                    jQuery('#watch_' + id).removeClass('tab-watch');
+                            jQuery('#watch_' + id).text('Un-Watch this artist');	 
+			 }else{
+                            jQuery('#watch_' + id).addClass('tab-watch');
+                            jQuery('#watch_' + id).removeClass('tab-unwatch');
+                            jQuery('#watch_' + id).text('Watch this artist');
+			}
+			//var existing_request = jQuery('#tab_' + id).html();
+                        //jQuery('#tab_' + id).html(existing_request);
+			alert(msg);
+                	}
+	      	 }
+		});
+	});
+
+/*	jQuery(".tab-unwatch").click(function(){
+		
+		var id=jQuery(this).attr("id").replace('watch_', '');
+		var galid=jQuery(".galid").val();
+		
+		
+		jQuery.ajax({
+		  url: BaseUrl+'ajax/unfollow.php',
+		  type:        'post',
+		  data:{'artistid':id,'galid':galid },
+		  success: function(msg)
+	   	  {
+    			if (msg) {
+		        jQuery('#watch_' + id).addClass('tab-watch');
+			jQuery('#watch_' + id).removeClass('tab-unwatch');
+		        jQuery('#watch_' + id).text('Watch this artist');
+			var existing_request = jQuery('#tab_' + id).html();
+			jQuery('#tab_' + id).html(existing_request);
+		} 
+	   }
+	});
+		
+	});*/
+	jQuery(".sendartmsg").click(function(){
+		//alert("hello");
+		var id=jQuery(this).attr("id");
+		var artemail=jQuery(".artemail_"+id).val();
+        var galemail=jQuery(".galemail_"+id).val();
+        var galmsg=jQuery("#msg_"+id).val();
+		
+		if(galmsg==""){
+			
+			alert("Please enter your message");
+		}
+		else{
+		jQuery.ajax({
+	  url: BaseUrl+'ajax/galmsg.php',
+	  type:        'post',
+	  data:{'artmail':artemail,'galmail':galemail,'msg':galmsg },
+	  success: function(msg)
+	   {
+		if (msg) {
+		   alert("message send successfully");
+		 // jQuery(".loader-img").hide();
+		 //  window.location.reload(); 
+		   
+		} 
+	   }
+	});
+		}
+	});
+								
+	//});
+		
+	</script>
+	
+	
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+		
+		
+		jQuery(".clickimg").click(function(){
+			
+		var id=jQuery(this).attr("id");
+		var src=jQuery("#re_"+id).attr('src');
+		//alert(src);
+		
+		jQuery("#preview_"+id).html("<img src='"+src+"'>").show();
+		jQuery("#black_"+id).show();
+		//alert(src);
+		});
+		
+		jQuery(document).on('click touch', function(event) {
+  if (!jQuery(event.target).parents().addBack().is('.clickimg')) {
+    jQuery('.preview-black-overlay').hide();
+	jQuery('.preview-custom').hide();
+  }
+});
+	});
+	
+	
+	</script>

@@ -1,0 +1,74 @@
+<div class="home-content">
+<div class="banner-section">
+<ul class="bxslider">
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-4.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-5.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getSkinUrl();?>images/banner-img-6.jpg" /></li>
+</ul>
+<div class="banner-shadow">&nbsp;</div>
+<div class="about-banner-con-outer">
+<div class="ab-con-left"><span class="text">A new Paradigm in Artist-Gallery Relations</span></div>
+<div class="ab-con-right">
+<div class="sign-up-con">Getting Started is easy, Sign Up Today!</div>
+<div class="new-account-outer">
+<div class="new-account"><a id="registernow"></a>New Account</div>
+<div class="or">-OR-</div>
+<div class="sign-in-facebook"><a href="#">Sign In with Facebook</a></div>
+<div class="member-outer"><span>Already a member,</span> <a class="ajaxlogin-login">Sign In</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="blog-outer container">
+<div class="special-outer">
+<div class="special-left"><iframe src="https://www.youtube.com/embed/gg5VI2ilHXA" height="315" width="560"></iframe></div>
+<div class="special-right">
+<h2>Why it's Special</h2>
+<p>Emergart is designed to bring out the best in Artists and gallery Owners. Our unique platform allow Artists from anywhere to upload their portfolios and submit them to Gallery Owners all over the world. What does this mean for Collectors? High quality selective Art that is Gallery Endorsed. This arrangement puts the work in the first stage of investable Art!</p>
+<div class="update">
+<h2 class="update-title">Get News on Updates!</h2>
+<div class="mail-outer"><input type="text" value="email:" /> <button>okay</button></div>
+</div>
+</div>
+</div>
+<div class="met-gallery">
+<h2>Meet the Artists - <span>more...</span></h2>
+<ul>
+<?php $collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('group_id', 3);?>
+        <?php //echo '<pre>';print_r($collection);
+        $i =0;
+        foreach($collection as $_collection):$i++?>
+        <?php if($i<5):?>
+<li>
+<p>
+<?php if ($_collection->getData('galprorepresent')): ?>
+<?php echo nl2br($_collection->getResource()->getAttribute('galprorepresent')->getFrontend()->getValue($_collection)) ?>
+<?php endif;?>
+</p>
+<span><img alt="" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $_collection->getAvatar();?>" height="125px"; width="125px" />"</span>
+<p class="name"><?php echo $_collection->getFirstname(); ?>  <?php echo $_collection->getLastname(); ?></p>
+</li>
+<?php endif;?>
+<?php endforeach;?>
+</ul>
+</div>
+</div>
+<div class="testimoniyel">
+<div class="container">
+<div class="images"><img alt="" src="<?php echo $this->getSkinUrl();?>images/test-img.png" /></div>
+<div class="test-con">
+<p class="con">"The best thing about Emergart is how Artists and Gallery Owners are connecting like never before and of course, every page has beautiful Art."</p>
+<p class="name">- Gallery Owner, Jane Kirkland</p>
+</div>
+</div>
+</div>
+<div class="about-content container">
+<h2>Why working with Galleries benefits Collectors</h2>
+<p>Emergart was created by an Artist for Artists who needed help succeeding in the Art World, this boils down to getting in front of that elusive Gallery Owner. We know that if we can create a symbiotic relationship with Galleries, we can attract the top talent. Our competitors allow any artist to jump on for free and then take 25-50% on anything that sells. And, what typically sells are the top 10% of talented artists on their sites. This simple consignment model has been the standard since the internet began.</p>
+<p>Emergart will cut off their supply by giving quality Artists a better platform to thrive. They will still make the kind of sales they&rsquo;re accustomed to but, will also connect with gallery owners that could launch their careers into stardom.</p>
+<p>So, what would prevent a competitor from pivoting in our direction? First, they would have to be willing to change their financial model, including telling all their Artists that they will be paid less and, they would also have to be willing to take less money themselves, approximately half. Then, they would have to re-develop their platform to accommodate Gallery participation and finally, they would have to convince Galleries to switch over from Emergart - except, we already have the best deal on the table.</p>
+</div>
+</div>

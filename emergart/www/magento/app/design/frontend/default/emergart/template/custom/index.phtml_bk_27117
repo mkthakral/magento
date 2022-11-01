@@ -1,0 +1,40 @@
+<div class="page-title">
+		<h1>Gallery Profiles</h1>
+</div>
+<div class="gallery-pro">
+<div class="met-gallery">
+
+<ul>
+<?php
+$collection = Mage::getModel('customer/customer')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+		->addAttributeToFilter('isapproved',1)
+        ->addFieldToFilter('group_id', 2);
+        //$i=0;
+	//	echo"<pre>";print_r($collection->getData());echo"</pre>";
+		foreach($collection  as $customer)
+		{
+		
+			?>
+			
+			<li>
+			<a href="<?php echo $this->getUrl('custom/index/details/id/'.$customer->getentityId()); ?>">
+			<span class="gla-profile-img"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>customer<?php  echo $customer->getAvatar();?>" height="125px"; width="125px" /></span>
+			<div class="gla-profile-con">
+				<p><?php echo $customer->getGaleryname();?></p>
+				<p><?php echo $customer->getAddress()?></p>
+                <p><?php echo $customer->getResource()->getAttribute('gallerycity')->getFrontend()->getValue($customer); ?><?php echo ", ". $customer->getResource()->getAttribute('gallerycountry')->getFrontend()->getValue($customer); ?></p>
+				<p><?php echo $customer->getGalleryzip(); ?></p>
+
+				<p class="name"><?php echo $customer->getFirstname(); ?>  <?php echo $customer->getLastname(); ?></p>
+			</div>
+			</a>
+			</li>
+		
+		<?php } ?>
+
+<ul>
+
+</div>
+</div>

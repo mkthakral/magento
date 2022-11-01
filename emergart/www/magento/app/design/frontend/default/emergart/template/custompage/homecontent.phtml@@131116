@@ -1,0 +1,171 @@
+
+<div class="home-content">
+<div class="banner-section">
+
+ <?php $bannerCollection = Mage::getModel("banner/banner")->getCollection()->addFieldToFilter("status",1); ?>
+        
+        <?php if(count($bannerCollection)): ?>
+            <ul class="bxslider">
+                <?php foreach($bannerCollection as $banner): ?>
+                    
+                    <li>
+					<a href="<?php echo $banner->getContent();  ?>" target="_blank">
+					<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$banner->getFilename(); ?>" title="<?php echo $banner->getTitle() ?>" alt="<?php echo $banner->getTitle() ?>"/>
+					</a>
+					</li>
+                    
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+<div class="banner-shadow">&nbsp;</div>
+<div class="banner-con-outer">
+<div class="con">
+<p>Nothing says more about You than the Artwork You choose to Collect</p>
+</div>
+<div class="botton"><span>How it works</span></div>
+</div>
+</div>
+<div class="gallery-con">
+<ul>
+<li>Marianne Boesky Gallery</li>
+<li>David Kordansky Gallery</li>
+<li>Mitchelle-Innes &amp; Nash</li>
+<li>Pace</li>
+<li>Davis Zwirner</li>
+<li>Blum &amp; Poe</li>
+<li>Gladstone Gallery</li>
+</ul>
+</div>
+<div class="blog-outer container">
+<div class="blog-1">
+<h2 class="title">View by Price</h2>
+<div class="blog-img">
+<ul>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-1.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-2.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-3.jpg" /></li>
+</ul>
+</div>
+</div>
+<div class="blog-1">
+<h2 class="title">View by Style</h2>
+<div class="blog-img">
+<ul>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-4.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-5.jpg"</li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-6.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-7.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-8.jpg" /></li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-9.jpg" /></li>
+</ul>
+</div>
+</div>
+<div class="met-gallery">
+<h2>Meet the Gallery Owners - <span>more...</span></h2>
+<ul>
+<li>
+<p>David Kordansky Gallery</p>
+<span><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-10.jpg" /></span>
+<p class="name">June Kordansky</p>
+</li>
+<li>
+<p>Katherine Roberts Fine Art Gallery</p>
+<span><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-11.jpg" /></span>
+<p class="name">James L. Roberts</p>
+</li>
+<li>
+<p>Davis Zwirner</p>
+<span><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-12.jpg" /></span>
+<p class="name">Elle Zwirner</p>
+</li>
+<li>
+<p>Marianne Boesky Gallery</p>
+<span><img alt="" src="<?php echo $this->getskinUrl(); ?>images/blog-img-13.jpg" /></span>
+<p class="name">C.H. Pyle</p>
+</li>
+</ul>
+</div>
+<div class="catagory-product-outer">
+<h2>Recently Sold</h2>
+<ul class="products-grid">
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/pro-image-1.jpg"  />
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three">$3900</li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/pro-image-1.jpg"  />
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three">$3900</li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/pro-image-2.jpg"  />
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three">$3900</li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+<li><img alt="" src="<?php echo $this->getskinUrl(); ?>images/pro-image-3.jpg"  />
+<div class="pro-detls">
+<ul>
+<ul>
+<li class="one">3</li>
+<li class="two">119</li>
+<li class="three">$3900</li>
+</ul>
+</ul>
+<p class="end">Endorsed By</p>
+<p>Rice Planters Fine Art Gallery</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+		
+        
+        jQuery(".bxslider").bxSlider({
+            
+            auto : true,
+            pager: true,
+            nextSelector: ".cls-next",
+	    prevSelector: ".cls-prev",
+            
+        });
+		
+		
+		
+		
+		
+        
+    });
+</script>

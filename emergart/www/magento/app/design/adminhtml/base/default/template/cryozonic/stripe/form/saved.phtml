@@ -1,0 +1,46 @@
+<?php
+/**
+ * Cryozonic
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Single Domain License
+ * that is available through the world-wide-web at this URL:
+ * http://cryozonic.com/licenses/stripe.html
+ * If you are unable to obtain it through the world-wide-web,
+ * please send an email to info@cryozonic.com so we can send
+ * you a copy immediately.
+ *
+ * @category   Cryozonic
+ * @package    Cryozonic_Stripe
+ * @copyright  Copyright (c) Cryozonic Ltd (http://cryozonic.com)
+ */
+
+$cards = $this->getCustomerCards();
+
+if (!empty($cards)): ?>
+    <li>
+        <ul class="saved-cards" id="saved-cards">
+            <?php foreach ($cards as $key => $card): ?>
+            <li>
+                <input type="radio" name="payment[cc_saved]" value="<?php echo $card->id . ':' . $card->brand . ':' . $card->last4; ?>" id="<?php echo $card->id; ?>" class="select">
+                <label for="<?php echo $card->id; ?>">
+                    <span class="type <?php echo $card->brand ?>">
+                        <?php echo (empty($card->brand) ? $this->__('Card') : $this->__($card->brand)); ?>
+                    </span>
+                    <span class="last4 cryozonic-stripe-fade"><?php echo $this->__('ending in'); ?> <?php echo $card->last4; ?></span>
+                    <span class="exp cryozonic-stripe-fade"><?php echo $this->__('expires'); ?>
+                        <?php echo str_pad($card->exp_month,2,'0',STR_PAD_LEFT); ?>/<?php echo $card->exp_year; ?>
+                    </span>
+                </label>
+            </li>
+            <?php endforeach; ?>
+            <li>
+                <input type="radio" name="payment[cc_saved]" value="new_card" class="select validate-one-required-by-name" id="new_card">
+                <label for="new_card">
+                    <span class="type"><?php echo $this->__('Use a new card'); ?></span>
+                </label>
+            </li>
+        </ul>
+    </li>
+<?php endif; ?>
